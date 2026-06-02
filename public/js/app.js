@@ -2037,19 +2037,31 @@ App.syncLightingShowcaseMode = function() {
 };
 
 App.initMobileMenu = function() {
-    if (!this.elements.mobileMenuBtn || !this.elements.navMenu) return;
+    const btn = this.elements.mobileMenuBtn;
+    const menu = this.elements.navMenu;
+    if (!btn || !menu) return;
 
-    this.elements.mobileMenuBtn.addEventListener('click', () => {
-        this.elements.navMenu.classList.toggle('active');
-        this.elements.mobileMenuBtn.classList.toggle('active');
+    const syncAria = (isOpen) => {
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        btn.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+    };
+
+    btn.addEventListener('click', () => {
+        const willOpen = !menu.classList.contains('active');
+        menu.classList.toggle('active');
+        btn.classList.toggle('active');
+        syncAria(willOpen);
     });
 
-    this.elements.navMenu.querySelectorAll('.nav-link').forEach(link => {
+    menu.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
-            this.elements.navMenu.classList.remove('active');
-            this.elements.mobileMenuBtn.classList.remove('active');
+            menu.classList.remove('active');
+            btn.classList.remove('active');
+            syncAria(false);
         });
     });
+
+    syncAria(false);
 };
 
 App.initActiveNavigation = function() {
@@ -2210,6 +2222,75 @@ App.initPerformanceOptimizations = function() {
     syncVisualizerRendering();
 };
 
+const FOCUSABLE = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])'
+].join(',');
+
+App._openModal = function(overlay) {
+    // Remember what was focused so we can restore it on close.
+    overlay._returnFocus = document.activeElement;
+
+    // Move focus to the first focusable element inside the modal.
+    const firstFocusable = overlay.querySelector(FOCUSABLE);
+    if (firstFocusable) {
+        window.setTimeout(() => firstFocusable.focus(), 50);
+    }
+
+    // Trap Tab/Shift+Tab inside the modal.
+    overlay._trapHandler = (e) => {
+        if (e.key !== 'Tab') return;
+        const focusables = Array.from(overlay.querySelectorAll(FOCUSABLE));
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+            if (document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            }
+        } else {
+            if (document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
+    };
+
+    overlay._escHandler = (e) => {
+        if (e.key === 'Escape') {
+            if (overlay.id === 'orderModal') this.closeOrderModal();
+            else if (overlay.id === 'requestModal') this.closeRequestModal();
+            else overlay.classList.remove('active');
+        }
+    };
+
+    overlay.addEventListener('keydown', overlay._trapHandler);
+    document.addEventListener('keydown', overlay._escHandler);
+};
+
+App._closeModal = function(overlay) {
+    if (overlay._trapHandler) {
+        overlay.removeEventListener('keydown', overlay._trapHandler);
+        overlay._trapHandler = null;
+    }
+    if (overlay._escHandler) {
+        document.removeEventListener('keydown', overlay._escHandler);
+        overlay._escHandler = null;
+    }
+    // Restore focus to the element that triggered the modal open.
+    const returnTarget = overlay._returnFocus;
+    if (returnTarget && typeof returnTarget.focus === 'function') {
+        window.setTimeout(() => returnTarget.focus(), 0);
+    }
+    overlay._returnFocus = null;
+};
+
 App.initModalOutsideClose = function() {
     document.querySelectorAll('.modal-overlay').forEach((overlay) => {
         if (overlay.dataset.outsideCloseBound === 'true') return;
@@ -2242,21 +2323,27 @@ App.initModalOutsideClose = function() {
 App.openOrderModal = function() {
     const materials = this.builder.getAllMaterials();
     if (materials.length === 0) {
-        this.showToast('Выберите хотя бы один материал', 'error');
+        this.showToast('Выберите хотя бы один материал', 'error', { critical: true });
         return;
     }
 
     this.updateOrderPreview();
 
-    this.elements.orderModal?.classList.add('active');
+    const overlay = this.elements.orderModal;
+    if (!overlay) return;
+    overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+    this._openModal(overlay);
 };
 
 /**
  */
 App.closeOrderModal = function() {
-    this.elements.orderModal?.classList.remove('active');
+    const overlay = this.elements.orderModal;
+    if (!overlay) return;
+    overlay.classList.remove('active');
     document.body.style.overflow = '';
+    this._closeModal(overlay);
     this.restoreOrderForm();
 };
 
@@ -2285,15 +2372,21 @@ App.restoreOrderForm = function() {
 /**
  */
 App.openRequestModal = function() {
-    this.elements.requestModal?.classList.add('active');
+    const overlay = this.elements.requestModal;
+    if (!overlay) return;
+    overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+    this._openModal(overlay);
 };
 
 /**
  */
 App.closeRequestModal = function() {
-    this.elements.requestModal?.classList.remove('active');
+    const overlay = this.elements.requestModal;
+    if (!overlay) return;
+    overlay.classList.remove('active');
     document.body.style.overflow = '';
+    this._closeModal(overlay);
 };
 
 /**

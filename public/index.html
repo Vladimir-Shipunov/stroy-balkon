@@ -85,10 +85,10 @@
                 </button>
             </div>
             
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
             </button>
         </div>
     </header>
@@ -148,9 +148,9 @@
                 ============================================ -->
                 <aside class="config-sidebar config-sidebar-left">
                     <div class="sidebar-header">
-                        <h3>📐 Параметры балкона</h3>
-                        <button class="btn-reset" onclick="resetConfigurator()" title="Сбросить все">
-                            🔄 Сброс
+                        <h3><span aria-hidden="true">📐</span> Параметры балкона</h3>
+                        <button class="btn-reset" onclick="resetConfigurator()" title="Сбросить все настройки">
+                            <span aria-hidden="true">🔄</span> Сброс
                         </button>
                     </div>
 
@@ -625,12 +625,12 @@
     <!-- ============================================
          МОДАЛЬНОЕ ОКНО ЗАКАЗА
     ============================================ -->
-    <div class="modal-overlay" id="orderModal">
+    <div class="modal-overlay" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
         <div class="modal modal-order">
-            <button class="modal-close" onclick="closeOrderModal()">✕</button>
-            
+            <button class="modal-close" onclick="closeOrderModal()" aria-label="Закрыть окно заказа">✕</button>
+
             <div class="modal-header">
-                <h2>📋 Оформление заказа</h2>
+                <h2 id="orderModalTitle"><span aria-hidden="true">📋</span> Оформление заказа</h2>
                 <p>Заполните форму и мы свяжемся с вами в течение 15 минут</p>
             </div>
 
@@ -740,12 +740,12 @@
     <!-- ============================================
          МОДАЛЬНОЕ ОКНО ЗАПРОСА ЗВОНКА
     ============================================ -->
-    <div class="modal-overlay" id="requestModal">
+    <div class="modal-overlay" id="requestModal" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle">
         <div class="modal modal-request">
-            <button class="modal-close" onclick="closeRequestModal()">✕</button>
-            
+            <button class="modal-close" onclick="closeRequestModal()" aria-label="Закрыть окно обратного звонка">✕</button>
+
             <div class="modal-header">
-                <h2>📞 Заказать звонок</h2>
+                <h2 id="requestModalTitle"><span aria-hidden="true">📞</span> Заказать звонок</h2>
                 <p>Оставьте номер и мы перезвоним вам в течение 5 минут</p>
             </div>
 
