@@ -195,8 +195,8 @@ input, textarea, select {
     font-family: inherit;
     font-size: inherit;
     border: none;
-    outline: none;
     background: none;
+    /* outline управляется через :focus-visible в theme.css */
 }
 
 ul, ol {
