@@ -217,14 +217,6 @@ app.use(
         etag: true
     })
 );
-app.use(
-    '/vendor/html2canvas',
-    express.static(path.join(__dirname, '../node_modules/html2canvas/dist'), {
-        maxAge: NODE_ENV === 'production' ? '30d' : 0,
-        etag: true
-    })
-);
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/uploads/');
