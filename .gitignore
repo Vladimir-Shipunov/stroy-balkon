@@ -1,0 +1,43 @@
+# Зависимости
+node_modules/
+package-lock.json
+
+# База данных
+database/*.db
+database/*.sqlite
+
+# Загрузки
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Логи
+logs/
+*.log
+npm-debug.log*
+
+# Переменные окружения
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ОС
+.DS_Store
+Thumbs.db
+
+# Временные файлы
+tmp/
+temp/
+.cache/
+
+# Сборка
+dist/
+build/
+
+# Тесты
+coverage/

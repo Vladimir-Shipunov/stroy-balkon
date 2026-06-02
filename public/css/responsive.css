@@ -1,0 +1,1753 @@
+/* ============================================
+   BALCONY PRO - АДАПТИВНЫЕ СТИЛИ
+   Версия: 2.0.0
+   ============================================ */
+
+/* ============================================
+   1. БОЛЬШИЕ ЭКРАНЫ (1600px+)
+   ============================================ */
+@media screen and (min-width: 1600px) {
+    :root {
+        --container-max: 1600px;
+        --container-padding: 3rem;
+    }
+
+    .configurator-wrapper {
+        grid-template-columns: 360px minmax(760px, 1fr) 380px;
+        gap: var(--spacing-6);
+    }
+
+    .visualizer-container {
+        min-height: 460px;
+    }
+
+    .hero-title {
+        font-size: clamp(3.2rem, 3.6vw, 4.6rem);
+    }
+}
+
+/* ============================================
+   2. СРЕДНИЕ ЭКРАНЫ (1200px - 1599px)
+   ============================================ */
+@media screen and (max-width: 1599px) {
+    .configurator-wrapper {
+        grid-template-columns: 320px minmax(600px, 1fr) 340px;
+        gap: var(--spacing-5);
+    }
+
+    .summary-panel {
+        width: 350px;
+        bottom: var(--spacing-4);
+        right: var(--spacing-4);
+    }
+}
+
+/* ============================================
+   3. ПЛАНШЕТЫ ЛАНДШАФТ (992px - 1199px)
+   ============================================ */
+@media screen and (max-width: 1199px) {
+    :root {
+        --container-padding: 1.25rem;
+    }
+
+    .configurator-wrapper {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+
+    .config-sidebar {
+        position: relative;
+        top: 0;
+        max-height: none;
+    }
+
+    .config-sidebar-left {
+        order: 1;
+    }
+
+    .config-main {
+        order: 2;
+    }
+
+    .config-sidebar-right {
+        order: 3;
+    }
+
+    .summary-panel {
+        position: relative;
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        margin-top: var(--spacing-6);
+        order: 4;
+    }
+
+    .summary-panel.collapsed {
+        transform: none;
+    }
+
+    .summary-header {
+        border-radius: var(--radius-2xl);
+    }
+
+    .hero-title {
+        font-size: var(--font-size-4xl);
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-base);
+    }
+
+    .hero-stats {
+        gap: var(--spacing-4);
+    }
+
+    .stat-value {
+        font-size: var(--font-size-2xl);
+    }
+
+    .header-container {
+        padding: var(--spacing-3) var(--container-padding);
+    }
+
+    .nav-menu {
+        gap: var(--spacing-1);
+    }
+
+    .nav-link {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--font-size-xs);
+    }
+
+    .phone-link .phone-number {
+        display: none;
+    }
+
+    .btn-request {
+        display: none;
+    }
+}
+
+/* ============================================
+   4. ПЛАНШЕТЫ ПОРТРЕТ (768px - 991px)
+   ============================================ */
+@media screen and (max-width: 991px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.96);
+        flex-direction: column;
+        padding: var(--spacing-4);
+        gap: var(--spacing-2);
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all var(--transition-normal);
+    }
+
+    .nav-menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-link {
+        width: 100%;
+        padding: var(--spacing-3) var(--spacing-4);
+        border-radius: var(--radius-lg);
+        color: var(--color-gray-700);
+    }
+
+    .hero {
+        min-height: 720px;
+        padding: 7rem 0 5rem;
+    }
+
+    .hero-content {
+        padding: 0;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .hero-features {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-3);
+    }
+
+    .section-title {
+        font-size: var(--font-size-3xl);
+    }
+
+    .section-subtitle {
+        font-size: var(--font-size-base);
+    }
+
+    .configurator-section {
+        padding: var(--spacing-10) 0;
+    }
+
+    .sidebar-tabs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tab-btn {
+        padding: var(--spacing-3);
+    }
+
+    .visualizer-container {
+        min-height: 340px;
+    }
+
+    .materials-grid,
+    .furniture-grid,
+    .lighting-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+
+    .shape-selector {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .size-selector {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .footer-top {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-bottom-right {
+        justify-content: center;
+    }
+
+    .modal {
+        max-width: 90%;
+        margin: var(--spacing-4);
+    }
+
+    .modal-form {
+        padding: var(--spacing-5);
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .toast-container {
+        left: var(--spacing-4);
+        right: var(--spacing-4);
+        max-width: none;
+    }
+
+    .toast {
+        max-width: none;
+    }
+}
+
+/* ============================================
+   5. МОБИЛЬНЫЕ УСТРОЙСТВА (481px - 767px)
+   ============================================ */
+@media screen and (max-width: 767px) {
+    :root {
+        --font-size-6xl: 2.5rem;
+        --font-size-5xl: 2rem;
+        --font-size-4xl: 1.75rem;
+        --font-size-3xl: 1.5rem;
+        --container-padding: 1rem;
+    }
+
+    .logo-text span {
+        display: none;
+    }
+
+    .logo-text h1 {
+        font-size: var(--font-size-lg);
+    }
+
+    .header-actions {
+        display: none;
+    }
+
+    .hero {
+        min-height: 680px;
+        padding: 6.5rem 0 4.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2.1rem, 10vw, 3.1rem);
+        line-height: 1.18;
+        margin-bottom: var(--spacing-6);
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 4.6vw, 1.35rem);
+        max-width: 100%;
+        margin-bottom: var(--spacing-8);
+    }
+
+    .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-4);
+    }
+
+    .stat-item {
+        min-width: 100px;
+    }
+
+    .stat-value {
+        font-size: var(--font-size-xl);
+    }
+
+    .stat-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .config-block-header h4 {
+        font-size: var(--font-size-sm);
+    }
+
+    .size-selector {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-2);
+    }
+
+    .size-btn {
+        padding: var(--spacing-3);
+    }
+
+    .size-value {
+        font-size: var(--font-size-base);
+    }
+
+    .size-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .shape-selector {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-2);
+    }
+
+    .shape-btn {
+        padding: var(--spacing-3);
+    }
+
+    .shape-icon {
+        width: 50px;
+        height: 35px;
+    }
+
+    .shape-name {
+        font-size: var(--font-size-xs);
+    }
+
+    .materials-categories,
+    .furniture-categories,
+    .lighting-types {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: var(--spacing-2);
+    }
+
+    .category-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .materials-grid,
+    .furniture-grid,
+    .lighting-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: var(--spacing-2);
+    }
+
+    .material-card {
+        min-height: 168px;
+    }
+
+    .material-preview,
+    .furniture-preview,
+    .lighting-preview {
+        height: 88px;
+    }
+
+    .material-name,
+    .furniture-name,
+    .lighting-name {
+        font-size: var(--font-size-xs);
+    }
+
+    .color-grid {
+        grid-template-columns: repeat(8, 1fr);
+    }
+
+    .palette-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .visualizer-container {
+        min-height: 300px;
+    }
+
+    .visualizer-controls {
+        gap: var(--spacing-2);
+        padding: var(--spacing-3);
+    }
+
+    .control-btn {
+        width: 38px;
+        height: 38px;
+        font-size: var(--font-size-base);
+    }
+
+    .control-group {
+        gap: var(--spacing-1);
+    }
+
+    .placement-mode-indicator {
+        flex-wrap: wrap;
+        gap: var(--spacing-2);
+    }
+
+    .mode-text {
+        width: 100%;
+    }
+
+    .mode-hint {
+        display: none;
+    }
+
+    .summary-panel {
+        width: calc(100% - var(--spacing-4));
+        left: var(--spacing-2);
+        right: var(--spacing-2);
+        bottom: var(--spacing-2);
+    }
+
+    .summary-content {
+        max-height: 400px;
+        padding: var(--spacing-4);
+    }
+
+    .total-row.grand-total {
+        font-size: var(--font-size-base);
+    }
+
+    .grand-total .total-value {
+        font-size: var(--font-size-lg);
+    }
+
+    .elements-panel {
+        padding: var(--spacing-4);
+    }
+
+    .element-item {
+        padding: var(--spacing-2);
+    }
+
+    .element-item-icon {
+        width: 35px;
+        height: 35px;
+        font-size: var(--font-size-base);
+    }
+
+    .footer-section {
+        text-align: center;
+    }
+
+    .footer-logo {
+        justify-content: center;
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+
+    .footer-contacts li {
+        justify-content: center;
+    }
+
+    .modal-header {
+        padding: var(--spacing-5) var(--spacing-5) var(--spacing-3);
+    }
+
+    .modal-header h2 {
+        font-size: var(--font-size-xl);
+    }
+
+    .modal-header p {
+        font-size: var(--font-size-sm);
+    }
+
+    .form-row {
+        margin-bottom: var(--spacing-3);
+    }
+
+    .btn-large {
+        padding: var(--spacing-3) var(--spacing-5);
+        font-size: var(--font-size-base);
+    }
+}
+
+/* ============================================
+   6. МАЛЕНЬКИЕ МОБИЛЬНЫЕ (320px - 480px)
+   ============================================ */
+@media screen and (max-width: 480px) {
+    :root {
+        --font-size-6xl: 2rem;
+        --font-size-5xl: 1.75rem;
+        --font-size-4xl: 1.5rem;
+        --font-size-3xl: 1.25rem;
+        --spacing-6: 1rem;
+        --spacing-8: 1.5rem;
+    }
+
+    .logo-icon {
+        font-size: var(--font-size-2xl);
+    }
+
+    .logo-text h1 {
+        font-size: var(--font-size-base);
+    }
+
+    .hero {
+        min-height: 640px;
+        padding: 6rem 0 4rem;
+    }
+
+    .hero-title {
+        font-size: clamp(1.9rem, 10vw, 2.7rem);
+        margin-bottom: var(--spacing-5);
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-7);
+        line-height: 1.5;
+    }
+
+    .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-3);
+        margin-bottom: var(--spacing-6);
+    }
+
+    .stat-value {
+        font-size: var(--font-size-lg);
+    }
+
+    .stat-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .hero-buttons {
+        gap: var(--spacing-3);
+        margin-bottom: 0;
+    }
+
+    .hero-buttons .btn {
+        min-width: auto;
+        width: 100%;
+        min-height: 58px;
+        padding: var(--spacing-3) var(--spacing-4);
+        font-size: var(--font-size-base);
+    }
+
+    .hero-features {
+        gap: var(--spacing-2);
+    }
+
+    .feature {
+        font-size: var(--font-size-xs);
+    }
+
+    .feature-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+
+    .section-header {
+        margin-bottom: var(--spacing-8);
+    }
+
+    .section-badge {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-1) var(--spacing-3);
+    }
+
+    .section-title {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-3);
+    }
+
+    .section-subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .configurator-section {
+        padding: var(--spacing-8) 0;
+    }
+
+    .config-sidebar {
+        padding: var(--spacing-4);
+        border-radius: var(--radius-xl);
+    }
+
+    .sidebar-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-3);
+    }
+
+    .btn-reset {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .config-block {
+        margin-bottom: var(--spacing-4);
+        padding-bottom: var(--spacing-4);
+    }
+
+    .form-label {
+        font-size: var(--font-size-xs);
+        margin-bottom: var(--spacing-2);
+    }
+
+    .form-hint {
+        display: block;
+        margin-top: var(--spacing-1);
+        margin-left: 0;
+    }
+
+    .size-selector {
+        grid-template-columns: 1fr;
+    }
+
+    .size-btn {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: var(--spacing-3) var(--spacing-4);
+    }
+
+    .shape-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .shape-btn {
+        padding: var(--spacing-2);
+    }
+
+    .shape-icon {
+        width: 40px;
+        height: 30px;
+    }
+
+    .range-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .range-value {
+        text-align: left;
+    }
+
+    .counter-wrapper {
+        width: 100%;
+    }
+
+    .counter-input {
+        flex: 1;
+    }
+
+    .counter-btn {
+        width: 45px;
+    }
+
+    .checkbox-group {
+        gap: var(--spacing-2);
+    }
+
+    .checkbox-item {
+        font-size: var(--font-size-xs);
+    }
+
+    .checkbox-mark {
+        width: 18px;
+        height: 18px;
+    }
+
+    .sidebar-tabs {
+        gap: var(--spacing-1);
+    }
+
+    .tab-btn {
+        padding: var(--spacing-2);
+        font-size: 10px;
+    }
+
+    .tab-icon {
+        font-size: var(--font-size-base);
+    }
+
+    .element-selector {
+        margin-bottom: var(--spacing-3);
+    }
+
+    .element-select {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--font-size-xs);
+    }
+
+    .materials-grid,
+    .furniture-grid,
+    .lighting-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-2);
+        max-height: 340px;
+    }
+
+    .material-card,
+    .furniture-card,
+    .lighting-card {
+        padding: var(--spacing-2);
+    }
+
+    .material-card {
+        min-height: 186px;
+    }
+
+    .material-preview,
+    .furniture-preview,
+    .lighting-preview {
+        height: 100px;
+        margin-bottom: var(--spacing-1);
+    }
+
+    .material-name,
+    .furniture-name,
+    .lighting-name {
+        font-size: 12px;
+    }
+
+    .material-price,
+    .furniture-price,
+    .lighting-price {
+        font-size: 10px;
+    }
+
+    .preview-texture {
+        height: 80px;
+    }
+
+    .color-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .color-btn {
+        aspect-ratio: 1;
+    }
+
+    .custom-color-wrapper {
+        flex-wrap: wrap;
+    }
+
+    .color-picker {
+        width: 40px;
+        height: 35px;
+    }
+
+    .custom-color-wrapper {
+        grid-template-columns: 40px minmax(0, 1fr);
+    }
+
+    .color-hex-input {
+        min-width: 0;
+    }
+
+    .btn-apply-color {
+        grid-column: 1 / -1;
+        width: 100%;
+        padding: var(--spacing-2);
+    }
+
+    .current-color-display {
+        padding: var(--spacing-2);
+    }
+
+    .current-color-preview {
+        width: 40px;
+        height: 40px;
+    }
+
+    .temperature-selector {
+        flex-direction: column;
+    }
+
+    .temp-btn {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+
+    .temp-indicator {
+        width: 24px;
+        height: 24px;
+    }
+
+    .visualizer-container {
+        min-height: 250px;
+    }
+
+    .visualizer-header {
+        padding: var(--spacing-3);
+    }
+
+    .visualizer-header h3 {
+        font-size: var(--font-size-sm);
+    }
+
+    .visualizer-actions {
+        gap: var(--spacing-1);
+    }
+
+    .visualizer-controls {
+        padding: var(--spacing-2);
+    }
+
+    .control-btn {
+        width: 34px;
+        height: 34px;
+        font-size: var(--font-size-sm);
+    }
+
+    .placement-mode-indicator {
+        padding: var(--spacing-3);
+    }
+
+    .mode-icon {
+        font-size: var(--font-size-base);
+    }
+
+    .mode-text {
+        font-size: var(--font-size-xs);
+    }
+
+    .mode-cancel {
+        width: 28px;
+        height: 28px;
+    }
+
+    .elements-panel {
+        padding: var(--spacing-3);
+    }
+
+    .elements-header h3 {
+        font-size: var(--font-size-sm);
+    }
+
+    .elements-count {
+        font-size: 10px;
+        padding: var(--spacing-1) var(--spacing-2);
+    }
+
+    .element-item {
+        padding: var(--spacing-2);
+        gap: var(--spacing-2);
+    }
+
+    .element-item-icon {
+        width: 30px;
+        height: 30px;
+        font-size: var(--font-size-sm);
+    }
+
+    .element-item-name {
+        font-size: var(--font-size-xs);
+    }
+
+    .element-item-details {
+        font-size: 10px;
+    }
+
+    .summary-panel {
+        width: calc(100% - var(--spacing-2));
+        left: var(--spacing-1);
+        right: var(--spacing-1);
+        bottom: var(--spacing-1);
+        border-radius: var(--radius-xl);
+    }
+
+    .summary-header {
+        padding: var(--spacing-3) var(--spacing-4);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .summary-header h3 {
+        font-size: var(--font-size-sm);
+    }
+
+    .summary-content {
+        padding: var(--spacing-3);
+        max-height: 350px;
+    }
+
+    .summary-section h4 {
+        font-size: var(--font-size-xs);
+    }
+
+    .summary-row {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-1) 0;
+    }
+
+    .summary-item {
+        padding: var(--spacing-2);
+        font-size: var(--font-size-xs);
+    }
+
+    .summary-total {
+        padding: var(--spacing-3);
+    }
+
+    .total-row {
+        font-size: var(--font-size-xs);
+    }
+
+    .grand-total .total-value {
+        font-size: var(--font-size-base);
+    }
+
+    .summary-actions {
+        gap: var(--spacing-2);
+    }
+
+    .summary-actions .btn {
+        padding: var(--spacing-2) var(--spacing-4);
+        font-size: var(--font-size-sm);
+    }
+
+    .summary-disclaimer {
+        margin-top: var(--spacing-3);
+        padding-top: var(--spacing-3);
+    }
+
+    .summary-disclaimer p {
+        font-size: 9px;
+    }
+
+    .footer {
+        padding: var(--spacing-10) 0 var(--spacing-6);
+    }
+
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+        text-align: center;
+    }
+
+    .footer-logo {
+        justify-content: center;
+    }
+
+    .footer-description {
+        font-size: var(--font-size-sm);
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+
+    .footer-section h4 {
+        margin-bottom: var(--spacing-3);
+    }
+
+    .footer-links {
+        align-items: center;
+    }
+
+    .footer-contacts {
+        align-items: center;
+    }
+
+    .footer-contacts li {
+        flex-direction: column;
+        gap: var(--spacing-1);
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: var(--spacing-3);
+    }
+
+    .footer-bottom-left p {
+        font-size: var(--font-size-xs);
+    }
+
+    .footer-bottom-right {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-3);
+    }
+
+    .footer-bottom-right a {
+        font-size: var(--font-size-xs);
+    }
+
+    .modal {
+        margin: var(--spacing-2);
+        border-radius: var(--radius-xl);
+    }
+
+    .modal-header {
+        padding: var(--spacing-4);
+    }
+
+    .modal-header h2 {
+        font-size: var(--font-size-lg);
+    }
+
+    .modal-header p {
+        font-size: var(--font-size-xs);
+    }
+
+    .modal-form {
+        padding: var(--spacing-4);
+    }
+
+    .form-input {
+        padding: var(--spacing-2) var(--spacing-3);
+        font-size: var(--font-size-sm);
+    }
+
+    .form-label {
+        font-size: var(--font-size-xs);
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: var(--spacing-2);
+        padding-top: var(--spacing-4);
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+    }
+
+    .toast-container {
+        top: var(--spacing-2);
+        right: var(--spacing-2);
+        left: var(--spacing-2);
+    }
+
+    .toast {
+        padding: var(--spacing-3);
+    }
+
+    .toast-icon {
+        font-size: var(--font-size-base);
+    }
+
+    .toast-title {
+        font-size: var(--font-size-sm);
+    }
+
+    .toast-message {
+        font-size: var(--font-size-xs);
+    }
+
+    .scroll-arrow {
+        width: 20px;
+        height: 35px;
+    }
+
+    .hero-scroll span {
+        font-size: var(--font-size-xs);
+    }
+
+    /* Скрываем некоторые элементы на очень маленьких экранах */
+    .hero-stats .stat-item:nth-child(3),
+    .hero-stats .stat-item:nth-child(4) {
+        display: none;
+    }
+
+    .footer-section:nth-child(3) {
+        display: none;
+    }
+}
+
+/* ============================================
+   7. ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (320px и меньше)
+   ============================================ */
+@media screen and (max-width: 320px) {
+    :root {
+        --font-size-base: 13px;
+        --spacing-4: 0.75rem;
+        --spacing-5: 1rem;
+    }
+
+    .hero-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .shape-selector {
+        grid-template-columns: 1fr;
+    }
+
+    .materials-grid,
+    .furniture-grid,
+    .lighting-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .color-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .sidebar-tabs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summary-panel {
+        position: relative;
+        margin-top: var(--spacing-4);
+        width: 100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+/* ============================================
+   8. ПЕЙЗАЖНАЯ ОРИЕНТАЦИЯ НА МОБИЛЬНЫХ
+   ============================================ */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding: var(--spacing-8) 0;
+    }
+
+    .hero-content {
+        padding: var(--spacing-4) 0;
+    }
+
+    .hero-title {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-3);
+    }
+
+    .hero-subtitle {
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--spacing-4);
+    }
+
+    .hero-stats {
+        display: none;
+    }
+
+    .hero-features {
+        display: none;
+    }
+
+    .hero-buttons {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .visualizer-container {
+        min-height: 220px;
+    }
+
+    .config-sidebar {
+        max-height: none;
+        position: relative;
+        top: 0;
+    }
+
+    .summary-panel {
+        position: relative;
+        width: 100%;
+        margin-top: var(--spacing-4);
+    }
+
+    .modal {
+        max-height: 95vh;
+        margin: var(--spacing-2);
+    }
+
+    .modal-content {
+        max-height: 80vh;
+    }
+}
+
+/* ============================================
+   9. ВЫСОКИЙ КОНТРАСТ
+   ============================================ */
+@media (prefers-contrast: high) {
+    :root {
+        --color-gray-200: #000000;
+        --color-gray-300: #000000;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-accent {
+        border: 2px solid currentColor;
+    }
+
+    .material-card,
+    .furniture-card,
+    .lighting-card {
+        border-width: 3px;
+    }
+
+    .form-input,
+    .form-select {
+        border-width: 3px;
+    }
+
+    .config-sidebar,
+    .visualizer-wrapper,
+    .elements-panel,
+    .summary-panel {
+        border-width: 3px;
+    }
+}
+
+/* ============================================
+   10. УМЕНЬШЕНИЕ ДВИЖЕНИЯ
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .hero-particles {
+        animation: none;
+    }
+
+    .scroll-arrow::after {
+        animation: none;
+        top: 15px;
+    }
+}
+
+/* ============================================
+   11. ТЁМНАЯ ТЕМА (ОПЦИОНАЛЬНО)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-gray-50: #111827;
+        --color-gray-100: #1f2937;
+        --color-gray-200: #374151;
+        --color-gray-300: #4b5563;
+        --color-gray-400: #6b7280;
+        --color-gray-500: #9ca3af;
+        --color-gray-600: #d1d5db;
+        --color-gray-700: #e5e7eb;
+        --color-gray-800: #f3f4f6;
+        --color-gray-900: #f9fafb;
+        --color-white: #1f2937;
+    }
+
+    body {
+        background-color: #030712;
+        color: #f9fafb;
+    }
+
+    .configurator-section {
+        background:
+            linear-gradient(135deg, rgba(148, 163, 184, 0.08) 0 1px, transparent 1px 38px),
+            linear-gradient(180deg, #151c2a 0%, #101827 50%, #080d18 100%);
+    }
+
+    .configurator-section::after {
+        background: linear-gradient(180deg, rgba(8, 13, 24, 0), rgba(3, 7, 18, 0.86));
+    }
+
+    .configurator-section .section-badge {
+        background: rgba(96, 165, 250, 0.16);
+        color: #bfdbfe;
+    }
+
+    .configurator-section .section-title {
+        color: #f8fafc;
+    }
+
+    .configurator-section .section-subtitle {
+        color: #cbd5e1;
+    }
+
+    .header.scrolled {
+        background: rgba(17, 24, 39, 0.95);
+    }
+
+    .config-sidebar,
+    .visualizer-wrapper,
+    .elements-panel,
+    .summary-panel,
+    .modal {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .form-input,
+    .form-select {
+        background: #111827;
+        border-color: #374151;
+        color: #f9fafb;
+    }
+
+    .material-card,
+    .furniture-card,
+    .lighting-card {
+        background: #111827;
+        border-color: #374151;
+    }
+
+    .footer {
+        background: #030712;
+    }
+}
+
+/* ============================================
+   11.1 НОВЫЙ ФУТЕР
+   ============================================ */
+@media screen and (max-width: 1199px) {
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-map {
+        margin-bottom: 4.5rem;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .footer {
+        padding: 3rem 0 0;
+    }
+
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+        text-align: center;
+    }
+
+    .footer-brand,
+    .footer-contacts-panel,
+    .footer-nav {
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-contacts {
+        align-items: stretch;
+    }
+
+    .footer-contacts li {
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.65rem;
+        font-size: 1.05rem;
+    }
+
+    .footer-social,
+    .footer-links {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer-map {
+        height: 340px;
+        margin: 1.5rem 0 3.25rem;
+    }
+
+    .footer-map-actions {
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.75rem;
+    }
+
+    .footer-map-actions a {
+        flex: 1 1 150px;
+        justify-content: center;
+        font-size: 0.82rem;
+    }
+
+    .footer-bottom {
+        display: block;
+        padding: 0;
+    }
+
+    .footer-bottom-inner {
+        min-height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.96rem;
+    }
+
+    .policy-header-inner {
+        min-height: 64px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.25rem;
+        text-align: center;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .footer {
+        background: #ffffff;
+        color: #2d2f34;
+    }
+
+    .footer-contacts-panel h4,
+    .footer-nav h4,
+    .footer-contacts li,
+    .footer-contacts a,
+    .footer-links a {
+        color: #2d2f34;
+    }
+
+    .footer-map {
+        background: #f6f3ea;
+        border-color: #e8ebef;
+    }
+
+    .policy-page {
+        background: #f5f6f8;
+        color: #20252d;
+    }
+
+    .policy-card,
+    .policy-header {
+        background: #ffffff;
+    }
+
+    .policy-text {
+        color: #374151;
+    }
+}
+
+/* ============================================
+   12. ПЕЧАТЬ
+   ============================================ */
+@media print {
+    * {
+        background: transparent !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    @page {
+        margin: 2cm;
+        size: A4;
+    }
+
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+
+    .header,
+    .footer,
+    .hero,
+    .btn,
+    .modal-overlay,
+    .toast-container,
+    .visualizer-controls,
+    .sidebar-tabs,
+    .config-sidebar,
+    .summary-panel,
+    .elements-panel,
+    .placement-mode-indicator {
+        display: none !important;
+    }
+
+    .configurator-section {
+        padding: 0;
+    }
+
+    .configurator-wrapper {
+        display: block;
+    }
+
+    .visualizer-container {
+        min-height: 400px;
+        page-break-inside: avoid;
+    }
+
+    .config-main {
+        width: 100%;
+    }
+
+    a {
+        text-decoration: underline;
+        color: #000000;
+    }
+
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 10pt;
+    }
+
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    .section-title {
+        font-size: 18pt;
+    }
+
+    .order-summary-block {
+        page-break-inside: avoid;
+    }
+}
+
+/* ============================================
+   13. TOUCH УСТРОЙСТВА
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    .btn,
+    .material-card,
+    .furniture-card,
+    .lighting-card,
+    .shape-btn,
+    .size-btn,
+    .category-btn,
+    .control-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .form-input,
+    .form-select {
+        min-height: 44px;
+    }
+
+    .checkbox-mark,
+    .radio-mark {
+        width: 24px;
+        height: 24px;
+    }
+
+    .nav-link {
+        min-height: 48px;
+    }
+
+    .color-btn {
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    .counter-btn {
+        min-width: 48px;
+        min-height: 48px;
+    }
+}
+
+/* ============================================
+   14. ВЕРТИКАЛЬНЫЙ ЭКРАН (MOBILE)
+   ============================================ */
+@media screen and (max-width: 480px) and (orientation: portrait) {
+    .hero {
+        min-height: 100vh;
+    }
+
+    .configurator-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .config-sidebar {
+        max-height: none;
+    }
+
+    .visualizer-container {
+        min-height: 250px;
+    }
+
+    .summary-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        max-height: 60vh;
+    }
+
+    .summary-content {
+        max-height: 50vh;
+    }
+}
+
+/* ============================================
+   15. СКРЫТИЕ ЭЛЕМЕНТОВ ПО РАЗМЕРАМ
+   ============================================ */
+.hide-on-mobile {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    .hide-on-mobile {
+        display: block;
+    }
+}
+
+.hide-on-tablet {
+    display: block;
+}
+
+@media screen and (max-width: 991px) {
+    .hide-on-tablet {
+        display: none;
+    }
+}
+
+.hide-on-desktop {
+    display: block;
+}
+
+@media screen and (min-width: 1200px) {
+    .hide-on-desktop {
+        display: none;
+    }
+}
+
+/* ============================================
+   16. ДОПОЛНИТЕЛЬНЫЕ КЛАССЫ АДАПТИВНОСТИ
+   ============================================ */
+.grid-1 { grid-template-columns: 1fr; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media screen and (max-width: 767px) {
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.text-mobile-center {
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+    .text-mobile-center {
+        text-align: left;
+    }
+}
+
+.flex-mobile-column {
+    flex-direction: column;
+}
+
+@media screen and (min-width: 768px) {
+    .flex-mobile-column {
+        flex-direction: row;
+    }
+}
+
+.gap-mobile {
+    gap: var(--spacing-4);
+}
+
+@media screen and (min-width: 768px) {
+    .gap-mobile {
+        gap: var(--spacing-6);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .visualizer-controls {
+        padding: 12px;
+        gap: 8px;
+    }
+    
+    .control-group {
+        gap: 6px;
+    }
+    
+    .control-group:first-child .control-btn,
+    .control-group:nth-child(2) .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .control-group:last-child .control-btn {
+        min-width: 80px;
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .visualizer-controls {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .control-group:last-child {
+        grid-column: 1 / -1;
+    }
+    
+    .control-group:last-child .control-btn {
+        flex: 1;
+        min-width: 0;
+    }
+}

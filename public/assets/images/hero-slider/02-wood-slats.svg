@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="room" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f5efe4"/>
+      <stop offset="1" stop-color="#cdbb9d"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#d6b17b"/>
+      <stop offset="1" stop-color="#8f6134"/>
+    </linearGradient>
+    <pattern id="slats" width="92" height="900" patternUnits="userSpaceOnUse">
+      <rect width="92" height="900" fill="#171614"/>
+      <rect x="18" width="38" height="900" rx="4" fill="url(#wood)"/>
+      <path d="M28 0v900M46 0v900" stroke="#f4dba8" opacity=".25" stroke-width="2"/>
+    </pattern>
+    <pattern id="wallpanel" width="180" height="180" patternUnits="userSpaceOnUse">
+      <rect width="180" height="180" fill="#ede5d8"/>
+      <path d="M0 60h180M0 120h180M60 0v60M126 60v60M72 120v60" stroke="#b7a792" stroke-width="4" opacity=".58"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="900" fill="url(#room)"/>
+  <path d="M0 0h1920v230H0z" fill="url(#slats)"/>
+  <path d="M0 230h780v670H0z" fill="url(#wallpanel)"/>
+  <path d="M780 230h480v670H780z" fill="#40353c"/>
+  <path d="M830 280h380v560H830z" fill="#af8551"/>
+  <g fill="#d2ad73">
+    <rect x="855" y="300" width="150" height="230" rx="8"/>
+    <rect x="1035" y="300" width="150" height="230" rx="8"/>
+    <rect x="855" y="560" width="150" height="250" rx="8"/>
+    <rect x="1035" y="560" width="150" height="250" rx="8"/>
+  </g>
+  <g fill="#f0d69a">
+    <rect x="980" y="412" width="14" height="72" rx="7"/>
+    <rect x="1046" y="412" width="14" height="72" rx="7"/>
+    <rect x="980" y="662" width="14" height="72" rx="7"/>
+    <rect x="1046" y="662" width="14" height="72" rx="7"/>
+  </g>
+  <path d="M1260 230h660v670h-660z" fill="#d4e4e8"/>
+  <path d="M1340 310h390v420h-390z" fill="#acd2df" opacity=".82"/>
+  <path d="M0 742h1920v158H0z" fill="#9f7449"/>
+  <g stroke="#e3bf84" opacity=".28" stroke-width="5">
+    <path d="M0 782h1920M0 836h1920"/>
+  </g>
+</svg>
