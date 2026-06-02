@@ -2257,6 +2257,29 @@ App.openOrderModal = function() {
 App.closeOrderModal = function() {
     this.elements.orderModal?.classList.remove('active');
     document.body.style.overflow = '';
+    this.restoreOrderForm();
+};
+
+/**
+ * Restore the order form after a success state was shown. No-op if the form
+ * is already in its default state, so a regular close preserves field values.
+ */
+App.restoreOrderForm = function() {
+    const modal = this.elements.orderModal?.querySelector('.modal');
+    if (!modal) return;
+
+    const successPanel = modal.querySelector('.modal-success');
+    if (!successPanel) return;
+
+    successPanel.remove();
+
+    const form = this.elements.orderForm;
+    if (form) {
+        form.style.display = '';
+        form.reset();
+    }
+    const header = modal.querySelector('.modal-header');
+    if (header) header.style.display = '';
 };
 
 /**
@@ -2336,17 +2359,27 @@ App.submitOrder = async function() {
     try {
         let screenshot = null;
         if (this.visualizer) {
-            screenshot = await this.visualizer.getFullScreenshot();
+            // A screenshot failure must never block the order itself.
+            try {
+                screenshot = await this.visualizer.getFullScreenshot();
+            } catch (screenshotError) {
+                console.warn('Не удалось получить скриншот, заказ отправляется без него:', screenshotError);
+            }
         }
 
         const result = await this.orderHandler.submitOrder(orderData, screenshot);
 
+        // submitOrder owns all failure feedback (it sees validation, rate-limit and
+        // network failures alike); handleOrderError only logs to avoid double toasts.
         if (!result.success) {
-            this.showToast(result.error, 'error');
+            const detail = result.errors?.[0]?.message
+                || result.error
+                || 'Не удалось отправить заказ. Попробуйте позже.';
+            this.showToast(detail, 'error', { critical: true });
         }
     } catch (error) {
         console.error('Ошибка отправки заказа:', error);
-        this.showToast('Ошибка отправки заказа. Попробуйте позже.', 'error');
+        this.showToast('Ошибка отправки заказа. Попробуйте позже.', 'error', { critical: true });
     } finally {
         submitBtn.disabled = false;
         btnText.style.display = '';
@@ -2379,15 +2412,16 @@ App.submitRequest = async function() {
         const result = await response.json();
 
         if (result.success) {
-            this.showToast('Заявка отправлена! Мы перезвоним вам в течение 5 минут', 'success');
+            this.showToast('Заявка отправлена! Мы перезвоним вам в течение 5 минут.', 'success', { critical: true });
             form.reset();
             this.closeRequestModal();
         } else {
-            throw new Error(result.error);
+            throw new Error(result.error || 'Не удалось отправить заявку');
         }
 
     } catch (error) {
-        this.showToast('Ошибка отправки. Попробуйте позже.', 'error');
+        console.error('Ошибка отправки заявки:', error);
+        this.showToast(error.message || 'Ошибка отправки. Попробуйте позже.', 'error', { critical: true });
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
@@ -2397,37 +2431,62 @@ App.submitRequest = async function() {
 /**
  */
 App.handleOrderSuccess = function(result) {
-    this.showToast(`Заказ #${result.orderId} успешно создан!`, 'success');
-    this.closeOrderModal();
-    
-    this.showThankYouMessage(result.orderId);
+    const orderId = result?.orderId || '';
+    // Show the confirmation state first (keeps the modal open), then a guaranteed toast.
+    this.showThankYouMessage(orderId);
+    this.showToast(
+        orderId ? `Заказ № ${orderId} успешно создан!` : 'Заказ успешно создан!',
+        'success',
+        { critical: true }
+    );
 };
 
 /**
  */
 App.handleOrderError = function(error) {
-    this.showToast(error.error || 'Ошибка отправки заказа', 'error');
+    // User-facing feedback is surfaced by submitOrder via the returned result.
+    // This callback only fires for network/submission failures — log for diagnostics.
+    const reason = error?.error?.message || error?.error || error?.message || 'unknown error';
+    console.error('Order error:', reason);
 };
 
 /**
  */
 App.showThankYouMessage = function(orderId) {
-    const modalContent = this.elements.orderModal?.querySelector('.modal-content');
-    if (!modalContent) return;
+    const overlay = this.elements.orderModal;
+    // The actual dialog box is `.modal` (.modal-content never existed — old bug).
+    const modal = overlay?.querySelector('.modal');
+    if (!overlay || !modal) {
+        this.closeOrderModal();
+        return;
+    }
 
-    modalContent.innerHTML = `
-        <div style="text-align: center; padding: 40px;">
-            <div style="font-size: 64px; margin-bottom: 20px;">✓</div>
-            <h2 style="color: var(--color-secondary); margin-bottom: 20px;">Спасибо за заявку!</h2>
-            <p style="font-size: 18px; margin-bottom: 10px;">Ваш заказ #${orderId} принят в работу</p>
-            <p style="color: var(--color-gray-500); margin-bottom: 30px;">
-                Мы свяжемся с вами в ближайшее время
-            </p>
-            <button class="btn btn-primary btn-full" onclick="location.reload();">
-                Создать новый проект
-            </button>
-        </div>
+    // Keep the modal visible and swap the form for a success panel (non-destructive:
+    // closeOrderModal() / restoreOrderForm() puts the form back).
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    const form = this.elements.orderForm;
+    if (form) form.style.display = 'none';
+    const header = modal.querySelector('.modal-header');
+    if (header) header.style.display = 'none';
+
+    modal.querySelector('.modal-success')?.remove();
+
+    const safeOrderId = this.escapeHtml(orderId);
+    const panel = document.createElement('div');
+    panel.className = 'modal-success';
+    panel.setAttribute('role', 'status');
+    panel.innerHTML = `
+        <div class="modal-success-icon" aria-hidden="true">✓</div>
+        <h2>Спасибо за заявку!</h2>
+        <p class="modal-success-lead">${safeOrderId ? `Ваш заказ № ${safeOrderId} принят в работу` : 'Ваш заказ принят в работу'}</p>
+        <p class="modal-success-sub">Мы свяжемся с вами в ближайшее время для уточнения деталей.</p>
+        <button class="btn btn-primary btn-full" type="button" onclick="location.reload()">
+            Создать новый проект
+        </button>
     `;
+    modal.appendChild(panel);
 };
 
 // ============================================
@@ -2435,14 +2494,21 @@ App.showThankYouMessage = function(orderId) {
 
 /**
  */
-App.showToast = function(message, type = 'info') {
-    if (this.config.suppressPopups) {
+App.showToast = function(message, type = 'info', options = {}) {
+    // `critical` messages (order/request outcomes, hard errors) are always shown,
+    // even when ambient popups are suppressed for the lighter interactions.
+    const critical = options === true || options?.critical === true;
+
+    if (!critical && (this.config.suppressPopups || !this.config.notifications)) {
         this.clearTransientPanels();
         return;
     }
 
-    if (!this.config.notifications) return;
-    if (!this.elements.toastContainer) return;
+    const container = this.elements.toastContainer;
+    if (!container) return;
+
+    // clearTransientPanels() may have hidden the container — make sure it can show again.
+    container.style.display = '';
 
     const icons = {
         success: '✓',
@@ -2453,20 +2519,37 @@ App.showToast = function(message, type = 'info') {
 
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <span class="toast-icon">${icons[type]}</span>
-        <div class="toast-content">
-            <div class="toast-message">${message}</div>
-        </div>
-        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-    `;
+    toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
 
-    this.elements.toastContainer.appendChild(toast);
+    const icon = document.createElement('span');
+    icon.className = 'toast-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = icons[type] || icons.info;
 
-    setTimeout(() => {
+    const content = document.createElement('div');
+    content.className = 'toast-content';
+    const messageEl = document.createElement('div');
+    messageEl.className = 'toast-message';
+    // textContent (not innerHTML) — never interpolate server/user strings into markup.
+    messageEl.textContent = String(message ?? '');
+    content.appendChild(messageEl);
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'toast-close';
+    closeButton.setAttribute('aria-label', 'Закрыть уведомление');
+    closeButton.textContent = '×';
+
+    const dismiss = () => {
         toast.style.animation = 'slideInRight 0.3s ease reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
+        window.setTimeout(() => toast.remove(), 280);
+    };
+    closeButton.addEventListener('click', dismiss);
+
+    toast.append(icon, content, closeButton);
+    container.appendChild(toast);
+
+    window.setTimeout(dismiss, 4500);
 };
 
 // ============================================
