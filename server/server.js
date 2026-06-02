@@ -122,11 +122,14 @@ const telegramBot = new TelegramBot({
     enabled: process.env.TELEGRAM_ENABLED === 'true'
 });
 
+const { createAdminGuard } = require('./middleware/admin-auth');
+const adminGuard = createAdminGuard();
+
 const ordersRouter = require('./routes/orders');
 const materialsRouter = require('./routes/materials');
 
-app.use('/api/orders', ordersRouter({ db, emailService, telegramBot }));
-app.use('/api/materials', materialsRouter({ db }));
+app.use('/api/orders', ordersRouter({ db, emailService, telegramBot, adminGuard }));
+app.use('/api/materials', materialsRouter({ db, adminGuard }));
 
 app.get('/api/hero-slides', (req, res) => {
     try {
@@ -321,7 +324,7 @@ app.post('/api/request-call', async (req, res) => {
     }
 });
 
-app.get('/api/statistics', (req, res) => {
+app.get('/api/statistics', adminGuard, (req, res) => {
     try {
         const stats = db.getStatistics();
         return res.json({

@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { MaterialIntelligenceBot } = require('../utils/material-intelligence-bot');
 const { buildMaterialAdaptationPayload } = require('../plugins/material-adaptation-plugin');
+const { createAdminGuard } = require('../middleware/admin-auth');
 const logger = require('../utils/logger');
 const { cleanId, cleanNumber, cleanObject, cleanString } = require('../utils/validation');
 
@@ -20,6 +21,7 @@ const ASSET_OVERRIDES_CACHE_MS = 60000;
 
 module.exports = function createMaterialsRouter(deps) {
     const { db } = deps;
+    const adminGuard = deps.adminGuard || createAdminGuard();
     const materialsRoot = path.join(process.cwd(), 'public', 'assets', 'pbr');
     const intelligenceBot = new MaterialIntelligenceBot({ projectRoot: process.cwd() });
     let assetPayloadCache = {
@@ -219,7 +221,7 @@ module.exports = function createMaterialsRouter(deps) {
     });
 
     // POST /api/materials
-    router.post('/', (req, res) => {
+    router.post('/', adminGuard, (req, res) => {
         try {
             const materialData = cleanObject(req.body);
             const requiredFields = ['name', 'category', 'price', 'unit'];
@@ -257,7 +259,7 @@ module.exports = function createMaterialsRouter(deps) {
     });
 
     // PUT /api/materials/:category/:id
-    router.put('/:category/:id', (req, res) => {
+    router.put('/:category/:id', adminGuard, (req, res) => {
         try {
             const category = cleanId(req.params.category);
             const id = cleanId(req.params.id);
@@ -293,7 +295,7 @@ module.exports = function createMaterialsRouter(deps) {
     });
 
     // DELETE /api/materials/:category/:id
-    router.delete('/:category/:id', (req, res) => {
+    router.delete('/:category/:id', adminGuard, (req, res) => {
         try {
             const category = cleanId(req.params.category);
             const id = cleanId(req.params.id);

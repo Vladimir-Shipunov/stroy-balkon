@@ -13,9 +13,13 @@ const {
     cleanString
 } = require('../utils/validation');
 
+const { createAdminGuard } = require('../middleware/admin-auth');
+
 module.exports = function createOrdersRouter(deps) {
     const router = express.Router();
     const { db, emailService, telegramBot } = deps;
+    // Self-sufficient if a guard is not injected — fail closed by default.
+    const adminGuard = deps.adminGuard || createAdminGuard();
     const validStatuses = ['new', 'processing', 'confirmed', 'in_work', 'completed', 'cancelled'];
 
     router.post('/', async (req, res) => {
@@ -110,7 +114,7 @@ module.exports = function createOrdersRouter(deps) {
         }
     });
 
-    router.get('/', (req, res) => {
+    router.get('/', adminGuard, (req, res) => {
         try {
             const page = cleanInteger(req.query.page, { min: 1, max: 10000, fallback: 1 });
             const limit = cleanInteger(req.query.limit, { min: 1, max: 100, fallback: 20 });
@@ -136,7 +140,7 @@ module.exports = function createOrdersRouter(deps) {
         }
     });
 
-    router.get('/client/:phone', (req, res) => {
+    router.get('/client/:phone', adminGuard, (req, res) => {
         try {
             const phone = cleanPhone(req.params.phone);
             return res.json({
@@ -152,21 +156,21 @@ module.exports = function createOrdersRouter(deps) {
         }
     });
 
-    router.post('/export/pdf', (req, res) => {
+    router.post('/export/pdf', adminGuard, (req, res) => {
         return res.status(501).json({
             success: false,
             error: 'PDF export is not implemented yet'
         });
     });
 
-    router.post('/export/excel', (req, res) => {
+    router.post('/export/excel', adminGuard, (req, res) => {
         return res.status(501).json({
             success: false,
             error: 'Excel export is not implemented yet'
         });
     });
 
-    router.get('/:id', (req, res) => {
+    router.get('/:id', adminGuard, (req, res) => {
         try {
             const orderId = cleanId(req.params.id);
             const order = db.getOrderById(orderId);
@@ -191,7 +195,7 @@ module.exports = function createOrdersRouter(deps) {
         }
     });
 
-    router.post('/:id/cancel', (req, res) => {
+    router.post('/:id/cancel', adminGuard, (req, res) => {
         try {
             const orderId = cleanId(req.params.id);
             const reason = cleanString(req.body?.reason, { max: 500 });
@@ -217,7 +221,7 @@ module.exports = function createOrdersRouter(deps) {
         }
     });
 
-    router.post('/:id/status', (req, res) => {
+    router.post('/:id/status', adminGuard, (req, res) => {
         try {
             const orderId = cleanId(req.params.id);
             const status = cleanString(req.body?.status, { max: 40 });
