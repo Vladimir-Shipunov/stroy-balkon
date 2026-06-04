@@ -1692,13 +1692,6 @@ const balconyBuilder = new BalconyBuilder();
 
 // ============================================
 // ============================================
-(function initBuilder() {
-    console.log('??? BalconyBuilder initialized');
-    console.log('Initial dimensions:', balconyBuilder.dimensions);
-})();
-
-// ============================================
-// ============================================
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { BalconyBuilder, balconyBuilder };
 }

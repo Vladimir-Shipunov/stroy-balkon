@@ -1,0 +1,229 @@
+/* ============================================================
+   LAYOUT V2 — Viewport-locked configurator
+   This file OWNS all structural layout for the configurator.
+   No other file should declare position/display/height/overflow/
+   flex/grid/align-self/width on:
+     .app-shell, .app-workspace, .viewer-panel,
+     .left-panel, .right-panel, .app-bottom-bar, .tab-bar
+
+   SCOPE NOTE (per product decision "lock configurator section only"):
+   We DO NOT lock the whole document (no html/body overflow:hidden).
+   The landing page (hero, gallery, contacts, footer) still scrolls.
+   Only the configurator becomes a 100dvh viewport-locked zone whose
+   3D viewer stays put while the side panels scroll INTERNALLY.
+   ============================================================ */
+
+:root {
+  /* Top offset reserved for the fixed marketing header. Matched to
+     redesign.css's `scroll-padding-top: 96px` so an anchor/scroll to the
+     configurator lands it just below the header and the whole shell
+     (viewer + panels + bottom bar) fits in one viewport. */
+  --app-header-h: 96px;
+}
+
+/* ── APP SHELL ───────────────────────────────────────────────
+   The configurator section's viewport-locked workspace.
+   Lives inside the normally-scrolling page; sized to fit one viewport
+   BELOW the fixed header (hence the calc, not a bare 100dvh). */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--app-header-h));   /* fallback */
+  height: calc(100dvh - var(--app-header-h));  /* fit below the fixed header */
+  box-sizing: border-box;
+  position: relative;   /* positioning context for the scoped #pageLoader */
+}
+
+/* ── WORKSPACE (the 3 columns) ───────────────────────────────── */
+.app-workspace {
+  flex: 1 1 0;
+  min-height: 0;        /* critical — lets flex children shrink + scroll */
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ──────────────────────────────────────────────── */
+.left-panel {
+  flex: 0 0 320px;
+  align-self: stretch;  /* fill workspace height (defeat legacy align-self:start) */
+  position: relative;   /* defeat legacy position:sticky */
+  min-height: 0;
+  max-height: none;     /* defeat legacy breakpoint max-heights */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+/* ── 3D VIEWER ───────────────────────────────────────────────── */
+.viewer-panel {
+  flex: 1 1 0;
+  align-self: stretch;     /* fill workspace height — defeat legacy .config-main align-self:start */
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;            /* let the visualizer wrapper stretch to fill */
+  flex-direction: column;
+}
+
+/* Make the Three.js host chain fill the viewer (higher specificity than
+   any single-class legacy rule, so we win without editing every file). */
+.viewer-panel .visualizer-wrapper {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.viewer-panel .visualizer-header,
+.viewer-panel .visualizer-secondary-actions {
+  flex: 0 0 auto;
+}
+.viewer-panel .visualizer-container {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: auto;       /* drop legacy 16/9 — fill the flex cell */
+}
+.viewer-panel .balcony-3d-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── RIGHT PANEL ─────────────────────────────────────────────── */
+.right-panel {
+  flex: 0 0 320px;
+  align-self: stretch;  /* fill workspace height */
+  position: relative;   /* defeat legacy position:relative/top + overflow */
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+/* ── BOTTOM BAR ──────────────────────────────────────────────── */
+.app-bottom-bar {
+  flex: 0 0 64px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  background: var(--surface, #ffffff);
+  border-top: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+}
+.bottom-bar-summary {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+.bottom-bar-summary .summary-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary, #66707c);
+}
+.bottom-bar-summary .summary-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text, #1a1a1a);
+}
+.btn-order-main {
+  flex: 0 0 auto;
+  padding: 0.7rem 1.4rem;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6f5a2f 0%, #b6955d 100%);
+  transition: filter 0.15s ease;
+}
+.btn-order-main:hover { filter: brightness(1.06); }
+
+/* ── TAB BAR (tablet/mobile only) ────────────────────────────── */
+.tab-bar,
+.tab-panel { display: none; }   /* hidden on desktop */
+
+.vtab-btn {
+  flex: 0 0 auto;
+  padding: 0 1rem;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--text-secondary, #66707c);
+}
+.vtab-btn.active {
+  color: var(--gold-700, #6f5a2f);
+  box-shadow: inset 0 -2px 0 currentColor;
+}
+
+/* ── Legacy floating summary FAB replaced by .app-bottom-bar ──── */
+.summary-panel,
+.summary-panel.compact { display: none; }
+
+/* ── TABLET (768px–1023px) ───────────────────────────────────── */
+@media (max-width: 1023px) {
+  .app-workspace {
+    flex-direction: column;
+  }
+
+  /* flex order forces: viewer → tab-bar → active panel, regardless of
+     DOM position of the panels. */
+  .viewer-panel { order: 0; }
+  .tab-bar { order: 1; }
+  .left-panel,
+  .right-panel { order: 2; }
+
+  .left-panel,
+  .right-panel {
+    display: none;        /* only the active section shows */
+    flex: none;
+    width: 100%;
+    overflow-y: auto;
+  }
+  .left-panel.active,
+  .right-panel.active {
+    display: block;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .viewer-panel {
+    flex: 0 0 45vh;
+  }
+
+  .tab-bar {
+    flex: 0 0 48px;
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    background: var(--surface, #ffffff);
+    border-top: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+    border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+}
+
+/* ── MOBILE (< 768px) ────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .viewer-panel {
+    flex: 0 0 40vh;
+  }
+
+  .app-bottom-bar {
+    flex: 0 0 60px;
+  }
+}

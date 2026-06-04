@@ -1,0 +1,123 @@
+/* ============================================================
+   DESIGN SYSTEM — token vocabulary (Phase 2)
+   ------------------------------------------------------------
+   Brand decision: "Keep gold brand, adopt token structure."
+
+   redesign.css is already a complete, gold-branded token system
+   (--gold-*/--stone-*/--plum-*, --sp-*, --radius-*, theme-aware
+   --shadow-*, --ease-*/--dur-*, full --text-* scale, surfaces,
+   text, borders). This file therefore does NOT re-declare those
+   scale tokens — doing so would override redesign.css's values
+   (e.g. break the theme-aware shadows / change radii) and that is
+   exactly the collision we set out to avoid.
+
+   Instead this is a BRIDGE: it introduces the new token NAMES the
+   Phase 2 spec uses (--clr-*, --surface-page, --text-primary, …)
+   and ALIASES them to the existing gold brand tokens. Component
+   CSS written against the spec vocabulary then resolves to the
+   gold brand, and — because the aliases point at base tokens that
+   redesign.css flips per [data-theme] — dark mode follows
+   automatically with no dark block here.
+
+   Anything that already exists with a brand-correct value
+   (--surface-raised, --surface-overlay, --text-secondary,
+   --text-disabled, --text-inverse, --border-subtle, --border-strong,
+   --font-display, --font-mono, the --text-*/--sp-*/--radius-*/
+   --shadow-*/--ease-*/--dur-* scales) is intentionally inherited
+   from redesign.css and not repeated here.
+   ============================================================ */
+
+:root {
+  /* ── Brand colour ramp → gold ───────────────────────────────
+     Spec calls this --clr-primary-*; brand ramp is --gold-*. */
+  --clr-primary-50:  var(--gold-50);
+  --clr-primary-100: var(--gold-100);
+  --clr-primary-200: var(--gold-200);
+  --clr-primary-300: var(--gold-300);
+  --clr-primary-400: var(--gold-400);
+  --clr-primary-500: var(--gold-500);   /* brand */
+  --clr-primary-600: var(--gold-600);
+  --clr-primary-700: var(--gold-700);
+  --clr-primary-800: var(--gold-800);
+  --clr-primary-900: var(--gold-900);
+
+  /* ── Neutrals → warm stone scale ────────────────────────────
+     (in-between steps 150/850/950 collapse to nearest stone) */
+  --clr-neutral-0:   var(--stone-0);
+  --clr-neutral-50:  var(--stone-50);
+  --clr-neutral-100: var(--stone-100);
+  --clr-neutral-150: var(--stone-200);
+  --clr-neutral-200: var(--stone-200);
+  --clr-neutral-300: var(--stone-300);
+  --clr-neutral-400: var(--stone-400);
+  --clr-neutral-500: var(--stone-500);
+  --clr-neutral-600: var(--stone-600);
+  --clr-neutral-700: var(--stone-700);
+  --clr-neutral-800: var(--stone-800);
+  --clr-neutral-850: var(--stone-800);
+  --clr-neutral-900: var(--stone-900);
+  --clr-neutral-950: var(--stone-900);
+
+  /* ── Semantic ───────────────────────────────────────────────
+     Aliased to brand semantic tokens (theme-aware via redesign). */
+  --clr-success:    var(--success);
+  --clr-success-bg: var(--success-bg);
+  --clr-warning:    var(--warning);
+  --clr-warning-bg: var(--warning-bg);
+  --clr-error:      var(--error);
+  --clr-error-bg:   var(--error-bg);
+  --clr-info:       var(--info);
+  --clr-info-bg:    var(--info-bg);
+
+  /* ── Surfaces ───────────────────────────────────────────────
+     New names mapped onto the layered brand surfaces.
+     (--surface-raised / --surface-overlay already exist.) */
+  --surface-page:  var(--bg);
+  --surface-base:  var(--surface);
+  --surface-panel: var(--surface-sunken);
+
+  /* ── Text ───────────────────────────────────────────────────
+     (--text-secondary / --text-disabled / --text-inverse exist.) */
+  --text-primary:  var(--text);
+  --text-tertiary: var(--text-muted);
+  --text-accent:   var(--gold-600);
+
+  /* ── Borders ────────────────────────────────────────────────
+     (--border-subtle / --border-strong exist.) */
+  --border-default: var(--border);
+  --border-focus:   var(--gold-500);
+
+  /* ── Typography ─────────────────────────────────────────────
+     Brand keeps DM Sans (body) + Playfair Display (headings).
+     We do NOT load Inter — --font-sans aliases the brand body font.
+     The --text-* size scale and --font-display/--font-mono are
+     inherited from redesign.css. */
+  --font-sans: var(--font-family);
+
+  /* ── Z-index ────────────────────────────────────────────────
+     The spec's --z-base/raised/dropdown/sticky/overlay/modal/toast/
+     tooltip vocabulary ALREADY exists in redesign.css with the
+     established (higher) stacking values — see redesign.css:244-252.
+     Re-declaring them here with the spec's low values (100–600)
+     would load last and silently lower modal/toast/tooltip stacking,
+     so we inherit the existing z-scale instead of overriding it. */
+}
+
+/* ============================================================
+   GLOBAL BASE
+   Effectively no-ops against the current brand (DM Sans body +
+   warm page background already apply), kept for spec parity and
+   so component CSS can rely on them. Heading rules that set
+   --font-display win over this universal rule by specificity, so
+   Playfair headings are preserved.
+   ============================================================ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { font-family: var(--font-sans); }
+
+body {
+  background: var(--surface-page);
+  color: var(--text-primary);
+}

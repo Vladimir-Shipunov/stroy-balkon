@@ -822,22 +822,24 @@ rect.brand-logo-gold {
     margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
 }
 
+/* LAYOUT-V2-DISABLED: legacy grid tuning (selector renamed to .app-workspace; layout owned by layout-v2.css)
 .configurator-wrapper {
     align-items: start;
     gap: clamp(1rem, 2vw, 1.6rem);
 }
+*/
 
 .config-main,
 .visualizer-wrapper {
-    align-self: start;
-    min-width: 0;
-    max-width: 100%;
+    /* LAYOUT-V2-DISABLED: align-self: start; */
+    /* LAYOUT-V2-DISABLED: min-width: 0; */
+    /* LAYOUT-V2-DISABLED: max-width: 100%; */
 }
 
 .visualizer-wrapper {
-    width: 100%;
+    /* LAYOUT-V2-DISABLED: width: 100%; */
     border-radius: 30px;
-    overflow: hidden;
+    /* LAYOUT-V2-DISABLED: overflow: hidden; */
     background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(251, 246, 234, 0.96));
     border: 1px solid rgba(185, 131, 31, 0.2);
@@ -869,10 +871,10 @@ rect.brand-logo-gold {
 }
 
 .visualizer-container {
-    min-width: 0;
-    height: clamp(420px, 36vw, 560px);
-    min-height: 0;
-    max-height: none;
+    /* LAYOUT-V2-DISABLED: min-width: 0; */
+    /* LAYOUT-V2-DISABLED: height: clamp(420px, 36vw, 560px); */
+    /* LAYOUT-V2-DISABLED: min-height: 0; */
+    /* LAYOUT-V2-DISABLED: max-height: none; */
     background: linear-gradient(180deg, #e7eef3 0%, #d9e7ec 100%);
 }
 
@@ -950,8 +952,8 @@ rect.brand-logo-gold {
 .config-sidebar-right {
     border-radius: 30px;
     padding: clamp(1rem, 1.6vw, 1.45rem);
-    position: relative;
-    top: auto;
+    /* LAYOUT-V2-DISABLED: position: relative; */
+    /* LAYOUT-V2-DISABLED: top: auto; */
 }
 
 .config-sidebar-right::before {

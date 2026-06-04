@@ -23,9 +23,35 @@
     <link rel="stylesheet" href="/css/config.css">
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/theme.css">
-    
+    <!-- Redesign system (authoritative layer — loaded last) -->
+    <link rel="stylesheet" href="/css/redesign.css">
+    <!-- Layout V2 — owns all structural layout -->
+    <link rel="stylesheet" href="/css/layout-v2.css">
+    <!-- Design system — token vocabulary bridge (gold brand) + base -->
+    <link rel="stylesheet" href="/css/design-system.css">
+    <!-- Components V2 — full component skin (gold brand), loaded last -->
+    <link rel="stylesheet" href="/css/components-v2.css">
+
+    <!-- Тема: применяем выбор до отрисовки, чтобы не было мигания -->
+    <script>
+        (function () {
+            document.documentElement.classList.add('js');
+            try {
+                var saved = localStorage.getItem('balcony-theme');
+                var dark = saved
+                    ? saved === 'dark'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
 </head>
 <body>
+    <a href="#configurator" class="skip-link">Перейти к конфигуратору</a>
+    <div class="scroll-progress" aria-hidden="true"></div>
+
     <!-- ============================================
          ШАПКА САЙТА
     ============================================ -->
@@ -85,14 +111,21 @@
             
             <div class="header-actions">
                 <a href="tel:+79088360606" class="phone-link">
-                    <span class="phone-icon">📞</span>
+                    <span class="phone-icon" aria-hidden="true">
+                        <svg class="ico" viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.5.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .56 3.5 1 1 0 0 1-.24 1z"/></svg>
+                    </span>
                     <span class="phone-number">+7 (908) 836-06-06</span>
                 </a>
                 <button class="btn btn-primary btn-request" onclick="openRequestModal()">
                     Заказать звонок
                 </button>
             </div>
-            
+
+            <button class="theme-toggle" type="button" aria-label="Переключить тему" aria-pressed="false">
+                <svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.2M19.8 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+                <svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+            </button>
+
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="navMenu">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -104,7 +137,7 @@
     <!-- ============================================
          ГЛАВНЫЙ ЭКРАН
     ============================================ -->
-    <section class="hero" id="hero">
+    <section class="hero hero-section" id="hero">
         <div class="hero-bg">
             <div class="hero-slide hero-slide-a is-active"></div>
             <div class="hero-slide hero-slide-b"></div>
@@ -114,9 +147,11 @@
         
         <div class="hero-content">
             <div class="container">
+                <span class="hero-eyebrow">Балконы под ключ в Москве</span>
+
                 <h2 class="hero-title">
                     Остекление и отделка балконов и лоджий
-                    <span class="hero-title-line">«под ключ» в Москве и МО</span>
+                    <br><em>«под ключ»</em> в Москве и МО
                 </h2>
                 
                 <p class="hero-subtitle">
@@ -124,24 +159,64 @@
                     остеклением, утеплением и стильным дизайном
                 </p>
                 
-                <div class="hero-buttons">
-                    <button class="btn btn-secondary btn-large hero-btn-light" onclick="openRequestModal()">
-                        Вызвать мастера бесплатно
+                <div class="hero-buttons hero-actions">
+                    <button class="hero-btn-primary" type="button" onclick="scrollToConfigurator()">
+                        Рассчитать стоимость
                     </button>
-                    <button class="btn btn-accent btn-large hero-btn-gold" onclick="openRequestModal()">
-                        Получить теплый пол в подарок
-                    </button>
+                    <a class="hero-btn-ghost" href="#works-gallery">
+                        Смотреть работы
+                    </a>
+                </div>
+
+                <div class="hero-badges">
+                    <span class="hero-badge"><svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Работаем с 2008</span>
+                    <span class="hero-badge"><svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Бесплатный замер</span>
+                    <span class="hero-badge"><svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Гарантия 5 лет</span>
+                    <span class="hero-badge"><svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>3D проект за 1 день</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-scroll-indicator" aria-hidden="true">
+            <span>Листайте вниз</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+    </section>
+
+    <!-- ============================================
+         СТАТИСТИКА / ДОВЕРИЕ
+    ============================================ -->
+    <section class="stats-bar">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">1 200+</span>
+                    <span class="stat-label">выполненных проектов</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15 лет</span>
+                    <span class="stat-label">на рынке Москвы</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">4.9 ★</span>
+                    <span class="stat-label">средняя оценка клиентов</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3 дня</span>
+                    <span class="stat-label">средний срок монтажа</span>
                 </div>
             </div>
         </div>
     </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
 
     <!-- ============================================
          КОНФИГУРАТОР БАЛКОНА
     ============================================ -->
     <section class="configurator-section" id="configurator">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" data-reveal>
                 <span class="section-badge">Онлайн конфигуратор</span>
                 <h2 class="section-title">Спроектируйте свой балкон</h2>
                 <p class="section-subtitle">
@@ -149,22 +224,37 @@
                     Все изменения отображаются в реальном времени в 3D.
                 </p>
             </div>
+        </div>
 
-            <div class="configurator-wrapper">
+        <!-- LAYOUT-V2: viewport-locked workspace shell (owns structural layout) -->
+        <div class="app-shell">
+            <!-- Scoped boot loader: covers only the configurator (see ui-enhance.js) -->
+            <div id="pageLoader" class="page-loader" role="status" aria-live="polite">
+                <div class="loader-content">
+                    <div class="loader-logo">БАЛКОН-МСК</div>
+                    <div class="loader-bar"><div class="loader-fill"></div></div>
+                    <div class="loader-text">Загружаем конфигуратор…</div>
+                </div>
+            </div>
+
+            <div class="app-workspace">
                 <!-- ============================================
                      ЛЕВАЯ ПАНЕЛЬ - ПАРАМЕТРЫ БАЛКОНА
                 ============================================ -->
-                <aside class="config-sidebar config-sidebar-left">
+                <aside class="config-sidebar config-sidebar-left left-panel">
                     <div class="sidebar-header">
-                        <h3><span aria-hidden="true">📐</span> Параметры балкона</h3>
+                        <h3>Параметры балкона</h3>
                         <button class="btn-reset" onclick="resetConfigurator()" title="Сбросить все настройки">
-                            <span aria-hidden="true">🔄</span> Сброс
+                            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.3M3 4.5V9h4.5"/></svg>
+                            Сброс
                         </button>
                     </div>
 
                     <div class="config-block">
                         <div class="config-block-header">
-                            <span class="config-block-icon">📏</span>
+                            <span class="config-block-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><path d="M21 3 3 21M3 8V3h5M21 16v5h-5M7.5 7.5l2 2M12 12l2 2"/></svg>
+                            </span>
                             <h4>Размеры</h4>
                         </div>
                         
@@ -235,7 +325,9 @@
 
                     <div class="config-block">
                         <div class="config-block-header">
-                            <span class="config-block-icon">◻️</span>
+                            <span class="config-block-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M3.5 10h17"/></svg>
+                            </span>
                             <h4>Форма балкона</h4>
                         </div>
                         
@@ -295,7 +387,9 @@
 
                     <div class="config-block">
                         <div class="config-block-header">
-                            <span class="config-block-icon">🪟</span>
+                            <span class="config-block-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M12 3.5v17M4 12h16"/></svg>
+                            </span>
                             <h4>Остекление</h4>
                         </div>
                         
@@ -354,7 +448,9 @@
 
                     <div class="config-block">
                         <div class="config-block-header">
-                            <span class="config-block-icon">🔧</span>
+                            <span class="config-block-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.3-.3-.3-2.3z"/></svg>
+                            </span>
                             <h4>Дополнительно</h4>
                         </div>
                         
@@ -389,22 +485,25 @@
                 <!-- ============================================
                      ЦЕНТРАЛЬНАЯ ЧАСТЬ - 3D ВИЗУАЛИЗАТОР
                 ============================================ -->
-                <main class="config-main">
+                <main class="config-main viewer-panel">
                     <div class="visualizer-wrapper">
                         <div class="visualizer-header">
-                            <h3>🎨 3D Визуализация</h3>
+                            <h3>
+                                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;margin-right:.5rem"><path d="M12 2.6 21 7.3v9.4L12 21.4 3 16.7V7.3z"/><path d="M3 7.3 12 12l9-4.7M12 12v9.4"/></svg>
+                                3D Визуализация
+                            </h3>
                             <div class="visualizer-actions">
-                                <button class="btn-icon" onclick="resetVisualizerState()" title="Сбросить изменения">
-                                    ↺
+                                <button class="btn-icon" onclick="resetVisualizerState()" title="Сбросить изменения" aria-label="Сбросить изменения">
+                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.3M3 4.5V9h4.5"/></svg>
                                 </button>
-                                <button class="btn-icon" onclick="toggleFullscreen()" title="На весь экран">
-                                    ⛶
+                                <button class="btn-icon" onclick="toggleFullscreen()" title="На весь экран" aria-label="Развернуть на весь экран">
+                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1v4M16 3h4a1 1 0 0 1 1 1v4M8 21H4a1 1 0 0 1-1-1v-4M16 21h4a1 1 0 0 0 1-1v-4"/></svg>
                                 </button>
-                                <button class="btn-icon" onclick="takeScreenshot()" title="Сделать скриншот">
-                                    📷
+                                <button class="btn-icon" onclick="takeScreenshot()" title="Сделать скриншот" aria-label="Сделать скриншот">
+                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg>
                                 </button>
-                                <button class="btn-icon" onclick="resetCamera()" title="Сбросить камеру">
-                                    🔄
+                                <button class="btn-icon" onclick="resetCamera()" title="Сбросить камеру" aria-label="Сбросить положение камеры">
+                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5V2M12 22v-2.5M4.5 12H2M22 12h-2.5"/><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.6" class="ico-fill"/></svg>
                                 </button>
                             </div>
                         </div>
@@ -427,7 +526,9 @@
                         </div>
 
                         <div class="placement-mode-indicator" id="placementModeIndicator">
-                            <span class="mode-icon">🎯</span>
+                            <span class="mode-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                            </span>
                             <span class="mode-text">Режим размещения: <strong id="placementModeName"></strong></span>
                             <span class="mode-hint">Кликните на поверхность для размещения</span>
                             <button class="mode-cancel" onclick="cancelPlacementMode()">✕</button>
@@ -436,21 +537,36 @@
 
                 </main>
 
+                <!-- LAYOUT-V2: tablet/mobile section switcher (hidden on desktop) -->
+                <nav class="tab-bar" id="vtabBar" aria-label="Разделы конфигуратора">
+                    <button class="vtab-btn active" type="button" data-vtab="dimensions">Размеры</button>
+                    <button class="vtab-btn" type="button" data-vtab="materials">Материалы</button>
+                    <button class="vtab-btn" type="button" data-vtab="furniture">Мебель</button>
+                    <button class="vtab-btn" type="button" data-vtab="lighting">Освещение</button>
+                    <button class="vtab-btn" type="button" data-vtab="extras">Доп. опции</button>
+                </nav>
+
                 <!-- ============================================
                      ПРАВАЯ ПАНЕЛЬ - МАТЕРИАЛЫ И ЦВЕТА
                 ============================================ -->
-                <aside class="config-sidebar config-sidebar-right">
+                <aside class="config-sidebar config-sidebar-right right-panel">
                     <div class="sidebar-tabs">
                         <button class="tab-btn active" data-tab="materials">
-                            <span class="tab-icon">🧱</span>
+                            <span class="tab-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><path d="M12 2.6 21 7l-9 4.4L3 7z"/><path d="M3 12l9 4.4L21 12M3 16.6 12 21l9-4.4"/></svg>
+                            </span>
                             <span>Материалы</span>
                         </button>
                         <button class="tab-btn" data-tab="furniture">
-                            <span class="tab-icon">🪑</span>
+                            <span class="tab-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><path d="M5 11V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M4 11h16a1 1 0 0 1 1 1v4H3v-4a1 1 0 0 1 1-1zM5 16v3M19 16v3"/></svg>
+                            </span>
                             <span>Мебель</span>
                         </button>
                         <button class="tab-btn" data-tab="lighting">
-                            <span class="tab-icon">💡</span>
+                            <span class="tab-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.5.4.5 1 .5 1.6V16h6v-.5c0-.6 0-1.2.5-1.6A6 6 0 0 0 12 3z"/></svg>
+                            </span>
                             <span>Свет</span>
                         </button>
                     </div>
@@ -473,6 +589,10 @@
                                 <option value="windowsill">Подоконник</option>
                                 <option value="sill">Отлив</option>
                             </select>
+                            <span class="wall-link-indicator is-linked" id="wallLinkIndicator">
+                                <span class="wall-link-icon" aria-hidden="true">🔗</span>
+                                <span class="wall-link-text">Все стены связаны</span>
+                            </span>
                         </div>
 
                         <div class="materials-categories">
@@ -518,7 +638,9 @@
                         </div>
 
                         <div class="furniture-placement-hint">
-                            <span class="hint-icon">💡</span>
+                            <span class="hint-icon" aria-hidden="true">
+                                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+                            </span>
                             <span>Выберите мебель и кликните на пол в 3D для размещения</span>
                         </div>
 
@@ -591,13 +713,24 @@
                         </div>
                     </div>
                 </aside>
+            </div><!-- /.app-workspace -->
+
+            <!-- LAYOUT-V2: persistent bottom action bar -->
+            <div class="app-bottom-bar">
+                <div class="bottom-bar-summary">
+                    <span class="summary-label">Предварительная стоимость:</span>
+                    <span class="summary-price" id="bottomBarPrice">по замеру</span>
+                </div>
+                <button class="btn-order-main" id="bottomBarOrderBtn" type="button" onclick="openRequestModal()">
+                    Заказать замер
+                </button>
             </div>
-        </div>
+        </div><!-- /.app-shell -->
     </section>
 
     <section class="config-gallery-section" id="works-gallery">
         <div class="container">
-            <div class="config-gallery-panel" aria-labelledby="configGalleryTitle">
+            <div class="config-gallery-panel" aria-labelledby="configGalleryTitle" data-reveal>
                 <div class="config-gallery-header">
                     <div>
                         <span class="config-gallery-kicker">Галерея</span>
@@ -616,12 +749,13 @@
     ============================================ -->
     <div class="summary-panel compact" id="summaryPanel">
         <button class="summary-fab" id="summaryFab" type="button" aria-label="Открыть панель действий">
-            ☎
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.5.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .56 3.5 1 1 0 0 1-.24 1z"/></svg>
         </button>
         <div class="summary-content summary-content-compact">
             <div class="summary-actions">
                 <button class="btn btn-secondary btn-full" onclick="saveProject()">
-                    💾 Сохранить проект
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5zM8 3v5h7M8 21v-6h8v6"/></svg>
+                    Сохранить проект
                 </button>
                 <button class="btn btn-primary btn-full" onclick="openRequestModal()">
                     Заказать замер
@@ -638,7 +772,7 @@
             <button class="modal-close" onclick="closeOrderModal()" aria-label="Закрыть окно заказа">✕</button>
 
             <div class="modal-header">
-                <h2 id="orderModalTitle"><span aria-hidden="true">📋</span> Оформление заказа</h2>
+                <h2 id="orderModalTitle">Оформление заказа</h2>
                 <p>Заполните форму и мы свяжемся с вами в течение 15 минут</p>
             </div>
 
@@ -753,7 +887,7 @@
             <button class="modal-close" onclick="closeRequestModal()" aria-label="Закрыть окно обратного звонка">✕</button>
 
             <div class="modal-header">
-                <h2 id="requestModalTitle"><span aria-hidden="true">📞</span> Заказать звонок</h2>
+                <h2 id="requestModalTitle">Заказать звонок</h2>
                 <p>Оставьте номер и мы перезвоним вам в течение 5 минут</p>
             </div>
 
@@ -784,7 +918,7 @@
     <!-- ============================================
          ФУТЕР
     ============================================ -->
-    <footer class="footer" id="contacts">
+    <footer class="footer site-footer" id="contacts">
         <div class="container">
             <div class="footer-top">
                 <div class="footer-brand">
@@ -808,19 +942,19 @@
                     <h4>Контакты</h4>
                     <ul class="footer-contacts">
                         <li>
-                            <span class="contact-icon">☎</span>
+                            <span class="contact-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.5.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .56 3.5 1 1 0 0 1-.24 1z"/></svg></span>
                             <a href="tel:+79088360606">+7 (908) 836-06-06</a>
                         </li>
                         <li>
-                            <span class="contact-icon">☎</span>
+                            <span class="contact-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.5.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .56 3.5 1 1 0 0 1-.24 1z"/></svg></span>
                             <a href="tel:+79099931217">+7 (909) 993-12-17</a>
                         </li>
                         <li>
-                            <span class="contact-icon">✉</span>
+                            <span class="contact-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
                             <a href="mailto:kurgankk@mail.ru">kurgankk@mail.ru</a>
                         </li>
                         <li>
-                            <span class="contact-icon">⌖</span>
+                            <span class="contact-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.5-6.5-10.5A6.5 6.5 0 0 1 12 4a6.5 6.5 0 0 1 6.5 6.5C18.5 15.5 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/></svg></span>
                             <span>Москва, ул. Дорожная 3к2</span>
                         </li>
                     </ul>
@@ -888,6 +1022,11 @@
         </div>
     </footer>
 
+    <!-- Наверх -->
+    <button class="back-to-top" type="button" aria-label="Наверх">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+
     <!-- ============================================
          СКРИПТЫ
     ============================================ -->
@@ -916,6 +1055,8 @@
     <script defer src="/js/balcony-builder.js"></script>
     <script defer src="/js/visualizer.js"></script>
     <script defer src="/js/order-handler.js"></script>
+    <script defer src="/js/price-calculator.js"></script>
     <script defer src="/js/app.js"></script>
+    <script defer src="/js/ui-enhance.js"></script>
 </body>
 </html>

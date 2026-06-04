@@ -67,8 +67,6 @@ const App = {
 // 2. Инициализация приложения
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Запуск BalconyPro...');
-    console.log('Version: 2.0.0');
     App.initGlobalErrorHandlers();
     
     App.init();
@@ -130,8 +128,6 @@ App.init = async function() {
 
         this.state.isInitialized = true;
 
-        console.log('Приложение успешно инициализировано');
-
     } catch (error) {
         console.error('Ошибка инициализации приложения:', error);
         this.showError('Ошибка загрузки приложения. Обновите страницу.');
@@ -143,9 +139,15 @@ App.init = async function() {
 App.initComponents = async function() {
     // BalconyBuilder
     this.builder = window.balconyBuilder || new BalconyBuilder();
-    console.log('✅ Builder initialized');
 
-    this.calculator = null;
+    // PriceCalculator: takes no constructor args; attach builder via setBuilder()
+    // (which also subscribes to builder updates and auto-invalidates its cache).
+    if (typeof PriceCalculator !== 'undefined') {
+        this.calculator = new PriceCalculator();
+        this.calculator.setBuilder(this.builder);
+    } else {
+        this.calculator = null;
+    }
 
     // BalconyVisualizer
     this.visualizer = new BalconyVisualizer('balcony3d', {
@@ -159,7 +161,6 @@ App.initComponents = async function() {
         }
     });
     this.visualizer.setBuilder(this.builder);
-    console.log('Визуализатор инициализирован');
 
     // OrderHandler
     this.orderHandler = window.orderHandler || new OrderHandler({
@@ -170,7 +171,6 @@ App.initComponents = async function() {
         validatePhone: true,
         validateEmail: true
     });
-    console.log('OrderHandler инициализирован');
 };
 
 /**
@@ -193,7 +193,9 @@ App.cacheElements = function() {
         
         materialsGrid: document.getElementById('materialsGrid'),
         elementSelect: document.getElementById('elementSelect'),
-        colorElementSelect: document.getElementById('colorElementSelect'),
+        /* DEAD: #colorElementSelect is not in the DOM — wall/colour selection is
+           driven by #elementSelect now. Kept (commented) rather than deleted. */
+        // colorElementSelect: document.getElementById('colorElementSelect'),
         materialPreview: document.getElementById('materialPreview'),
         previewMaterialName: document.getElementById('previewMaterialName'),
         previewTexture: document.getElementById('previewTexture'),
@@ -676,10 +678,19 @@ App.initEventListeners = function() {
         this.elements.elementSelect.addEventListener('change', (e) => {
             const nextElement = String(e.target.value || 'walls_all');
             this.state.selectedElement = nextElement;
+            // Picking a specific wall switches edits to that wall only; "Все стены
+            // сразу" links them. Keeps wallSelectionMode in sync with the dropdown
+            // so getEffectiveMaterialTarget() applies to the wall the user expects.
+            if (nextElement.startsWith('walls_')) {
+                this.state.wallSelectionMode = nextElement === 'walls_all' ? 'linked' : 'individual';
+            }
+            this.updateWallLinkIndicator();
             const nextCategory = this.getCategoryForElement(nextElement);
             this.state.materialVariantsBaseByCategory[nextCategory] = null;
             this.renderMaterialsForCategory(nextCategory);
         });
+        // Reflect the initial selection (defaults to "Все стены сразу").
+        this.updateWallLinkIndicator();
     }
 
     // ============================================
@@ -721,6 +732,8 @@ App.initEventListeners = function() {
         });
     }
 
+    /* DEAD: #colorElementSelect was removed from the DOM; this listener never bound.
+       Wall-link mode is now synced from the #elementSelect change handler above.
     if (this.elements.colorElementSelect) {
         this.elements.colorElementSelect.addEventListener('change', (e) => {
             if (e.target.value.startsWith('walls_')) {
@@ -731,6 +744,7 @@ App.initEventListeners = function() {
             this.updateCurrentColor(this.builder.getColor(e.target.value));
         });
     }
+    */
 
     if (this.elements.cabinetColorSwatches) {
         this.elements.cabinetColorSwatches.addEventListener('click', (e) => {
@@ -854,8 +868,6 @@ App.initEventListeners = function() {
             }
         });
     });
-
-    console.log('Обработчики событий инициализированы');
 };
 
 /**
@@ -905,8 +917,6 @@ App.linkComponents = function() {
     this.orderHandler.subscribe('onOrderError', (error) => {
         this.handleOrderError(error);
     });
-
-    console.log('Компоненты связаны');
 };
 
 /**
@@ -1572,8 +1582,10 @@ App.selectMaterial = function(category, materialId) {
 /**
  */
 App.selectColor = function(color) {
-    const element = this.getEffectiveMaterialTarget(this.elements.colorElementSelect?.value || 'walls_all');
-    
+    // selectedElement is the live source of truth (#colorElementSelect was removed).
+    // Using it also fixes a latent bug where colours always applied to all walls.
+    const element = this.getEffectiveMaterialTarget(this.state.selectedElement || 'walls_all');
+
     this.builder.setColor(element, color);
     
     document.querySelectorAll('.color-btn').forEach(btn => {
@@ -1584,10 +1596,10 @@ App.selectColor = function(color) {
     });
 
     this.updateCurrentColor(color);
-    if (this.elements.colorElementSelect?.value.startsWith('walls_')) {
-        this.syncWallSelectionMode();
-    }
-
+    /* DEAD: #colorElementSelect removed — no dropdown to re-sync after a colour pick. */
+    // if (this.elements.colorElementSelect?.value.startsWith('walls_')) {
+    //     this.syncWallSelectionMode();
+    // }
 };
 
 /**
@@ -1760,6 +1772,22 @@ App._updateSummaryNow = function() {
     this.renderCabinetColorControls();
     this.renderPlacedLighting();
     this.syncLightingControls();
+
+    // Live preliminary price in the bottom action bar (best-effort: a calc
+    // error must never break the rest of the summary render).
+    if (this.calculator) {
+        try {
+            const total = this.calculator.calculateTotal();
+            const el = document.getElementById('bottomBarPrice');
+            if (el) {
+                el.textContent = total
+                    ? total.toLocaleString('ru-RU') + ' ₽'
+                    : 'по замеру';
+            }
+        } catch (priceError) {
+            // Leave the existing "по замеру" fallback in place.
+        }
+    }
 };
 
 /**
@@ -1951,8 +1979,6 @@ App.exitPlacementMode = function() {
  */
 App.handleCameraAction = function(action) {
     if (!this.visualizer) return;
-
-    console.log('Camera action:', action);
 
     switch (action) {
         case 'rotate-left':
@@ -2445,6 +2471,21 @@ App.submitOrder = async function() {
         extras: this.builder.getExtras()
     };
 
+    // Attach the calculated estimate when available (best-effort metadata; the
+    // order-handler forwards the full orderData object to /orders via spread).
+    if (this.calculator) {
+        try {
+            const breakdown = this.calculator.getDetailedBreakdown();
+            orderData.priceMaterials = breakdown.materials.total;
+            orderData.priceWork = breakdown.work.total;
+            orderData.priceDiscount = breakdown.pricing.discount;
+            orderData.priceDiscountPercent = breakdown.pricing.discountPercent;
+            orderData.priceTotal = breakdown.pricing.total;
+        } catch (priceError) {
+            console.warn('Не удалось рассчитать стоимость для заказа:', priceError);
+        }
+    }
+
     submitBtn.disabled = true;
     btnText.style.display = 'none';
     btnLoading.style.display = 'flex';
@@ -2729,6 +2770,10 @@ App.getEffectiveMaterialTarget = function(element) {
 
 App.syncWallSelectionMode = function() {
     const isLinked = this.state.wallSelectionMode !== 'individual';
+
+    /* DEAD: the #colorElementSelect dropdown and [data-wall-mode] buttons were
+       removed from the DOM. Wall linking is now expressed via #elementSelect and
+       the #wallLinkIndicator chip. Kept (commented) rather than deleted.
     const colorSelect = this.elements.colorElementSelect;
 
     document.querySelectorAll('[data-wall-mode]').forEach((btn) => {
@@ -2739,10 +2784,10 @@ App.syncWallSelectionMode = function() {
         if (!option.value.startsWith('walls_')) {
             return;
         }
-
         const isAllOption = option.value === 'walls_all';
         option.hidden = isLinked ? !isAllOption : false;
     });
+    */
 
     if (this.state.selectedElement && this.state.selectedElement.startsWith('walls_')) {
         this.state.selectedElement = isLinked
@@ -2750,15 +2795,53 @@ App.syncWallSelectionMode = function() {
             : (this.state.selectedElement === 'walls_all' ? 'walls_front' : this.state.selectedElement);
     }
 
+    /* DEAD: value sync for the removed #colorElementSelect dropdown.
     if (colorSelect && colorSelect.value.startsWith('walls_')) {
         colorSelect.value = isLinked
             ? 'walls_all'
             : (colorSelect.value === 'walls_all' ? 'walls_front' : colorSelect.value);
         this.updateCurrentColor(this.builder.getColor(colorSelect.value));
     }
+    */
+
+    this.updateWallLinkIndicator();
 
     if (this.state.selectedElement) {
         this.renderMaterialsForCategory(this.getCategoryForElement(this.state.selectedElement));
+    }
+};
+
+/**
+ * Reflect the wall-link state in the #wallLinkIndicator chip so users can see at
+ * a glance whether material edits hit all walls at once or a single wall.
+ */
+App.updateWallLinkIndicator = function() {
+    const indicator = document.getElementById('wallLinkIndicator');
+    if (!indicator) return;
+
+    const iconEl = indicator.querySelector('.wall-link-icon');
+    const textEl = indicator.querySelector('.wall-link-text');
+    const element = this.state.selectedElement || 'walls_all';
+    const wallNames = {
+        walls_front: 'передняя стена',
+        walls_left: 'левая стена',
+        walls_right: 'правая стена',
+        walls_back: 'задняя стена'
+    };
+
+    if (element === 'walls_all') {
+        indicator.hidden = false;
+        indicator.classList.add('is-linked');
+        if (iconEl) iconEl.textContent = '🔗';
+        if (textEl) textEl.textContent = 'Все стены связаны';
+    } else if (element.startsWith('walls_')) {
+        indicator.hidden = false;
+        indicator.classList.remove('is-linked');
+        if (iconEl) iconEl.textContent = '◻';
+        if (textEl) textEl.textContent = `Отдельно: ${wallNames[element] || 'стена'}`;
+    } else {
+        // Non-wall element (потолок/пол/окна/…): the chip is irrelevant — hide it.
+        indicator.hidden = true;
     }
 };
 
@@ -2779,6 +2862,8 @@ App.resetConfigurator = function() {
             this.state.materialVariantsBaseByCategory[category] = null;
         });
         this.syncWallSelectionMode();
+        if (this.elements.elementSelect) this.elements.elementSelect.value = 'walls_all';
+        this.updateWallLinkIndicator();
         this.updateSummary();
         this.showToast('Конфигуратор сброшен', 'info');
     }
@@ -2956,8 +3041,6 @@ App.formatMaterialQuantity = function(material) {
     return `${quantity} ${material.unit || ''}`.trim();
 };
 
-
-console.log(' BalconyPro Application Ready!');
 
 window.resetCamera = function() {
     if (App.visualizer) {

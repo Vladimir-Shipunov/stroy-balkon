@@ -116,7 +116,7 @@ class BalconyVisualizer {
         this.textureLoadPromises = {};
         this.textureFailureCache = {};
         this.stoneReliefObjects = [];
-        this.slatPanelObjects = [];
+        // (slatPanelObjects already initialized above)
         this.textureRetryCooldownMs = 30000;
         this.lastBuilderSnapshot = null;
         this.lastGeometryKey = null;
@@ -208,9 +208,6 @@ class BalconyVisualizer {
             this.state.isLoaded = true;
             this._notifyLoad();
 
-            console.log('? BalconyVisualizer initialized successfully');
-            console.log('?? Stats:', this.getSceneStats());
-
         } catch (error) {
             console.error('? Visualizer initialization error:', error);
             this._notifyError(error);
@@ -219,10 +216,10 @@ class BalconyVisualizer {
             if (overlay) {
                 overlay.innerHTML = `
                     <div style="color: white; text-align: center; padding: 20px;">
-                        <div style="font-size: 48px; margin-bottom: 10px;">??</div>
-                        <div style="font-size: 18px; margin-bottom: 10px;">������ �������� 3D</div>
+                        <div style="font-size: 48px; margin-bottom: 10px;">⚠️</div>
+                        <div style="font-size: 18px; margin-bottom: 10px;">Ошибка загрузки 3D</div>
                         <div style="font-size: 14px; opacity: 0.8;">${error.message}</div>
-                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; cursor: pointer;">�������������</button>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; cursor: pointer;">Перезагрузить</button>
                     </div>
                 `;
                 overlay.classList.remove('hidden');
@@ -782,7 +779,6 @@ class BalconyVisualizer {
             120
         );
 
-        console.log('? Scene created');
     }
 
     /**
@@ -806,7 +802,6 @@ class BalconyVisualizer {
             this.config.camera.initialLookAt.z
         );
 
-        console.log('? Camera created at interior position');
     }
 
     /**
@@ -834,7 +829,6 @@ class BalconyVisualizer {
 
         this.container.appendChild(this.renderer.domElement);
 
-        console.log('? Renderer created with quality:', this.config.quality);
     }
 
     /**
@@ -870,7 +864,6 @@ class BalconyVisualizer {
         this.interiorLight.castShadow = true;
         this.scene.add(this.interiorLight);
 
-        console.log('? Lighting system created');
     }
 
     /**
@@ -910,7 +903,6 @@ class BalconyVisualizer {
             this.controls.addEventListener('change', () => this.requestRender(300));
             this.controls.addEventListener('end', () => this.requestRender(500));
              
-            console.log('? OrbitControls created for interior view');
         } else {
             console.warn('?? OrbitControls not loaded');
         }
@@ -935,7 +927,6 @@ class BalconyVisualizer {
         this.helpers.cameraHelper.visible = false;
         this.scene.add(this.helpers.cameraHelper);
 
-        console.log('? Helpers created');
     }
 
     /**
@@ -969,7 +960,6 @@ class BalconyVisualizer {
         this.scene.add(this.exteriorGroup);
         this.state.exteriorLoaded = true;
 
-        console.log('? Exterior world created');
     }
 
     _getExteriorStreetLevel() {
@@ -1678,7 +1668,6 @@ class BalconyVisualizer {
             this._applyInteriorCameraPose(dimensions, false);
         }
         
-        console.log('? Balcony created successfully with finishing');
     }
 
     /**
@@ -1867,7 +1856,6 @@ class BalconyVisualizer {
         this._createGlazingParapets(profile, parapetHeight);
         this._createGlazingCaps(profile, parapetHeight);
 
-        console.log('? Walls created successfully with profile geometry');
     }
 
     _createGlazingParapets(profile, parapetHeight) {
@@ -2303,7 +2291,6 @@ class BalconyVisualizer {
             });
         });
 
-        console.log('? Windows created with profile geometry');
     }
 
     _getBalconyProfile(dimensions) {
@@ -3229,7 +3216,6 @@ class BalconyVisualizer {
         }
 
         navigationPoints.forEach((point) => this._createNavigationMarker(point));
-        console.log('? Navigation markers created');
         return;
 
         const { height } = dimensions;
@@ -3276,7 +3262,6 @@ class BalconyVisualizer {
             this.markers.push(ring);
         });
 
-        console.log('? Markers created for interaction');
     }
 
     /**
@@ -5042,6 +5027,21 @@ class BalconyVisualizer {
 
         window.addEventListener('resize', () => this._onResize());
 
+        // Panel-driven size changes (sidebar toggle, mobile tab switch, fullscreen)
+        // don't fire window 'resize', so watch the container directly and keep the
+        // canvas filling it. rAF-debounced to coalesce burst layout changes.
+        if (typeof ResizeObserver !== 'undefined' && this.container) {
+            let resizeRaf = null;
+            this._resizeObserver = new ResizeObserver(() => {
+                if (resizeRaf) return;
+                resizeRaf = requestAnimationFrame(() => {
+                    resizeRaf = null;
+                    this._onResize();
+                });
+            });
+            this._resizeObserver.observe(this.container);
+        }
+
         this.renderer.domElement.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
@@ -5054,7 +5054,6 @@ class BalconyVisualizer {
 
         this.renderer.domElement.addEventListener('wheel', (e) => this._onWheel(e), { passive: false });
 
-        console.log('? Event listeners configured');
     }
 
     /**
@@ -5215,8 +5214,6 @@ class BalconyVisualizer {
 
         this.renderer.setSize(width, height);
         this.requestRender(400);
-
-        console.log('?? Window resized:', width, 'x', height);
     }
 
     /**
@@ -5251,6 +5248,17 @@ class BalconyVisualizer {
      * @private
      */
     _onKeyDown(event) {
+        // These shortcuts (g/h/r/f/s) are global, so ignore them while the user is
+        // typing in a form field — otherwise typing "r" in the order form resets
+        // the camera, "f" toggles fullscreen, etc.
+        const target = event.target;
+        if (target && (
+            target.matches?.('input, textarea, select, [contenteditable=""], [contenteditable="true"]') ||
+            target.isContentEditable
+        )) {
+            return;
+        }
+
         switch (event.key.toLowerCase()) {
             case 'g':
                 this.toggleGrid(!this.state.showGrid);
@@ -5834,32 +5842,10 @@ class BalconyVisualizer {
         console.log('??? Fullscreen:', this.state.isFullscreen);
     }
 
-    /**
-     * @private
-     */
-    _notifyViewChange(view) {
-        this.callbacks.onViewChange.forEach(callback => {
-            try {
-                callback(view);
-            } catch (error) {
-                console.error('? Error in view change callback:', error);
-            }
-        });
-    }
+    // _notifyViewChange / _notifyExteriorUpdate are defined once below (near the
+    // other _notify* callbacks); the duplicate copies that lived here were dead.
 
-    /**
-     * @private
-     */
-    _notifyExteriorUpdate() {
-        this.callbacks.onExteriorUpdate.forEach(callback => {
-            try {
-                callback();
-            } catch (error) {
-                console.error('? Error in exterior update callback:', error);
-            }
-        });
-    }
-        // ============================================
+    // ============================================
     // ============================================
 
     /**
@@ -5878,9 +5864,8 @@ class BalconyVisualizer {
         link.href = dataUrl;
         link.click();
 
-        console.log('?? Screenshot exported:', filename);
-
-        this._showNotification('�������� ��������!', 'success');
+        console.log('Screenshot exported:', filename);
+        this._showNotification('Скриншот сохранён!', 'success');
     }
 
     /**
@@ -5932,7 +5917,7 @@ class BalconyVisualizer {
 
         this.camera.rotation.y = originalRotation;
 
-        console.log('?? 360� capture completed:', images.length, 'images');
+        console.log('360° capture completed:', images.length, 'images');
         return images;
     }
 
@@ -6384,14 +6369,10 @@ class BalconyVisualizer {
         });
     }
 
-    /**
-     */
-    reloadTextures() {
-        this._clearTextureCache();
-        this._loadDefaultTextures();
-        this._updateMaterials();
-        console.log('?? Textures reloaded');
-    }
+    // NOTE: reloadTextures() is defined once below (in the debug section). The
+    // copy that lived here was dead (JS keeps the later definition) and behaved
+    // differently — it also called _loadDefaultTextures(). Kept the live one to
+    // preserve current runtime behavior; flagged as a possible latent bug.
 
     refreshMaterialAssets() {
         this.materialsCache = {};
@@ -6759,52 +6740,11 @@ class BalconyVisualizer {
         console.table(summary);
     }
 
-    /**
-     */
-    getRenderStats() {
-        const info = this.renderer.info;
-        return {
-            drawCalls: info.render.calls,
-            triangles: info.render.triangles,
-            points: info.render.points,
-            lines: info.render.lines,
-            textures: info.memory.textures,
-            geometries: info.memory.geometries,
-            programs: info.programs ? info.programs.length : 0
-        };
-    }
+    // getRenderStats / logRenderStats are defined once below (in the debug
+    // section); destroy() is defined once near the end of the class. The
+    // duplicate copies that lived here were dead.
 
-    /**
-     */
-    logRenderStats() {
-        const stats = this.getRenderStats();
-        console.log('?? Render Statistics:', stats);
-    }
-
-    /**
-     */
-    destroy() {
-        console.log('?? Destroying visualizer...');
-
-        this.unregisterFromGlobalRegistry();
-
-        this.clearCallbacks();
-
-        this.stopAnimation();
-
-        this.dispose();
-
-        this.scene = null;
-        this.camera = null;
-        this.renderer = null;
-        this.controls = null;
-        this.balconyGroup = null;
-        this.builder = null;
-        this.container = null;
-
-        console.log('? Visualizer destroyed successfully');
-    }
-        // ============================================
+    // ============================================
     // ============================================
 
     /**
@@ -7351,48 +7291,9 @@ class BalconyVisualizer {
         console.log('?? Integrated with external application');
     }
 
-    /**
-     */
-    registerPlugin(name, plugin) {
-        if (!this.plugins) {
-            this.plugins = {};
-        }
-
-        this.plugins[name] = plugin;
-
-        if (plugin.init) {
-            plugin.init(this);
-        }
-
-        console.log('?? Plugin registered:', name);
-    }
-
-    /**
-     */
-    getPlugin(name) {
-        return this.plugins?.[name] || null;
-    }
-
-    /**
-     */
-    unregisterPlugin(name) {
-        if (this.plugins?.[name]) {
-            const plugin = this.plugins[name];
-
-            if (plugin.dispose) {
-                plugin.dispose();
-            }
-
-            delete this.plugins[name];
-            console.log('?? Plugin unregistered:', name);
-        }
-    }
-
-    /**
-     */
-    getPlugins() {
-        return Object.keys(this.plugins || {});
-    }
+    // The plugin API (registerPlugin / getPlugin / unregisterPlugin / getPlugins)
+    // is defined once below in the full plugin system (initPluginSystem + hooks).
+    // The simpler copies that lived here were dead.
 
     // ============================================
     // ============================================
@@ -7443,7 +7344,6 @@ class BalconyVisualizer {
     _testLighting() {
         console.assert(this.ambientLight !== null, 'Ambient light should exist');
         console.assert(this.directionalLight !== null, 'Directional light should exist');
-        console.log('? Lighting tests passed');
     }
 
     /**
@@ -7866,16 +7766,16 @@ class BalconyVisualizer {
      */
     getAvailableMaterials() {
         return [
-            { id: 'wood', name: '������', type: 'texture' },
-            { id: 'tile', name: '������', type: 'texture' },
-            { id: 'laminate', name: '�������', type: 'texture' },
-            { id: 'concrete', name: '�����', type: 'texture' },
-            { id: 'brick', name: '������', type: 'texture' },
-            { id: 'paint', name: '������', type: 'color' },
-            { id: 'plaster', name: '����������', type: 'texture' },
-            { id: 'metal', name: '������', type: 'texture' },
-            { id: 'glass', name: '������', type: 'special' },
-            { id: 'carpet', name: '�����', type: 'texture' }
+            { id: 'wood', name: 'Дерево', type: 'texture' },
+            { id: 'tile', name: 'Плитка', type: 'texture' },
+            { id: 'laminate', name: 'Ламинат', type: 'texture' },
+            { id: 'concrete', name: 'Бетон', type: 'texture' },
+            { id: 'brick', name: 'Кирпич', type: 'texture' },
+            { id: 'paint', name: 'Краска', type: 'color' },
+            { id: 'plaster', name: 'Штукатурка', type: 'texture' },
+            { id: 'metal', name: 'Металл', type: 'texture' },
+            { id: 'glass', name: 'Стекло', type: 'special' },
+            { id: 'carpet', name: 'Ковролин', type: 'texture' }
         ];
     }
 
@@ -8020,7 +7920,6 @@ class BalconyVisualizer {
 
         this.renderer.shadowMap.enabled = enabled;
 
-        console.log('?? Shadows configured:', enabled);
     }
 
     /**
@@ -8066,7 +7965,6 @@ class BalconyVisualizer {
             this.setTimeOfDay(timeOfDay);
         }
 
-        console.log('?? Lighting settings updated');
     }
 
     /**
@@ -8108,7 +8006,6 @@ class BalconyVisualizer {
         const presetSettings = presets[preset];
         if (presetSettings) {
             this.updateLightingSettings(presetSettings);
-            console.log('?? Lighting preset applied:', preset);
         }
     }
 
@@ -8136,7 +8033,6 @@ class BalconyVisualizer {
         };
 
         animate();
-        console.log('?? Lighting animation started');
     }
 
     /**
@@ -8268,7 +8164,6 @@ class BalconyVisualizer {
         const particles = new THREE.Points(geometry, material);
         this.scene.add(particles);
 
-        console.log('? Particle system created');
         return particles;
     }
 
@@ -8379,14 +8274,14 @@ class BalconyVisualizer {
      */
     getAvailableFurnitureTypes() {
         return [
-            { id: 'chair', name: '����', width: 50, height: 90, depth: 50, color: 0x8B7355 },
-            { id: 'table', name: '����', width: 120, height: 75, depth: 80, color: 0x6B5344 },
-            { id: 'cabinet', name: '����', width: 80, height: 200, depth: 60, color: 0x5C4A3D },
-            { id: 'sofa', name: '�����', width: 200, height: 80, depth: 90, color: 0x4A5C6B },
-            { id: 'plant', name: '��������', width: 40, height: 100, depth: 40, color: 0x228B22 },
-            { id: 'lamp', name: '�����', width: 30, height: 150, depth: 30, color: 0xFFD700 },
-            { id: 'bench', name: '��������', width: 150, height: 50, depth: 40, color: 0x8B7355 },
-            { id: 'flowerpot', name: '��������� ������', width: 30, height: 40, depth: 30, color: 0xA0522D }
+            { id: 'chair', name: 'Стул', width: 50, height: 90, depth: 50, color: 0x8B7355 },
+            { id: 'table', name: 'Стол', width: 120, height: 75, depth: 80, color: 0x6B5344 },
+            { id: 'cabinet', name: 'Шкаф', width: 80, height: 200, depth: 60, color: 0x5C4A3D },
+            { id: 'sofa', name: 'Диван', width: 200, height: 80, depth: 90, color: 0x4A5C6B },
+            { id: 'plant', name: 'Растение', width: 40, height: 100, depth: 40, color: 0x228B22 },
+            { id: 'lamp', name: 'Лампа', width: 30, height: 150, depth: 30, color: 0xFFD700 },
+            { id: 'bench', name: 'Скамейка', width: 150, height: 50, depth: 40, color: 0x8B7355 },
+            { id: 'flowerpot', name: 'Цветочный горшок', width: 30, height: 40, depth: 30, color: 0xA0522D }
         ];
     }
 
@@ -9630,11 +9525,11 @@ class BalconyVisualizer {
     _handleSWMessage(data) {
         switch (data.type) {
             case 'CACHE_UPDATED':
-                console.log('?? Cache updated:', data.cacheName);
+                console.log('Cache updated:', data.cacheName);
                 break;
             case 'OFFLINE_READY':
-                console.log('?? Offline mode ready');
-                this._showNotification('���������� ������ � ������ ������', 'info');
+                console.log('Offline mode ready');
+                this._showNotification('Офлайн-режим готов к работе', 'info');
                 break;
         }
     }
@@ -9643,9 +9538,8 @@ class BalconyVisualizer {
      * @private
      */
     _handleOnline() {
-        console.log('?? Online');
-        this._showNotification('���������� �������������', 'success');
-        
+        console.log('Online');
+        this._showNotification('Подключение восстановлено', 'success');
         this._syncOfflineData();
     }
 
@@ -9653,8 +9547,8 @@ class BalconyVisualizer {
      * @private
      */
     _handleOffline() {
-        console.log('?? Offline');
-        this._showNotification('������ � ������ ������', 'warning');
+        console.log('Offline');
+        this._showNotification('Работа в офлайн-режиме', 'warning');
     }
 
     /**
@@ -9680,7 +9574,7 @@ class BalconyVisualizer {
      */
     _showInstallPrompt() {
         const installButton = document.createElement('button');
-        installButton.textContent = '?? ���������� ����������';
+        installButton.textContent = 'Установить приложение';
         installButton.style.cssText = `
             position: fixed;
             bottom: 20px;
@@ -9691,13 +9585,10 @@ class BalconyVisualizer {
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            z-index: 10000;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0,0,0,.25);
         `;
-
-        installButton.addEventListener('click', async () => {
-            console.log('?? Install prompt shown');
-        });
-
+        installButton.addEventListener('click', () => installButton.remove(), { once: true });
         document.body.appendChild(installButton);
     }
 
@@ -9875,7 +9766,7 @@ class BalconyVisualizer {
         console.log('%c?? BalconyPro Visualizer', 'font-size: 24px; font-weight: bold; color: #2563eb;');
         console.log('%cVersion 3.0.0 ULTIMATE', 'font-size: 14px; color: #6b7280;');
         console.log('%cBuilt with Three.js r' + (typeof THREE !== 'undefined' ? THREE.REVISION : 'unknown'), 'font-size: 12px; color: #9ca3af;');
-        console.log('%c� 2024 BalconyPro Team. MIT License.', 'font-size: 10px; color: #d1d5db;');
+        console.log('%c© 2024 BalconyPro Team. MIT License.', 'font-size: 10px; color: #d1d5db;');
         console.log('');
         console.log('?? Documentation: https://balconypro.ru/docs');
         console.log('?? Issues: https://github.com/balconypro/visualizer/issues');
@@ -10013,106 +9904,6 @@ class BalconyVisualizer {
         console.log('? Visualizer destroyed successfully');
     }
 }
-
-// Переопределения после восстановления кодировки: русские подписи и уведомления.
-BalconyVisualizer.prototype.getAvailableMaterials = function() {
-    return [
-        { id: 'wood', name: 'Дерево', type: 'texture' },
-        { id: 'tile', name: 'Плитка', type: 'texture' },
-        { id: 'laminate', name: 'Ламинат', type: 'texture' },
-        { id: 'concrete', name: 'Бетон', type: 'texture' },
-        { id: 'brick', name: 'Кирпич', type: 'texture' },
-        { id: 'paint', name: 'Краска', type: 'color' },
-        { id: 'plaster', name: 'Штукатурка', type: 'texture' },
-        { id: 'metal', name: 'Металл', type: 'texture' },
-        { id: 'glass', name: 'Стекло', type: 'special' },
-        { id: 'carpet', name: 'Ковролин', type: 'texture' }
-    ];
-};
-
-BalconyVisualizer.prototype.getAvailableFurnitureTypes = function() {
-    return [
-        { id: 'chair', name: 'Стул', width: 50, height: 90, depth: 50, color: 0x8B7355 },
-        { id: 'table', name: 'Стол', width: 120, height: 75, depth: 80, color: 0x6B5344 },
-        { id: 'cabinet', name: 'Шкаф', width: 80, height: 200, depth: 60, color: 0x5C4A3D },
-        { id: 'sofa', name: 'Диван', width: 200, height: 80, depth: 90, color: 0x4A5C6B },
-        { id: 'plant', name: 'Растение', width: 40, height: 100, depth: 40, color: 0x228B22 },
-        { id: 'lamp', name: 'Лампа', width: 30, height: 150, depth: 30, color: 0xFFD700 },
-        { id: 'bench', name: 'Скамейка', width: 150, height: 50, depth: 40, color: 0x8B7355 },
-        { id: 'flowerpot', name: 'Цветочный горшок', width: 30, height: 40, depth: 30, color: 0xA0522D }
-    ];
-};
-
-BalconyVisualizer.prototype.exportScreenshot = function(filename = 'balcony.png') {
-    const dataUrl = this.takeScreenshot();
-    const link = document.createElement('a');
-    link.download = filename;
-    link.href = dataUrl;
-    link.click();
-
-    console.log('Screenshot exported:', filename);
-    this._showNotification('Скриншот сохранён!', 'success');
-};
-
-BalconyVisualizer.prototype.capture360 = async function() {
-    const images = [];
-    const angles = [0, 90, 180, 270];
-    const originalRotation = this.camera.rotation.y;
-
-    for (const angle of angles) {
-        this.camera.rotation.y = angle * Math.PI / 180;
-        this.renderer.render(this.scene, this.camera);
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-        images.push(this.renderer.domElement.toDataURL('image/png'));
-    }
-
-    this.camera.rotation.y = originalRotation;
-    console.log('360° capture completed:', images.length, 'images');
-    return images;
-};
-
-BalconyVisualizer.prototype._handleSWMessage = function(data) {
-    switch (data.type) {
-        case 'CACHE_UPDATED':
-            console.log('Cache updated:', data.cacheName);
-            break;
-        case 'OFFLINE_READY':
-            console.log('Offline mode ready');
-            this._showNotification('Офлайн-режим готов к работе', 'info');
-            break;
-    }
-};
-
-BalconyVisualizer.prototype._handleOnline = function() {
-    console.log('Online');
-    this._showNotification('Подключение восстановлено', 'success');
-    this._syncOfflineData();
-};
-
-BalconyVisualizer.prototype._handleOffline = function() {
-    console.log('Offline');
-    this._showNotification('Работа в офлайн-режиме', 'warning');
-};
-
-BalconyVisualizer.prototype._showInstallPrompt = function() {
-    const installButton = document.createElement('button');
-    installButton.textContent = 'Установить приложение';
-    installButton.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        background: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 9999;
-        box-shadow: 0 8px 24px rgba(0,0,0,.25);
-    `;
-    installButton.addEventListener('click', () => installButton.remove(), { once: true });
-    document.body.appendChild(installButton);
-};
 
 // Lightweight local fallback so the viewer keeps working without CDN OrbitControls.
 if (typeof THREE !== 'undefined' && typeof THREE.OrbitControls === 'undefined') {

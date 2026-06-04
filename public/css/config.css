@@ -45,6 +45,7 @@
     color: #4c5b6d;
 }
 
+/* LAYOUT-V2-DISABLED: legacy 3-column grid (selector renamed to .app-workspace in markup; layout owned by layout-v2.css)
 .configurator-wrapper {
     display: grid;
     grid-template-columns: minmax(280px, 340px) minmax(640px, 1fr) minmax(300px, 360px);
@@ -53,6 +54,7 @@
     position: relative;
     padding-bottom: var(--spacing-6);
 }
+*/
 
 /* ============================================
    2. БОКОВЫЕ ПАНЕЛИ (SIDEBAR)
@@ -62,10 +64,10 @@
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     padding: var(--spacing-5);
-    position: sticky;
-    top: 100px;
-    max-height: none;
-    overflow: visible;
+    /* LAYOUT-V2-DISABLED: position: sticky; */
+    /* LAYOUT-V2-DISABLED: top: 100px; */
+    /* LAYOUT-V2-DISABLED: max-height: none; */
+    /* LAYOUT-V2-DISABLED: overflow: visible; */
     border: 1px solid var(--color-gray-200);
 }
 
@@ -962,10 +964,10 @@
    19. ЦЕНТРАЛЬНАЯ ЧАСТЬ (ВИЗУАЛИЗАТОР)
    ============================================ */
 .config-main {
-    display: flex;
-    flex-direction: column;
+    /* LAYOUT-V2-DISABLED: display: flex; */
+    /* LAYOUT-V2-DISABLED: flex-direction: column; */
     gap: var(--spacing-3);
-    min-width: 0;
+    /* LAYOUT-V2-DISABLED: min-width: 0; */
 }
 
 .visualizer-wrapper {
@@ -973,7 +975,7 @@
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-md);
     border: 1px solid var(--color-gray-200);
-    overflow: hidden;
+    /* LAYOUT-V2-DISABLED: overflow: hidden; */
 }
 
 .visualizer-header {
@@ -1015,11 +1017,11 @@
 }
 
 .visualizer-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    min-height: 360px;
-    max-height: calc(100vh - 220px);
+    /* LAYOUT-V2-DISABLED: position: relative; */
+    /* LAYOUT-V2-DISABLED: width: 100%; */
+    /* LAYOUT-V2-DISABLED: aspect-ratio: 16 / 9; */
+    /* LAYOUT-V2-DISABLED: min-height: 360px; */
+    /* LAYOUT-V2-DISABLED: max-height: calc(100vh - 220px); */
     background: #dce8f2;
 }
 
@@ -2021,7 +2023,7 @@ body:not(.is-configurator-reached) .summary-panel.compact {
         linear-gradient(180deg, #fffdf8 0%, #ffffff 42%, #f7f5ef 100%);
     border: 1px solid rgba(180, 147, 89, 0.2);
     box-shadow: 0 28px 60px rgba(43, 35, 19, 0.12);
-    overflow: visible;
+    /* LAYOUT-V2-DISABLED: overflow: visible; */
 }
 
 .sidebar-tabs {
