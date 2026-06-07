@@ -40,4 +40,5 @@ dist/
 build/
 
 # Тесты
-coverage/
+coverage/# Three.js Vite build artifacts
+public/vendor/three-bundle/

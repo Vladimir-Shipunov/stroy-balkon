@@ -820,10 +820,15 @@ class BalconyVisualizer {
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
         this.renderer.setPixelRatio(pixelRatio);
         this.renderer.shadowMap.enabled = shadowMap;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.shadowMap.type = THREE.PCFShadowMap;
+        // r152+: outputEncoding → outputColorSpace
+        if ('outputColorSpace' in this.renderer) {
+            this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+        } else {
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
+        }
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.0;
+        this.renderer.toneMappingExposure = 1.05;
         
         this.renderer.localClippingEnabled = false;
 
@@ -863,6 +868,17 @@ class BalconyVisualizer {
         this.interiorLight.position.set(0, 2.1, 0.4);
         this.interiorLight.castShadow = true;
         this.scene.add(this.interiorLight);
+
+        // RoomEnvironment IBL — realistic ambient lighting for PBR materials (r163+)
+        if (typeof THREE.RoomEnvironment !== 'undefined' && typeof THREE.PMREMGenerator !== 'undefined') {
+            try {
+                const pmrem = new THREE.PMREMGenerator(this.renderer);
+                this.scene.environment = pmrem.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+                pmrem.dispose();
+            } catch (e) {
+                console.warn('RoomEnvironment setup failed:', e);
+            }
+        }
 
     }
 
@@ -5993,13 +6009,15 @@ class BalconyVisualizer {
      * @private
      */
     _startAnimation() {
-        this.clock = new THREE.Clock();
+        // THREE.Timer (r163+) replaces deprecated THREE.Clock
+        this.clock = (typeof THREE.Timer !== 'undefined') ? new THREE.Timer() : new THREE.Clock();
         this.state.isAnimating = true;
         this.requestRender(600);
 
         const animate = () => {
             this.animationFrame = requestAnimationFrame(animate);
 
+            if (this.clock.update) this.clock.update(); // Timer requires explicit update()
             const delta = this.clock.getDelta();
             const now = performance.now();
             let controlsChanged = false;

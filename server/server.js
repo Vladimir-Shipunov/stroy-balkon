@@ -40,21 +40,55 @@ function sanitizeUploadFilename(originalName = 'upload') {
 const apiLimiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
-    message: {
-        success: false,
-        error: 'Слишком много запросов. Попробуйте позже.'
-    },
+    message: { success: false, error: 'Слишком много запросов. Попробуйте позже.' },
     standardHeaders: true,
     legacyHeaders: false,
     skip: (req) => !req.path.startsWith('/api')
 });
 
+const callRequestLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+    message: { success: false, error: 'Слишком много заявок. Пожалуйста, позвоните нам напрямую.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => req.ip
+});
+
+const siteUrl = process.env.SITE_URL || 'http://localhost:3000';
+const siteHost = (() => {
+    try { return new URL(siteUrl).hostname; } catch { return 'localhost'; }
+})();
+
 app.use(helmet({
-    contentSecurityPolicy: false,
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            imgSrc: ["'self'", 'data:', 'blob:'],
+            connectSrc: ["'self'"],
+            frameSrc: ['https://yandex.ru'],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: NODE_ENV === 'production' ? [] : null
+        }
+    },
     crossOriginEmbedderPolicy: false
 }));
+
+const allowedOrigins = new Set(
+    [siteUrl, 'http://localhost:3000', 'http://127.0.0.1:3000']
+        .filter(Boolean)
+);
 app.use(cors({
-    origin: process.env.SITE_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.has(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS: origin not allowed'));
+        }
+    },
     credentials: true
 }));
 app.use(compression());
@@ -203,20 +237,8 @@ app.get('/api/gallery', (req, res) => {
     }
 });
 
-app.use(
-    '/vendor/three',
-    express.static(path.join(__dirname, '../node_modules/three/build'), {
-        maxAge: NODE_ENV === 'production' ? '30d' : 0,
-        etag: true
-    })
-);
-app.use(
-    '/vendor/three-controls',
-    express.static(path.join(__dirname, '../node_modules/three/examples/js/controls'), {
-        maxAge: NODE_ENV === 'production' ? '30d' : 0,
-        etag: true
-    })
-);
+// Three.js r184+ bundle is served from public/vendor/three.global.js
+// (built via: npm run build:three)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/uploads/');
@@ -270,7 +292,7 @@ app.post('/api/upload', upload.single('screenshot'), (req, res) => {
     }
 });
 
-app.post('/api/request-call', async (req, res) => {
+app.post('/api/request-call', callRequestLimiter, async (req, res) => {
     try {
         const name = cleanString(req.body?.name, { max: 120 }) || 'Client';
         const phone = cleanPhone(req.body?.phone);
@@ -366,6 +388,10 @@ app.get('/', (req, res) => {
 
 app.get('/privacy', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/privacy.html'));
+});
+
+app.get('/configurator', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/configurator.html'));
 });
 
 app.use((req, res) => {

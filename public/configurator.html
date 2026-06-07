@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="3D Конфигуратор балконов БАЛКОН-МСК — выберите форму, остекление, материалы и отделку онлайн">
+    <title>БАЛКОН-МСК | 3D Конфигуратор балконов</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+
+    <!-- Preload -->
+    <link rel="preload" href="/assets/images/hero-slider/01-stone-lodgia.svg" as="image">
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+
+    <!-- Styles — same stack as index.html -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/config.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/redesign.css">
+    <link rel="stylesheet" href="/css/layout-v2.css">
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/components-v2.css">
+
+    <!-- Configurator-page-specific overrides -->
+    <style>
+        /* Full-viewport layout — safe here because this page has NO marketing content */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Compact header for the configurator page */
+        .configurator-page-header {
+            height: 56px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: var(--surface-base, #ffffff);
+            border-bottom: 1px solid var(--border-subtle, rgba(0,0,0,0.08));
+            z-index: 200;
+            gap: 16px;
+        }
+
+        /* Override layout-v2 header height var so the shell fits */
+        :root { --app-header-h: 56px; }
+
+        .app-shell {
+            flex: 1 1 0;
+            min-height: 0;
+            height: calc(100dvh - 56px) !important;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary, #66707c);
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .back-link:hover {
+            background: var(--clr-neutral-100, #f1f5f9);
+            color: var(--text-primary, #1a1a1a);
+        }
+        .back-link svg { flex-shrink: 0; }
+
+        /* Center brand */
+        .conf-header-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+        .conf-logo-text {
+            font-family: var(--font-display, 'Playfair Display', serif);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--clr-primary-700, #6f5a2f);
+            letter-spacing: 0.06em;
+            line-height: 1.1;
+        }
+        .conf-header-sub {
+            font-size: 0.72rem;
+            color: var(--text-tertiary, #94a3b8);
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        /* Right actions */
+        .conf-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .conf-phone {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary, #1a1a1a);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .conf-phone:hover { color: var(--clr-primary-600, #a07a35); }
+
+        /* Theme toggle button (reuse viewer-btn style) */
+        .theme-toggle-conf {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border-default, rgba(0,0,0,0.12));
+            background: var(--surface-base, #fff);
+            color: var(--text-secondary, #66707c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .theme-toggle-conf:hover {
+            background: var(--clr-neutral-100, #f1f5f9);
+            border-color: var(--border-strong, rgba(0,0,0,0.22));
+        }
+
+        /* Hide phone on small screens */
+        @media (max-width: 600px) {
+            .conf-phone { display: none; }
+            .configurator-page-header { padding: 0 16px; }
+        }
+    </style>
+
+    <!-- Apply theme before paint -->
+    <script>
+        (function () {
+            document.documentElement.classList.add('js');
+            try {
+                var saved = localStorage.getItem('balcony-theme');
+                var dark = saved
+                    ? saved === 'dark'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+</head>
+<body>
+
+    <!-- ============================================
+         COMPACT PAGE HEADER
+    ============================================ -->
+    <header class="configurator-page-header">
+        <a href="/" class="back-link" aria-label="Вернуться на главную">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            На главную
+        </a>
+
+        <div class="conf-header-center">
+            <span class="conf-logo-text">БАЛКОН-МСК</span>
+            <span class="conf-header-sub">Конфигуратор балконов</span>
+        </div>
+
+        <div class="conf-header-actions">
+            <a href="tel:+79088360606" class="conf-phone">+7 (908) 836-06-06</a>
+            <button class="theme-toggle-conf" type="button" id="confThemeToggle" aria-label="Переключить тему">
+                <svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.2M19.8 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" style="display:none"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ============================================
+         FULL-SCREEN CONFIGURATOR SHELL
+    ============================================ -->
+    <div class="app-shell">
+        <!-- Scoped boot loader -->
+        <div id="pageLoader" class="page-loader" role="status" aria-live="polite">
+            <div class="loader-content">
+                <div class="loader-logo">БАЛКОН-МСК</div>
+                <div class="loader-bar"><div class="loader-fill"></div></div>
+                <div class="loader-text">Загружаем конфигуратор…</div>
+            </div>
+        </div>
+
+        <div class="app-workspace">
+            <!-- ============================================
+                 ЛЕВАЯ ПАНЕЛЬ — ПАРАМЕТРЫ БАЛКОНА
+            ============================================ -->
+            <aside class="config-sidebar config-sidebar-left left-panel">
+                <div class="sidebar-header">
+                    <h3>Параметры балкона</h3>
+                    <button class="btn-reset" onclick="resetConfigurator()" title="Сбросить все настройки">
+                        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.3M3 4.5V9h4.5"/></svg>
+                        Сброс
+                    </button>
+                </div>
+
+                <div class="config-block">
+                    <div class="config-block-header">
+                        <span class="config-block-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><path d="M21 3 3 21M3 8V3h5M21 16v5h-5M7.5 7.5l2 2M12 12l2 2"/></svg>
+                        </span>
+                        <h4>Размеры</h4>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Длина балкона
+                            <span class="form-hint">(от 2 до 20 метров)</span>
+                        </label>
+                        <div class="size-selector">
+                            <button class="size-btn" data-size="3">
+                                <span class="size-value">3 м</span>
+                                <span class="size-label">Стандарт</span>
+                            </button>
+                            <button class="size-btn" data-size="5">
+                                <span class="size-value">5 м</span>
+                                <span class="size-label">Средний</span>
+                            </button>
+                            <button class="size-btn" data-size="8">
+                                <span class="size-value">8 м</span>
+                                <span class="size-label">Большой</span>
+                            </button>
+                        </div>
+                        <div class="custom-input-wrapper">
+                            <input type="number"
+                                   id="customSize"
+                                   class="form-input custom-size"
+                                   placeholder="Свой размер (м)"
+                                   min="2"
+                                   max="20"
+                                   step="0.05">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Ширина балкона
+                            <span class="form-hint">(от 0.8 до 5 метров)</span>
+                        </label>
+                        <div class="range-wrapper">
+                            <input type="range"
+                                   id="widthRange"
+                                   class="form-range"
+                                   min="0.8"
+                                   max="5"
+                                   step="0.01"
+                                   value="1.5">
+                            <span class="range-value" id="widthValue">1.5 м</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Высота потолка
+                            <span class="form-hint">(от 2.2 до 4 метров)</span>
+                        </label>
+                        <div class="range-wrapper">
+                            <input type="range"
+                                   id="heightRange"
+                                   class="form-range"
+                                   min="2.2"
+                                   max="4"
+                                   step="0.1"
+                                   value="2.7">
+                            <span class="range-value" id="heightValue">2.7 м</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <div class="config-block-header">
+                        <span class="config-block-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M3.5 10h17"/></svg>
+                        </span>
+                        <h4>Форма балкона</h4>
+                    </div>
+
+                    <div class="shape-selector">
+                        <button class="shape-btn" data-shape="hrushchevka" title="Хрущёвка">
+                            <svg class="shape-icon" viewBox="0 0 100 60">
+                                <rect x="18" y="16" width="64" height="28" fill="currentColor" opacity="0.3"/>
+                                <rect x="18" y="16" width="64" height="28" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                            <span class="shape-name">Хрущёвка</span>
+                        </button>
+
+                        <button class="shape-btn active" data-shape="loggia-3" title="Лоджия 3 метра">
+                            <svg class="shape-icon" viewBox="0 0 100 60">
+                                <rect x="10" y="14" width="80" height="32" fill="currentColor" opacity="0.3"/>
+                                <rect x="10" y="14" width="80" height="32" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                            <span class="shape-name">Лоджия 3 м</span>
+                        </button>
+
+                        <button class="shape-btn" data-shape="loggia-6" title="Лоджия 6 метров">
+                            <svg class="shape-icon" viewBox="0 0 100 60">
+                                <rect x="6" y="18" width="88" height="24" fill="currentColor" opacity="0.3"/>
+                                <rect x="6" y="18" width="88" height="24" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                            <span class="shape-name">Лоджия 6 м</span>
+                        </button>
+
+                        <button class="shape-btn" data-shape="boot" title="Сапожок">
+                            <svg class="shape-icon" viewBox="0 0 100 60">
+                                <path d="M14,18 L86,18 L86,48 L77,48 L68,35 L14,35 Z" fill="currentColor" opacity="0.18"/>
+                                <path d="M14,18 L86,18 L86,48 L77,48 L68,35 L14,35 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M14,35 L68,35 L77,48 L86,48" stroke="#f2cf63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="shape-name">Сапожок</span>
+                        </button>
+
+                        <button class="shape-btn" data-shape="iron" title="Утюжок">
+                            <svg class="shape-icon" viewBox="0 0 100 60">
+                                <path d="M14,44 L86,44 L86,18 L38,18 L14,34 Z" fill="currentColor" opacity="0.18"/>
+                                <path d="M14,44 L86,44 L86,18 L38,18 L14,34 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M14,34 L38,18 L86,18" stroke="#f2cf63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="shape-name">Утюжок</span>
+                        </button>
+
+                        <button class="shape-btn" data-shape="boat" title="Лодочка">
+                            <svg class="shape-icon" viewBox="0 0 100 60">
+                                <path d="M8,45 L76,45 L76,37 L84,37 L84,17 L43,17 L8,29 Z" fill="currentColor" opacity="0.18"/>
+                                <path d="M8,45 L76,45 L76,37 L84,37 L84,17 L43,17 L8,29 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M8,29 L43,17 L84,17" stroke="#f2cf63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="shape-name">Лодочка</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <div class="config-block-header">
+                        <span class="config-block-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M12 3.5v17M4 12h16"/></svg>
+                        </span>
+                        <h4>Остекление</h4>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Тип остекления</label>
+                        <select class="form-select" id="glazingType">
+                            <option value="classic" selected>Классическое от парапета</option>
+                            <option value="french">Панорамное / французское</option>
+                            <option value="none">Без остекления</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Форма остекления</label>
+                        <div class="materials-categories glazing-layout-switch" id="glazingLayoutSwitch">
+                            <button class="category-btn active" type="button" data-glazing-layout="straight">Прямое</button>
+                            <button class="category-btn" type="button" data-glazing-layout="g">Г-образное</button>
+                            <button class="category-btn" type="button" data-glazing-layout="p">П-образное</button>
+                        </div>
+                        <div class="materials-categories glazing-side-switch" id="glazingSideSwitch" style="display: none;">
+                            <button class="category-btn active" type="button" data-glazing-side="left">Г-левое</button>
+                            <button class="category-btn" type="button" data-glazing-side="right">Г-правое</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Вход на балкон</label>
+                        <div class="materials-categories entrance-type-switch" id="entranceTypeSwitch">
+                            <button class="category-btn active" type="button" data-entrance-type="plastic-door">Дверь + окно</button>
+                            <button class="category-btn" type="button" data-entrance-type="glazing-window">Дверь + широкое окно</button>
+                            <button class="category-btn" type="button" data-entrance-type="open-connection">Окно + дверь + окно</button>
+                        </div>
+                        <div class="materials-categories entrance-side-switch" id="entranceSideSwitch">
+                            <button class="category-btn active" type="button" data-entrance-mirror="false">Петли слева</button>
+                            <button class="category-btn" type="button" data-entrance-mirror="true">Петли справа</button>
+                        </div>
+                        <div class="range-wrapper entrance-size-control">
+                            <label for="entranceWidth">Ширина проёма <span id="entranceWidthValue">0.90 м</span></label>
+                            <input type="range" id="entranceWidth" class="form-range" min="0.7" max="2.8" step="0.05" value="0.9">
+                        </div>
+                        <div class="range-wrapper entrance-size-control">
+                            <label for="entranceHeight">Высота проёма <span id="entranceHeightValue">2.15 м</span></label>
+                            <input type="range" id="entranceHeight" class="form-range" min="0.85" max="2.55" step="0.05" value="2.15">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Количество оконных секций</label>
+                        <div class="counter-wrapper">
+                            <button class="counter-btn" onclick="adjustCounter('windowSections', -1)">−</button>
+                            <input type="number" id="windowSections" class="counter-input" value="3" min="1" max="10" readonly>
+                            <button class="counter-btn" onclick="adjustCounter('windowSections', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <div class="config-block-header">
+                        <span class="config-block-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.3-.3-.3-2.3z"/></svg>
+                        </span>
+                        <h4>Дополнительно</h4>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="needInsulation" checked>
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-label">Утепление</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="needWiring" checked>
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-label">Электрика</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="needFloorHeating">
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-label">Тёплый пол</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="needVentilation">
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-label">Вентиляция</span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ============================================
+                 ЦЕНТРАЛЬНАЯ ЧАСТЬ — 3D ВИЗУАЛИЗАТОР
+            ============================================ -->
+            <main class="config-main viewer-panel">
+                <div class="visualizer-wrapper">
+                    <div class="visualizer-header">
+                        <h3>
+                            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;margin-right:.5rem"><path d="M12 2.6 21 7.3v9.4L12 21.4 3 16.7V7.3z"/><path d="M3 7.3 12 12l9-4.7M12 12v9.4"/></svg>
+                            3D Визуализация
+                        </h3>
+                        <div class="visualizer-actions">
+                            <button class="btn-icon" onclick="resetVisualizerState()" title="Сбросить изменения" aria-label="Сбросить изменения">
+                                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.3M3 4.5V9h4.5"/></svg>
+                            </button>
+                            <button class="btn-icon" onclick="toggleFullscreen()" title="На весь экран" aria-label="Развернуть на весь экран">
+                                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1v4M16 3h4a1 1 0 0 1 1 1v4M8 21H4a1 1 0 0 1-1-1v-4M16 21h4a1 1 0 0 0 1-1v-4"/></svg>
+                            </button>
+                            <button class="btn-icon" onclick="takeScreenshot()" title="Сделать скриншот" aria-label="Сделать скриншот">
+                                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg>
+                            </button>
+                            <button class="btn-icon" onclick="resetCamera()" title="Сбросить камеру" aria-label="Сбросить положение камеры">
+                                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5V2M12 22v-2.5M4.5 12H2M22 12h-2.5"/><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.6" class="ico-fill"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="visualizer-container" id="visualizerContainer">
+                        <div id="balcony3d" class="balcony-3d-canvas"></div>
+
+                        <div class="visualizer-overlay" id="visualizerOverlay">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
+                                <span>Загрузка 3D...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="visualizer-secondary-actions">
+                        <button class="btn btn-ghost visualizer-reset-btn" onclick="resetVisualizerState()">
+                            Сбросить изменения
+                        </button>
+                    </div>
+
+                    <div class="placement-mode-indicator" id="placementModeIndicator">
+                        <span class="mode-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                        </span>
+                        <span class="mode-text">Режим размещения: <strong id="placementModeName"></strong></span>
+                        <span class="mode-hint">Кликните на поверхность для размещения</span>
+                        <button class="mode-cancel" onclick="cancelPlacementMode()">✕</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Tablet/mobile section switcher -->
+            <nav class="tab-bar" id="vtabBar" aria-label="Разделы конфигуратора">
+                <button class="vtab-btn active" type="button" data-vtab="dimensions">Размеры</button>
+                <button class="vtab-btn" type="button" data-vtab="materials">Материалы</button>
+                <button class="vtab-btn" type="button" data-vtab="furniture">Мебель</button>
+                <button class="vtab-btn" type="button" data-vtab="lighting">Освещение</button>
+                <button class="vtab-btn" type="button" data-vtab="extras">Доп. опции</button>
+            </nav>
+
+            <!-- ============================================
+                 ПРАВАЯ ПАНЕЛЬ — МАТЕРИАЛЫ И ЦВЕТА
+            ============================================ -->
+            <aside class="config-sidebar config-sidebar-right right-panel">
+                <div class="sidebar-tabs">
+                    <button class="tab-btn active" data-tab="materials">
+                        <span class="tab-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><path d="M12 2.6 21 7l-9 4.4L3 7z"/><path d="M3 12l9 4.4L21 12M3 16.6 12 21l9-4.4"/></svg>
+                        </span>
+                        <span>Материалы</span>
+                    </button>
+                    <button class="tab-btn" data-tab="furniture">
+                        <span class="tab-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><path d="M5 11V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M4 11h16a1 1 0 0 1 1 1v4H3v-4a1 1 0 0 1 1-1zM5 16v3M19 16v3"/></svg>
+                        </span>
+                        <span>Мебель</span>
+                    </button>
+                    <button class="tab-btn" data-tab="lighting">
+                        <span class="tab-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.5.4.5 1 .5 1.6V16h6v-.5c0-.6 0-1.2.5-1.6A6 6 0 0 0 12 3z"/></svg>
+                        </span>
+                        <span>Свет</span>
+                    </button>
+                </div>
+
+                <!-- ВКЛАДКА МАТЕРИАЛЫ -->
+                <div class="tab-content active" id="tab-materials">
+                    <div class="element-selector">
+                        <label class="element-label">Выберите элемент:</label>
+                        <select class="form-select element-select" id="elementSelect">
+                            <option value="walls_all" class="wall-element-option" selected>Все стены сразу</option>
+                            <option value="walls_front">Передняя стена</option>
+                            <option value="walls_left">Левая стена</option>
+                            <option value="walls_right">Правая стена</option>
+                            <option value="walls_back">Задняя стена</option>
+                            <option value="ceiling">Потолок</option>
+                            <option value="floor">Пол</option>
+                            <option value="windows">Окна</option>
+                            <option value="windowsill">Подоконник</option>
+                            <option value="sill">Отлив</option>
+                        </select>
+                        <span class="wall-link-indicator is-linked" id="wallLinkIndicator">
+                            <span class="wall-link-icon" aria-hidden="true">🔗</span>
+                            <span class="wall-link-text">Все стены связаны</span>
+                        </span>
+                    </div>
+
+                    <div class="materials-categories">
+                        <button class="category-btn active" data-category="walls">Стены</button>
+                        <button class="category-btn" data-category="ceiling">Потолок</button>
+                        <button class="category-btn" data-category="floor">Пол</button>
+                        <button class="category-btn" data-category="windows">Окна</button>
+                    </div>
+
+                    <div class="materials-grid" id="materialsGrid">
+                        <!-- Генерируется через JS -->
+                    </div>
+                </div>
+
+                <!-- ВКЛАДКА МЕБЕЛЬ -->
+                <div class="tab-content" id="tab-furniture">
+                    <div class="furniture-categories">
+                        <button class="category-btn active" data-furniture-category="storage">Хранение</button>
+                        <button class="category-btn" data-furniture-category="seating">Мебель для сидения</button>
+                        <button class="category-btn" data-furniture-category="tables">Столы</button>
+                        <button class="category-btn" data-furniture-category="decor">Декор</button>
+                    </div>
+
+                    <div class="furniture-grid" id="furnitureGrid">
+                        <!-- Генерируется через JS -->
+                    </div>
+
+                    <div class="cabinet-color-panel" id="cabinetColorPanel">
+                        <div class="cabinet-color-header">
+                            <div>
+                                <span class="panel-eyebrow">Шкафы</span>
+                                <h4>Цвет выбранного шкафа</h4>
+                            </div>
+                            <span class="cabinet-color-status" id="cabinetColorStatus">Выберите шкаф</span>
+                        </div>
+                        <div class="cabinet-color-swatches" id="cabinetColorSwatches"></div>
+                        <div class="cabinet-custom-color">
+                            <input type="color" id="cabinetColorPicker" class="color-picker" value="#8B7355" aria-label="Свой цвет шкафа">
+                            <button class="btn-apply-color" type="button" id="cabinetColorApply">Применить</button>
+                        </div>
+                    </div>
+
+                    <div class="furniture-placement-hint">
+                        <span class="hint-icon" aria-hidden="true">
+                            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+                        </span>
+                        <span>Выберите мебель и кликните на пол в 3D для размещения</span>
+                    </div>
+
+                    <div class="placed-furniture" id="placedFurniture">
+                        <h4>Размещённая мебель:</h4>
+                        <div class="placed-list" id="placedFurnitureList">
+                            <p class="empty-message">Мебель ещё не размещена</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ВКЛАДКА ОСВЕЩЕНИЕ -->
+                <div class="tab-content" id="tab-lighting">
+                    <div class="lighting-types">
+                        <button class="category-btn active" data-lighting-type="ceiling">Потолочное</button>
+                        <button class="category-btn" data-lighting-type="wall">Настенное</button>
+                        <button class="category-btn" data-lighting-type="floor">Напольное</button>
+                        <button class="category-btn" data-lighting-type="decorative">Декоративное</button>
+                    </div>
+
+                    <div class="lighting-grid" id="lightingGrid">
+                        <!-- Генерируется через JS -->
+                    </div>
+
+                    <div class="lighting-settings">
+                        <h4>Настройки освещения:</h4>
+
+                        <div class="form-group">
+                            <label class="form-label">Яркость</label>
+                            <div class="range-wrapper">
+                                <input type="range" id="lightBrightness" class="form-range" min="0" max="200" value="80">
+                                <span class="range-value" id="brightnessValue">80%</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Температура света</label>
+                            <div class="temperature-selector">
+                                <button class="temp-btn" data-temp="warm" title="Тёплый (2700K)">
+                                    <span class="temp-indicator" style="background: #ffcc80;"></span>
+                                    <span>Тёплый</span>
+                                </button>
+                                <button class="temp-btn active" data-temp="neutral" title="Нейтральный (4000K)">
+                                    <span class="temp-indicator" style="background: #ffffff;"></span>
+                                    <span>Нейтральный</span>
+                                </button>
+                                <button class="temp-btn" data-temp="cool" title="Холодный (6000K)">
+                                    <span class="temp-indicator" style="background: #80deea;"></span>
+                                    <span>Холодный</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="autoLighting" checked>
+                                <span class="checkbox-mark"></span>
+                                <span class="checkbox-label">Автоматическое включение</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="placed-lighting" id="placedLighting">
+                        <h4>Размещённые светильники:</h4>
+                        <div class="placed-list" id="placedLightingList">
+                            <p class="empty-message">Светильники ещё не размещены</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div><!-- /.app-workspace -->
+
+        <!-- Persistent bottom action bar -->
+        <div class="app-bottom-bar">
+            <div class="bottom-bar-summary">
+                <span class="summary-label">Предварительная стоимость:</span>
+                <span class="summary-price" id="bottomBarPrice">по замеру</span>
+            </div>
+            <button class="btn-order-main" id="bottomBarOrderBtn" type="button" onclick="openRequestModal()">
+                Заказать замер
+            </button>
+        </div>
+    </div><!-- /.app-shell -->
+
+    <!-- ============================================
+         МОДАЛЬНОЕ ОКНО ЗАКАЗА
+    ============================================ -->
+    <div class="modal-overlay" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+        <div class="modal modal-order">
+            <button class="modal-close" onclick="closeOrderModal()" aria-label="Закрыть окно заказа">✕</button>
+
+            <div class="modal-header">
+                <h2 id="orderModalTitle">Оформление заказа</h2>
+                <p>Заполните форму и мы свяжемся с вами в течение 15 минут</p>
+            </div>
+
+            <form class="modal-form" id="orderForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="clientName">ФИО <span class="required">*</span></label>
+                        <input type="text" id="clientName" name="clientName" class="form-input" placeholder="Иванов Иван Иванович" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="clientPhone">Телефон <span class="required">*</span></label>
+                        <input type="tel" id="clientPhone" name="clientPhone" class="form-input" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="clientEmail">Email</label>
+                        <input type="email" id="clientEmail" name="clientEmail" class="form-input" placeholder="example@mail.ru">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="clientAddress">Адрес объекта</label>
+                        <input type="text" id="clientAddress" name="clientAddress" class="form-input" placeholder="г. Москва, ул. Примерная, д. 1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="comment">Комментарий</label>
+                        <textarea id="comment" name="comment" class="form-input form-textarea" placeholder="Пожелания, вопросы, удобное время для звонка..." rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-label">
+                                Согласен с <a href="/privacy" target="_blank" rel="noopener">условиями обработки персональных данных</a>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="order-summary-block">
+                    <h4>Ваш заказ:</h4>
+                    <div id="orderSummaryContent"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">Отправить заказ</span>
+                        <span class="btn-loading" style="display: none;">
+                            <span class="spinner-small"></span>
+                            Отправка...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================
+         МОДАЛЬНОЕ ОКНО ЗАПРОСА ЗВОНКА
+    ============================================ -->
+    <div class="modal-overlay" id="requestModal" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle">
+        <div class="modal modal-request">
+            <button class="modal-close" onclick="closeRequestModal()" aria-label="Закрыть окно обратного звонка">✕</button>
+
+            <div class="modal-header">
+                <h2 id="requestModalTitle">Заказать звонок</h2>
+                <p>Оставьте номер и мы перезвоним вам в течение 5 минут</p>
+            </div>
+
+            <form class="modal-form" id="requestForm">
+                <div class="form-group">
+                    <label class="form-label" for="requestName">Ваше имя</label>
+                    <input type="text" id="requestName" name="requestName" class="form-input" placeholder="Иван">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="requestPhone">Телефон <span class="required">*</span></label>
+                    <input type="tel" id="requestPhone" name="requestPhone" class="form-input" placeholder="+7 (___) ___-__-__" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeRequestModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Жду звонка</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================
+         СКРИПТЫ
+    ============================================ -->
+    <script>
+        try {
+            window.BALCONY_DEBUG = new URLSearchParams(window.location.search).has('debug') ||
+                window.localStorage.getItem('balconyDebug') === '1';
+        } catch (error) {
+            window.BALCONY_DEBUG = false;
+        }
+        if (!window.BALCONY_DEBUG) {
+            ['log', 'info', 'table'].forEach(function(method) {
+                console[method] = function() {};
+            });
+        }
+    </script>
+
+    <!-- Theme toggle wiring for configurator page header -->
+    <script>
+        (function () {
+            var btn = document.getElementById('confThemeToggle');
+            if (!btn) return;
+            var sun = btn.querySelector('.ico-sun');
+            var moon = btn.querySelector('.ico-moon');
+
+            function applyTheme(dark) {
+                document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+                try { localStorage.setItem('balcony-theme', dark ? 'dark' : 'light'); } catch(e) {}
+                if (sun)  sun.style.display  = dark ? 'none'  : '';
+                if (moon) moon.style.display = dark ? ''      : 'none';
+                btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+            }
+
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            applyTheme(isDark);
+
+            btn.addEventListener('click', function () {
+                isDark = !isDark;
+                applyTheme(isDark);
+            });
+        })();
+    </script>
+
+    <!-- Three.js r184 + OrbitControls + RoomEnvironment (esbuild bundle) -->
+    <script defer src="/vendor/three.global.js"></script>
+
+    <!-- Core scripts -->
+    <script defer src="/js/materials.js"></script>
+    <script defer src="/js/balcony-builder.js"></script>
+    <script defer src="/js/visualizer.js"></script>
+    <script defer src="/js/order-handler.js"></script>
+    <script defer src="/js/price-calculator.js"></script>
+    <script defer src="/js/app.js"></script>
+    <script defer src="/js/ui-enhance.js"></script>
+</body>
+</html>
