@@ -328,10 +328,11 @@ export const RAILINGS: Record<RailingType, RailingSpec> = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * How an accessory is priced:
- * - `Flat`        — single fixed charge regardless of size.
- * - `PerSqm`      — multiplied by the glazed façade area.
- * - `PerMeter`    — multiplied by the balcony width in metres.
+ * How an accessory is priced (the union members below are the real
+ * {@link PriceUnit} identifiers):
+ * - `Flat`         — single fixed charge regardless of size.
+ * - `SquareMeter`  — multiplied by the glazed façade area.
+ * - `LinearMeter`  — multiplied by the balcony width in metres.
  */
 export type AccessoryPricingMode = PriceUnit.Flat | PriceUnit.SquareMeter | PriceUnit.LinearMeter;
 
