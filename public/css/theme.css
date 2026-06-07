@@ -45,17 +45,19 @@
 }
 
 html {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    /* SCROLLBAR-FIX-DISABLED: scrollbar-width: none; */
+    /* SCROLLBAR-FIX-DISABLED: -ms-overflow-style: none; */
     scroll-padding-top: 92px;
 }
 
+/* SCROLLBAR-FIX-DISABLED: global scrollbar kill removed — components-v2.css owns scrollbar styles
 html::-webkit-scrollbar,
 body::-webkit-scrollbar,
 *::-webkit-scrollbar {
     width: 0;
     height: 0;
 }
+*/
 
 section,
 footer {

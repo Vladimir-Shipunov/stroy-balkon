@@ -1128,12 +1128,6 @@ OrderHandler.prototype._sendRequest = async function(endpoint, data, method = 'P
 // ============================================
 const orderHandler = new OrderHandler();
 
-// ============================================
-// ============================================
-(function initOrderHandler() {
-    console.log('?? OrderHandler initialized');
-    console.log('API URL:', orderHandler.config.apiUrl);
-})();
 
 // ============================================
 // ============================================

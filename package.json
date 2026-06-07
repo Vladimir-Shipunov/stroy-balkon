@@ -9,6 +9,7 @@
     "build:three": "esbuild src/three-bundle.js --bundle --format=iife --global-name=__threeSetup --outfile=public/vendor/three.global.js --minify",
     "build": "npm run build:three && npm run check",
     "check": "node scripts/smoke-test.js",
+    "typecheck": "tsc --noEmit",
     "test": "node scripts/smoke-test.js"
   },
   "keywords": [
@@ -36,12 +37,14 @@
     "nodemailer": "^8.0.10",
     "swiper": "^12.2.0",
     "three": "^0.184.0",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
     "nodemon": "^3.0.2",
     "prettier": "^3.8.3",
+    "typescript": "^5.9.3",
     "vite": "^8.0.16"
   },
   "engines": {

@@ -77,7 +77,8 @@
             
             <nav class="nav-menu" id="navMenu">
                 <a href="#hero" class="nav-link active">Главная</a>
-                <a href="#configurator" class="nav-link">Конфигуратор</a>
+                <a href="#services" class="nav-link">Услуги</a>
+                <a href="/configurator" class="nav-link">Конфигуратор</a>
                 <a href="#contacts" class="nav-link">Контакты</a>
             </nav>
 
@@ -160,9 +161,9 @@
                 </p>
                 
                 <div class="hero-buttons hero-actions">
-                    <button class="hero-btn-primary" type="button" onclick="scrollToConfigurator()">
+                    <a class="hero-btn-primary" href="/configurator">
                         Рассчитать стоимость
-                    </button>
+                    </a>
                     <a class="hero-btn-ghost" href="#works-gallery">
                         Смотреть работы
                     </a>
@@ -209,523 +210,265 @@
         </div>
     </section>
 
-    <div class="section-divider" aria-hidden="true"></div>
-
     <!-- ============================================
-         КОНФИГУРАТОР БАЛКОНА
+         УСЛУГИ
     ============================================ -->
-    <section class="configurator-section" id="configurator">
+    <section class="services-section" id="services">
         <div class="container">
-            <div class="section-header" data-reveal>
-                <span class="section-badge">Онлайн конфигуратор</span>
-                <h2 class="section-title">Спроектируйте свой балкон</h2>
-                <p class="section-subtitle">
-                    Выберите параметры, материалы и цвета для каждого элемента отдельно.
-                    Все изменения отображаются в реальном времени в 3D.
-                </p>
+            <div class="section-header-landing" data-reveal>
+                <span class="section-eyebrow">Что мы делаем</span>
+                <h2 class="section-heading">Полный комплекс работ<br><em>под ключ</em></h2>
+                <p class="section-lead">Остекление, отделка, утепление — всё в одних руках. Без субподрядчиков и переплат.</p>
+            </div>
+            <div class="services-grid">
+                <article class="service-card" data-reveal>
+                    <div class="service-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="6" y="10" width="36" height="28" rx="2" stroke="currentColor" stroke-width="2.5"/>
+                            <line x1="6" y1="24" x2="42" y2="24" stroke="currentColor" stroke-width="2.5"/>
+                            <line x1="24" y1="10" x2="24" y2="38" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M14 17l4 4M14 31l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-card-title">Остекление балконов</h3>
+                    <p class="service-card-desc">Рамное, безрамное, панорамное — подберём под ваш дом. Профиль Rehau, КБЕ, Veka. Установка за 1 день.</p>
+                    <ul class="service-card-list">
+                        <li>Холодное и тёплое остекление</li>
+                        <li>Двухкамерные стеклопакеты</li>
+                        <li>Панорамное и французское</li>
+                    </ul>
+                </article>
+                <article class="service-card service-card--featured" data-reveal>
+                    <div class="service-card-badge">Популярно</div>
+                    <div class="service-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 36V18l16-10 16 10v18H8z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+                            <rect x="18" y="24" width="12" height="12" stroke="currentColor" stroke-width="2.5"/>
+                            <path d="M21 24V20a3 3 0 0 1 6 0v4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-card-title">Отделка «под ключ»</h3>
+                    <p class="service-card-desc">Вагонка, ламинат, МДФ, ПВХ-панели, искусственный камень. Стены, пол, потолок — всё в одной бригаде.</p>
+                    <ul class="service-card-list">
+                        <li>20+ материалов и текстур</li>
+                        <li>3D-проект до начала работ</li>
+                        <li>Гарантия 5 лет на монтаж</li>
+                    </ul>
+                </article>
+                <article class="service-card" data-reveal>
+                    <div class="service-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 6l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+                            <path d="M12 36c-3 2-4 5-4 5M36 36c3 2 4 5 4 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="24" y1="36" x2="24" y2="42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-card-title">Утепление и электрика</h3>
+                    <p class="service-card-desc">Теплоизоляция пола, стен и потолка. Тёплый электрический пол, освещение, розетки — превратим балкон в полноценную комнату.</p>
+                    <ul class="service-card-list">
+                        <li>Пенофол, пеноплекс, минвата</li>
+                        <li>Тёплый пол и LED-освещение</li>
+                        <li>Вывод розеток и выключателей</li>
+                    </ul>
+                </article>
             </div>
         </div>
+    </section>
 
-        <!-- LAYOUT-V2: viewport-locked workspace shell (owns structural layout) -->
-        <div class="app-shell">
-            <!-- Scoped boot loader: covers only the configurator (see ui-enhance.js) -->
-            <div id="pageLoader" class="page-loader" role="status" aria-live="polite">
-                <div class="loader-content">
-                    <div class="loader-logo">БАЛКОН-МСК</div>
-                    <div class="loader-bar"><div class="loader-fill"></div></div>
-                    <div class="loader-text">Загружаем конфигуратор…</div>
+    <!-- ============================================
+         ПРЕИМУЩЕСТВА
+    ============================================ -->
+    <section class="advantages-section">
+        <div class="container">
+            <div class="section-header-landing" data-reveal>
+                <span class="section-eyebrow">Почему мы</span>
+                <h2 class="section-heading">6 причин выбрать<br><em>БАЛКОН-МСК</em></h2>
+            </div>
+            <div class="advantages-grid">
+                <div class="advantage-card" data-reveal>
+                    <div class="advantage-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none"><path d="M16 4l2.5 7.5H26l-6.5 4.8 2.5 7.7L16 19.5l-6 4.5 2.5-7.7L6 11.5h7.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3>15 лет опыта</h3>
+                    <p>Работаем на рынке Москвы с 2008 года. Выполнили более 1 200 проектов.</p>
+                </div>
+                <div class="advantage-card" data-reveal>
+                    <div class="advantage-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none"><path d="M4 8h24v16H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 12v8M22 12v8M16 12v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>Бесплатный замер</h3>
+                    <p>Выезд замерщика бесплатно. Подготовим 3D-проект и точную смету за 1 день.</p>
+                </div>
+                <div class="advantage-card" data-reveal>
+                    <div class="advantage-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none"><path d="M16 4l3 7 7.5 1.1-5.4 5.3 1.3 7.5L16 21.3l-6.4 3.6 1.3-7.5L5.5 12.1 13 11z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3>Гарантия 5 лет</h3>
+                    <p>Письменная гарантия на все работы и материалы. Устраним любые дефекты бесплатно.</p>
+                </div>
+                <div class="advantage-card" data-reveal>
+                    <div class="advantage-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 14h24" stroke="currentColor" stroke-width="2"/><path d="M12 14v10M20 14v10" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3>Своё производство</h3>
+                    <p>Собственный цех позволяет контролировать качество и держать цены ниже рынка.</p>
+                </div>
+                <div class="advantage-card" data-reveal>
+                    <div class="advantage-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none"><path d="M10 16s1.5 3 6 3 6-3 6-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2"/><path d="M10 12h.01M22 12h.01" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>Без посредников</h3>
+                    <p>Работаем напрямую — без субподрядчиков. Одна бригада от замера до сдачи.</p>
+                </div>
+                <div class="advantage-card" data-reveal>
+                    <div class="advantage-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2"/><path d="M16 9v7l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>Монтаж от 3 дней</h3>
+                    <p>Средний срок выполнения — 3–5 рабочих дней. Без затяжных ремонтов.</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="app-workspace">
-                <!-- ============================================
-                     ЛЕВАЯ ПАНЕЛЬ - ПАРАМЕТРЫ БАЛКОНА
-                ============================================ -->
-                <aside class="config-sidebar config-sidebar-left left-panel">
-                    <div class="sidebar-header">
-                        <h3>Параметры балкона</h3>
-                        <button class="btn-reset" onclick="resetConfigurator()" title="Сбросить все настройки">
-                            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.3M3 4.5V9h4.5"/></svg>
-                            Сброс
-                        </button>
+    <!-- ============================================
+         КАК МЫ РАБОТАЕМ
+    ============================================ -->
+    <section class="process-section">
+        <div class="container">
+            <div class="section-header-landing" data-reveal>
+                <span class="section-eyebrow">Как мы работаем</span>
+                <h2 class="section-heading">От заявки до<br><em>готового балкона</em></h2>
+            </div>
+            <ol class="process-steps" aria-label="Этапы работы">
+                <li class="process-step" data-reveal>
+                    <div class="process-step-number" aria-hidden="true">01</div>
+                    <div class="process-step-body">
+                        <h3>Заявка или звонок</h3>
+                        <p>Оставьте заявку на сайте или позвоните — связываемся в течение 15 минут в рабочее время.</p>
                     </div>
-
-                    <div class="config-block">
-                        <div class="config-block-header">
-                            <span class="config-block-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><path d="M21 3 3 21M3 8V3h5M21 16v5h-5M7.5 7.5l2 2M12 12l2 2"/></svg>
-                            </span>
-                            <h4>Размеры</h4>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">
-                                Длина балкона
-                                <span class="form-hint">(от 2 до 20 метров)</span>
-                            </label>
-                            <div class="size-selector">
-                                <button class="size-btn" data-size="3">
-                                    <span class="size-value">3 м</span>
-                                    <span class="size-label">Стандарт</span>
-                                </button>
-                                <button class="size-btn" data-size="5">
-                                    <span class="size-value">5 м</span>
-                                    <span class="size-label">Средний</span>
-                                </button>
-                                <button class="size-btn" data-size="8">
-                                    <span class="size-value">8 м</span>
-                                    <span class="size-label">Большой</span>
-                                </button>
-                            </div>
-                            <div class="custom-input-wrapper">
-                                <input type="number" 
-                                       id="customSize" 
-                                       class="form-input custom-size" 
-                                       placeholder="Свой размер (м)" 
-                                       min="2" 
-                                       max="20" 
-                                       step="0.05">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                Ширина балкона
-                                <span class="form-hint">(от 0.8 до 5 метров)</span>
-                            </label>
-                            <div class="range-wrapper">
-                                <input type="range" 
-                                       id="widthRange" 
-                                       class="form-range" 
-                                       min="0.8" 
-                                       max="5" 
-                                       step="0.01" 
-                                       value="1.5">
-                                <span class="range-value" id="widthValue">1.5 м</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                Высота потолка
-                                <span class="form-hint">(от 2.2 до 4 метров)</span>
-                            </label>
-                            <div class="range-wrapper">
-                                <input type="range" 
-                                       id="heightRange" 
-                                       class="form-range" 
-                                       min="2.2" 
-                                       max="4" 
-                                       step="0.1" 
-                                       value="2.7">
-                                <span class="range-value" id="heightValue">2.7 м</span>
-                            </div>
-                        </div>
+                </li>
+                <li class="process-step" data-reveal>
+                    <div class="process-step-number" aria-hidden="true">02</div>
+                    <div class="process-step-body">
+                        <h3>Замер и 3D-проект</h3>
+                        <p>Замерщик приезжает бесплатно. Составим 3D-проект и точную смету — уже на следующий день.</p>
                     </div>
-
-                    <div class="config-block">
-                        <div class="config-block-header">
-                            <span class="config-block-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M3.5 10h17"/></svg>
-                            </span>
-                            <h4>Форма балкона</h4>
-                        </div>
-                        
-                        <div class="shape-selector">
-                            <button class="shape-btn" data-shape="hrushchevka" title="Хрущёвка">
-                                <svg class="shape-icon" viewBox="0 0 100 60">
-                                    <rect x="18" y="16" width="64" height="28" fill="currentColor" opacity="0.3"/>
-                                    <rect x="18" y="16" width="64" height="28" stroke="currentColor" stroke-width="2" fill="none"/>
-                                </svg>
-                                <span class="shape-name">Хрущёвка</span>
-                            </button>
-
-                            <button class="shape-btn active" data-shape="loggia-3" title="Лоджия 3 метра">
-                                <svg class="shape-icon" viewBox="0 0 100 60">
-                                    <rect x="10" y="14" width="80" height="32" fill="currentColor" opacity="0.3"/>
-                                    <rect x="10" y="14" width="80" height="32" stroke="currentColor" stroke-width="2" fill="none"/>
-                                </svg>
-                                <span class="shape-name">Лоджия 3 м</span>
-                            </button>
-
-                            <button class="shape-btn" data-shape="loggia-6" title="Лоджия 6 метров">
-                                <svg class="shape-icon" viewBox="0 0 100 60">
-                                    <rect x="6" y="18" width="88" height="24" fill="currentColor" opacity="0.3"/>
-                                    <rect x="6" y="18" width="88" height="24" stroke="currentColor" stroke-width="2" fill="none"/>
-                                </svg>
-                                <span class="shape-name">Лоджия 6 м</span>
-                            </button>
-
-                            <button class="shape-btn" data-shape="boot" title="Сапожок">
-                                <svg class="shape-icon" viewBox="0 0 100 60">
-                                    <path d="M14,18 L86,18 L86,48 L77,48 L68,35 L14,35 Z" fill="currentColor" opacity="0.18"/>
-                                    <path d="M14,18 L86,18 L86,48 L77,48 L68,35 L14,35 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                                    <path d="M14,35 L68,35 L77,48 L86,48" stroke="#f2cf63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                <span class="shape-name">Сапожок</span>
-                            </button>
-
-                            <button class="shape-btn" data-shape="iron" title="Утюжок">
-                                <svg class="shape-icon" viewBox="0 0 100 60">
-                                    <path d="M14,44 L86,44 L86,18 L38,18 L14,34 Z" fill="currentColor" opacity="0.18"/>
-                                    <path d="M14,44 L86,44 L86,18 L38,18 L14,34 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                                    <path d="M14,34 L38,18 L86,18" stroke="#f2cf63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                <span class="shape-name">Утюжок</span>
-                            </button>
-
-                            <button class="shape-btn" data-shape="boat" title="Лодочка">
-                                <svg class="shape-icon" viewBox="0 0 100 60">
-                                    <path d="M8,45 L76,45 L76,37 L84,37 L84,17 L43,17 L8,29 Z" fill="currentColor" opacity="0.18"/>
-                                    <path d="M8,45 L76,45 L76,37 L84,37 L84,17 L43,17 L8,29 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                                    <path d="M8,29 L43,17 L84,17" stroke="#f2cf63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                <span class="shape-name">Лодочка</span>
-                            </button>
-                        </div>
+                </li>
+                <li class="process-step" data-reveal>
+                    <div class="process-step-number" aria-hidden="true">03</div>
+                    <div class="process-step-body">
+                        <h3>Договор и материалы</h3>
+                        <p>Утверждаем объём работ, подписываем договор с фиксированной ценой. Никаких скрытых доплат.</p>
                     </div>
-
-                    <div class="config-block">
-                        <div class="config-block-header">
-                            <span class="config-block-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M12 3.5v17M4 12h16"/></svg>
-                            </span>
-                            <h4>Остекление</h4>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Тип остекления</label>
-                            <select class="form-select" id="glazingType">
-                                <option value="classic" selected>Классическое от парапета</option>
-                                <option value="french">Панорамное / французское</option>
-                                <option value="none">Без остекления</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Форма остекления</label>
-                            <div class="materials-categories glazing-layout-switch" id="glazingLayoutSwitch">
-                                <button class="category-btn active" type="button" data-glazing-layout="straight">Прямое</button>
-                                <button class="category-btn" type="button" data-glazing-layout="g">Г-образное</button>
-                                <button class="category-btn" type="button" data-glazing-layout="p">П-образное</button>
-                            </div>
-                            <div class="materials-categories glazing-side-switch" id="glazingSideSwitch" style="display: none;">
-                                <button class="category-btn active" type="button" data-glazing-side="left">Г-левое</button>
-                                <button class="category-btn" type="button" data-glazing-side="right">Г-правое</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Вход на балкон</label>
-                            <div class="materials-categories entrance-type-switch" id="entranceTypeSwitch">
-                                <button class="category-btn active" type="button" data-entrance-type="plastic-door">Дверь + окно</button>
-                                <button class="category-btn" type="button" data-entrance-type="glazing-window">Дверь + широкое окно</button>
-                                <button class="category-btn" type="button" data-entrance-type="open-connection">Окно + дверь + окно</button>
-                            </div>
-                            <div class="materials-categories entrance-side-switch" id="entranceSideSwitch">
-                                <button class="category-btn active" type="button" data-entrance-mirror="false">Петли слева</button>
-                                <button class="category-btn" type="button" data-entrance-mirror="true">Петли справа</button>
-                            </div>
-                            <div class="range-wrapper entrance-size-control">
-                                <label for="entranceWidth">Ширина проёма <span id="entranceWidthValue">0.90 м</span></label>
-                                <input type="range" id="entranceWidth" class="form-range" min="0.7" max="2.8" step="0.05" value="0.9">
-                            </div>
-                            <div class="range-wrapper entrance-size-control">
-                                <label for="entranceHeight">Высота проёма <span id="entranceHeightValue">2.15 м</span></label>
-                                <input type="range" id="entranceHeight" class="form-range" min="0.85" max="2.55" step="0.05" value="2.15">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Количество оконных секций</label>
-                            <div class="counter-wrapper">
-                                <button class="counter-btn" onclick="adjustCounter('windowSections', -1)">−</button>
-                                <input type="number" id="windowSections" class="counter-input" value="3" min="1" max="10" readonly>
-                                <button class="counter-btn" onclick="adjustCounter('windowSections', 1)">+</button>
-                            </div>
-                        </div>
+                </li>
+                <li class="process-step" data-reveal>
+                    <div class="process-step-number" aria-hidden="true">04</div>
+                    <div class="process-step-body">
+                        <h3>Монтаж и сдача</h3>
+                        <p>Наша бригада выполняет все работы в срок. Принимаете балкон — подписываем акт и выдаём гарантию.</p>
                     </div>
-
-                    <div class="config-block">
-                        <div class="config-block-header">
-                            <span class="config-block-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.3-.3-.3-2.3z"/></svg>
-                            </span>
-                            <h4>Дополнительно</h4>
-                        </div>
-                        
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="needInsulation" checked>
-                                <span class="checkbox-mark"></span>
-                                <span class="checkbox-label">Утепление</span>
-                            </label>
-                            
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="needWiring" checked>
-                                <span class="checkbox-mark"></span>
-                                <span class="checkbox-label">Электрика</span>
-                            </label>
-                            
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="needFloorHeating">
-                                <span class="checkbox-mark"></span>
-                                <span class="checkbox-label">Тёплый пол</span>
-                            </label>
-                            
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="needVentilation">
-                                <span class="checkbox-mark"></span>
-                                <span class="checkbox-label">Вентиляция</span>
-                            </label>
-                        </div>
-                    </div>
-                </aside>
-
-                <!-- ============================================
-                     ЦЕНТРАЛЬНАЯ ЧАСТЬ - 3D ВИЗУАЛИЗАТОР
-                ============================================ -->
-                <main class="config-main viewer-panel">
-                    <div class="visualizer-wrapper">
-                        <div class="visualizer-header">
-                            <h3>
-                                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;margin-right:.5rem"><path d="M12 2.6 21 7.3v9.4L12 21.4 3 16.7V7.3z"/><path d="M3 7.3 12 12l9-4.7M12 12v9.4"/></svg>
-                                3D Визуализация
-                            </h3>
-                            <div class="visualizer-actions">
-                                <button class="btn-icon" onclick="resetVisualizerState()" title="Сбросить изменения" aria-label="Сбросить изменения">
-                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.3M3 4.5V9h4.5"/></svg>
-                                </button>
-                                <button class="btn-icon" onclick="toggleFullscreen()" title="На весь экран" aria-label="Развернуть на весь экран">
-                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1v4M16 3h4a1 1 0 0 1 1 1v4M8 21H4a1 1 0 0 1-1-1v-4M16 21h4a1 1 0 0 0 1-1v-4"/></svg>
-                                </button>
-                                <button class="btn-icon" onclick="takeScreenshot()" title="Сделать скриншот" aria-label="Сделать скриншот">
-                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.2"/></svg>
-                                </button>
-                                <button class="btn-icon" onclick="resetCamera()" title="Сбросить камеру" aria-label="Сбросить положение камеры">
-                                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5V2M12 22v-2.5M4.5 12H2M22 12h-2.5"/><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.6" class="ico-fill"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="visualizer-container" id="visualizerContainer">
-                            <div id="balcony3d" class="balcony-3d-canvas"></div>
-                            
-                            <div class="visualizer-overlay" id="visualizerOverlay">
-                                <div class="loading-spinner">
-                                    <div class="spinner"></div>
-                                    <span>Загрузка 3D...</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="visualizer-secondary-actions">
-                            <button class="btn btn-ghost visualizer-reset-btn" onclick="resetVisualizerState()">
-                                Сбросить изменения
-                            </button>
-                        </div>
-
-                        <div class="placement-mode-indicator" id="placementModeIndicator">
-                            <span class="mode-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-                            </span>
-                            <span class="mode-text">Режим размещения: <strong id="placementModeName"></strong></span>
-                            <span class="mode-hint">Кликните на поверхность для размещения</span>
-                            <button class="mode-cancel" onclick="cancelPlacementMode()">✕</button>
-                        </div>
-                    </div>
-
-                </main>
-
-                <!-- LAYOUT-V2: tablet/mobile section switcher (hidden on desktop) -->
-                <nav class="tab-bar" id="vtabBar" aria-label="Разделы конфигуратора">
-                    <button class="vtab-btn active" type="button" data-vtab="dimensions">Размеры</button>
-                    <button class="vtab-btn" type="button" data-vtab="materials">Материалы</button>
-                    <button class="vtab-btn" type="button" data-vtab="furniture">Мебель</button>
-                    <button class="vtab-btn" type="button" data-vtab="lighting">Освещение</button>
-                    <button class="vtab-btn" type="button" data-vtab="extras">Доп. опции</button>
-                </nav>
-
-                <!-- ============================================
-                     ПРАВАЯ ПАНЕЛЬ - МАТЕРИАЛЫ И ЦВЕТА
-                ============================================ -->
-                <aside class="config-sidebar config-sidebar-right right-panel">
-                    <div class="sidebar-tabs">
-                        <button class="tab-btn active" data-tab="materials">
-                            <span class="tab-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><path d="M12 2.6 21 7l-9 4.4L3 7z"/><path d="M3 12l9 4.4L21 12M3 16.6 12 21l9-4.4"/></svg>
-                            </span>
-                            <span>Материалы</span>
-                        </button>
-                        <button class="tab-btn" data-tab="furniture">
-                            <span class="tab-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><path d="M5 11V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M4 11h16a1 1 0 0 1 1 1v4H3v-4a1 1 0 0 1 1-1zM5 16v3M19 16v3"/></svg>
-                            </span>
-                            <span>Мебель</span>
-                        </button>
-                        <button class="tab-btn" data-tab="lighting">
-                            <span class="tab-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.5.4.5 1 .5 1.6V16h6v-.5c0-.6 0-1.2.5-1.6A6 6 0 0 0 12 3z"/></svg>
-                            </span>
-                            <span>Свет</span>
-                        </button>
-                    </div>
-
-                    <!-- ============================================
-                         ВКЛАДКА МАТЕРИАЛЫ
-                    ============================================ -->
-                    <div class="tab-content active" id="tab-materials">
-                        <div class="element-selector">
-                            <label class="element-label">Выберите элемент:</label>
-                            <select class="form-select element-select" id="elementSelect">
-                                <option value="walls_all" class="wall-element-option" selected>Все стены сразу</option>
-                                <option value="walls_front">Передняя стена</option>
-                                <option value="walls_left">Левая стена</option>
-                                <option value="walls_right">Правая стена</option>
-                                <option value="walls_back">Задняя стена</option>
-                                <option value="ceiling">Потолок</option>
-                                <option value="floor">Пол</option>
-                                <option value="windows">Окна</option>
-                                <option value="windowsill">Подоконник</option>
-                                <option value="sill">Отлив</option>
-                            </select>
-                            <span class="wall-link-indicator is-linked" id="wallLinkIndicator">
-                                <span class="wall-link-icon" aria-hidden="true">🔗</span>
-                                <span class="wall-link-text">Все стены связаны</span>
-                            </span>
-                        </div>
-
-                        <div class="materials-categories">
-                            <button class="category-btn active" data-category="walls">Стены</button>
-                            <button class="category-btn" data-category="ceiling">Потолок</button>
-                            <button class="category-btn" data-category="floor">Пол</button>
-                            <button class="category-btn" data-category="windows">Окна</button>
-                        </div>
-
-                        <div class="materials-grid" id="materialsGrid">
-                            <!-- Генерируется через JS -->
-                        </div>
-                    </div>
-
-                    <!-- ============================================
-                         ВКЛАДКА МЕБЕЛЬ
-                    ============================================ -->
-                    <div class="tab-content" id="tab-furniture">
-                        <div class="furniture-categories">
-                            <button class="category-btn active" data-furniture-category="storage">Хранение</button>
-                            <button class="category-btn" data-furniture-category="seating">Мебель для сидения</button>
-                            <button class="category-btn" data-furniture-category="tables">Столы</button>
-                            <button class="category-btn" data-furniture-category="decor">Декор</button>
-                        </div>
-
-                        <div class="furniture-grid" id="furnitureGrid">
-                            <!-- Генерируется через JS -->
-                        </div>
-
-                        <div class="cabinet-color-panel" id="cabinetColorPanel">
-                            <div class="cabinet-color-header">
-                                <div>
-                                    <span class="panel-eyebrow">Шкафы</span>
-                                    <h4>Цвет выбранного шкафа</h4>
-                                </div>
-                                <span class="cabinet-color-status" id="cabinetColorStatus">Выберите шкаф</span>
-                            </div>
-                            <div class="cabinet-color-swatches" id="cabinetColorSwatches"></div>
-                            <div class="cabinet-custom-color">
-                                <input type="color" id="cabinetColorPicker" class="color-picker" value="#8B7355" aria-label="Свой цвет шкафа">
-                                <button class="btn-apply-color" type="button" id="cabinetColorApply">Применить</button>
-                            </div>
-                        </div>
-
-                        <div class="furniture-placement-hint">
-                            <span class="hint-icon" aria-hidden="true">
-                                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-                            </span>
-                            <span>Выберите мебель и кликните на пол в 3D для размещения</span>
-                        </div>
-
-                        <div class="placed-furniture" id="placedFurniture">
-                            <h4>Размещённая мебель:</h4>
-                            <div class="placed-list" id="placedFurnitureList">
-                                <p class="empty-message">Мебель ещё не размещена</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ============================================
-                         ВКЛАДКА ОСВЕЩЕНИЕ
-                    ============================================ -->
-                    <div class="tab-content" id="tab-lighting">
-                        <div class="lighting-types">
-                            <button class="category-btn active" data-lighting-type="ceiling">Потолочное</button>
-                            <button class="category-btn" data-lighting-type="wall">Настенное</button>
-                            <button class="category-btn" data-lighting-type="floor">Напольное</button>
-                            <button class="category-btn" data-lighting-type="decorative">Декоративное</button>
-                        </div>
-
-                        <div class="lighting-grid" id="lightingGrid">
-                            <!-- Генерируется через JS -->
-                        </div>
-
-                        <div class="lighting-settings">
-                            <h4>Настройки освещения:</h4>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Яркость</label>
-                                <div class="range-wrapper">
-                                    <input type="range" id="lightBrightness" class="form-range" min="0" max="200" value="80">
-                                    <span class="range-value" id="brightnessValue">80%</span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Температура света</label>
-                                <div class="temperature-selector">
-                                    <button class="temp-btn" data-temp="warm" title="Тёплый (2700K)">
-                                        <span class="temp-indicator" style="background: #ffcc80;"></span>
-                                        <span>Тёплый</span>
-                                    </button>
-                                    <button class="temp-btn active" data-temp="neutral" title="Нейтральный (4000K)">
-                                        <span class="temp-indicator" style="background: #ffffff;"></span>
-                                        <span>Нейтральный</span>
-                                    </button>
-                                    <button class="temp-btn" data-temp="cool" title="Холодный (6000K)">
-                                        <span class="temp-indicator" style="background: #80deea;"></span>
-                                        <span>Холодный</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="checkbox-item">
-                                    <input type="checkbox" id="autoLighting" checked>
-                                    <span class="checkbox-mark"></span>
-                                    <span class="checkbox-label">Автоматическое включение</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="placed-lighting" id="placedLighting">
-                            <h4>Размещённые светильники:</h4>
-                            <div class="placed-list" id="placedLightingList">
-                                <p class="empty-message">Светильники ещё не размещены</p>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-            </div><!-- /.app-workspace -->
-
-            <!-- LAYOUT-V2: persistent bottom action bar -->
-            <div class="app-bottom-bar">
-                <div class="bottom-bar-summary">
-                    <span class="summary-label">Предварительная стоимость:</span>
-                    <span class="summary-price" id="bottomBarPrice">по замеру</span>
-                </div>
-                <button class="btn-order-main" id="bottomBarOrderBtn" type="button" onclick="openRequestModal()">
-                    Заказать замер
+                </li>
+            </ol>
+            <div class="process-cta" data-reveal>
+                <button class="hero-btn-primary" type="button" onclick="openRequestModal()">
+                    Записаться на бесплатный замер
                 </button>
             </div>
-        </div><!-- /.app-shell -->
+        </div>
+    </section>
+
+    <!-- ============================================
+         ОТЗЫВЫ
+    ============================================ -->
+    <section class="reviews-section">
+        <div class="container">
+            <div class="section-header-landing" data-reveal>
+                <span class="section-eyebrow">Отзывы</span>
+                <h2 class="section-heading">Что говорят<br><em>наши клиенты</em></h2>
+            </div>
+            <div class="reviews-grid">
+                <blockquote class="review-card" data-reveal>
+                    <div class="review-stars" aria-label="5 из 5 звёзд">★★★★★</div>
+                    <p class="review-text">Заказала отделку лоджии «под ключ». Приехали точно в срок, сделали всё аккуратно, без мусора. Очень довольна результатом — вагонка, тёплый пол, шкаф. Ребята молодцы!</p>
+                    <footer class="review-author">
+                        <div class="review-avatar" aria-hidden="true">МС</div>
+                        <div>
+                            <cite class="review-name">Мария С.</cite>
+                            <span class="review-location">Москва, Выхино</span>
+                        </div>
+                    </footer>
+                </blockquote>
+                <blockquote class="review-card" data-reveal>
+                    <div class="review-stars" aria-label="5 из 5 звёзд">★★★★★</div>
+                    <p class="review-text">Делали остекление в двух квартирах — у нас и у тёщи. Профиль VEKA, двухкамерные стеклопакеты. Всё установили за день. Цена оказалась ниже, чем давали другие компании.</p>
+                    <footer class="review-author">
+                        <div class="review-avatar" aria-hidden="true">АК</div>
+                        <div>
+                            <cite class="review-name">Александр К.</cite>
+                            <span class="review-location">Реутов</span>
+                        </div>
+                    </footer>
+                </blockquote>
+                <blockquote class="review-card" data-reveal>
+                    <div class="review-stars" aria-label="5 из 5 звёзд">★★★★★</div>
+                    <p class="review-text">Долго искала нормальных мастеров. Здесь — сразу замерили, привезли 3D-проект, согласовали материалы. Монтаж занял 4 дня. Балкон стал отдельной комнатой-кабинетом. Спасибо!</p>
+                    <footer class="review-author">
+                        <div class="review-avatar" aria-hidden="true">ИВ</div>
+                        <div>
+                            <cite class="review-name">Ирина В.</cite>
+                            <span class="review-location">Химки</span>
+                        </div>
+                    </footer>
+                </blockquote>
+            </div>
+            <div class="reviews-more" data-reveal>
+                <a href="https://www.avito.ru/user/e0780a5d9e65235385c024ac52d8bc12/profile?src=sharing" class="reviews-more-link" target="_blank" rel="noopener noreferrer">
+                    Все отзывы на Авито
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         КОНФИГУРАТОР — CTA СЕКЦИЯ
+    ============================================ -->
+    <section class="launch-section" id="configurator">
+        <div class="container">
+            <div class="launch-card">
+                <div class="launch-card-left">
+                    <span class="section-eyebrow">3D Конфигуратор</span>
+                    <h2 class="launch-title">Спроектируйте балкон<br><em>в реальном времени</em></h2>
+                    <p class="launch-desc">
+                        Выберите форму, остекление, материалы и отделку.
+                        Увидите результат в 3D сразу — без замерщика и звонков.
+                        Займёт 5 минут.
+                    </p>
+                    <ul class="launch-features">
+                        <li>✦ 6 форм балконов и лоджий</li>
+                        <li>✦ 20+ материалов с текстурами</li>
+                        <li>✦ Расчёт стоимости в реальном времени</li>
+                        <li>✦ Сохранить проект и заказать замер</li>
+                    </ul>
+                    <a href="/configurator" class="hero-btn-primary launch-cta">
+                        Открыть конфигуратор
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <div class="launch-card-right">
+                    <div class="launch-preview">
+                        <img src="/assets/images/configurator-preview.jpg"
+                             onerror="this.parentElement.classList.add('launch-preview--placeholder')"
+                             alt="3D конфигуратор балкона" loading="lazy" />
+                        <div class="launch-preview-badge">
+                            <span class="badge-dot"></span>
+                            3D в реальном времени
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="config-gallery-section" id="works-gallery">
@@ -743,141 +486,6 @@
             </div>
         </div>
     </section> 
-
-    <!-- ============================================
-         ПАНЕЛЬ ИТОГОВ (FIXED)
-    ============================================ -->
-    <div class="summary-panel compact" id="summaryPanel">
-        <button class="summary-fab" id="summaryFab" type="button" aria-label="Открыть панель действий">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.5.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .56 3.5 1 1 0 0 1-.24 1z"/></svg>
-        </button>
-        <div class="summary-content summary-content-compact">
-            <div class="summary-actions">
-                <button class="btn btn-secondary btn-full" onclick="saveProject()">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5zM8 3v5h7M8 21v-6h8v6"/></svg>
-                    Сохранить проект
-                </button>
-                <button class="btn btn-primary btn-full" onclick="openRequestModal()">
-                    Заказать замер
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================
-         МОДАЛЬНОЕ ОКНО ЗАКАЗА
-    ============================================ -->
-    <div class="modal-overlay" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
-        <div class="modal modal-order">
-            <button class="modal-close" onclick="closeOrderModal()" aria-label="Закрыть окно заказа">✕</button>
-
-            <div class="modal-header">
-                <h2 id="orderModalTitle">Оформление заказа</h2>
-                <p>Заполните форму и мы свяжемся с вами в течение 15 минут</p>
-            </div>
-
-            <form class="modal-form" id="orderForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="clientName">
-                            ФИО <span class="required">*</span>
-                        </label>
-                        <input type="text" 
-                               id="clientName" 
-                               name="clientName" 
-                               class="form-input" 
-                               placeholder="Иванов Иван Иванович"
-                               required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="clientPhone">
-                            Телефон <span class="required">*</span>
-                        </label>
-                        <input type="tel" 
-                               id="clientPhone" 
-                               name="clientPhone" 
-                               class="form-input" 
-                               placeholder="+7 (___) ___-__-__"
-                               required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="clientEmail">
-                            Email
-                        </label>
-                        <input type="email" 
-                               id="clientEmail" 
-                               name="clientEmail" 
-                               class="form-input" 
-                               placeholder="example@mail.ru">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="clientAddress">
-                            Адрес объекта
-                        </label>
-                        <input type="text" 
-                               id="clientAddress" 
-                               name="clientAddress" 
-                               class="form-input" 
-                               placeholder="г. Москва, ул. Примерная, д. 1">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="comment">
-                            Комментарий
-                        </label>
-                        <textarea id="comment" 
-                                  name="comment" 
-                                  class="form-input form-textarea" 
-                                  placeholder="Пожелания, вопросы, удобное время для звонка..."
-                                  rows="4"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
-                            <span class="checkbox-mark"></span>
-                            <span class="checkbox-label">
-                                Согласен с <a href="/privacy" target="_blank" rel="noopener">условиями обработки персональных данных</a>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="order-summary-block">
-                    <h4>Ваш заказ:</h4>
-                    <div id="orderSummaryContent">
-                        <!-- Заполняется через JS -->
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeOrderModal()">
-                        Отмена
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <span class="btn-text">Отправить заказ</span>
-                        <span class="btn-loading" style="display: none;">
-                            <span class="spinner-small"></span>
-                            Отправка...
-                        </span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- ============================================
          МОДАЛЬНОЕ ОКНО ЗАПРОСА ЗВОНКА
@@ -1044,19 +652,8 @@
         }
     </script>
 
-    <!-- Three.js -->
-    <script defer src="/vendor/three/three.min.js"></script>
-    <script defer src="/vendor/three-controls/OrbitControls.js"></script>
-    
-    <!-- HTML2Canvas для скриншотов -->
-    
-    <!-- Основные скрипты -->
-    <script defer src="/js/materials.js"></script>
-    <script defer src="/js/balcony-builder.js"></script>
-    <script defer src="/js/visualizer.js"></script>
+    <!-- Landing page scripts (no 3D / configurator scripts needed here) -->
     <script defer src="/js/order-handler.js"></script>
-    <script defer src="/js/price-calculator.js"></script>
-    <script defer src="/js/app.js"></script>
     <script defer src="/js/ui-enhance.js"></script>
 </body>
 </html>

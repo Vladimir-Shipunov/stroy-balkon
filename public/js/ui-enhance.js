@@ -245,9 +245,163 @@
         })();
     }
 
+    /* ---- Header scroll class ---- */
+    function wireHeaderScroll() {
+        var header = document.getElementById('header');
+        if (!header) return;
+        var ticking = false;
+        function update() {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+            ticking = false;
+        }
+        window.addEventListener('scroll', function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(update); }
+        }, { passive: true });
+        update();
+    }
+
+    /* ---- Mobile menu toggle ---- */
+    function wireMobileMenu() {
+        var btn = document.getElementById('mobileMenuBtn');
+        var menu = document.getElementById('navMenu');
+        if (!btn || !menu) return;
+
+        function syncAria(isOpen) {
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            btn.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+        }
+        btn.addEventListener('click', function () {
+            var willOpen = !menu.classList.contains('active');
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            document.body.classList.toggle('menu-open', willOpen);
+            syncAria(willOpen);
+        });
+        menu.querySelectorAll('.nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                menu.classList.remove('active');
+                btn.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                syncAria(false);
+            });
+        });
+        syncAria(false);
+    }
+
+    /* ---- Toast helper for landing page ---- */
+    var SAFE_TOAST_TYPES = { success: true, error: true, warning: true, info: true };
+    function showLandingToast(message, type) {
+        var container = document.getElementById('toastContainer');
+        if (!container) return;
+        var toast = document.createElement('div');
+        toast.className = 'toast ' + (SAFE_TOAST_TYPES[type] ? type : 'info');
+        var content = document.createElement('span');
+        content.className = 'toast-content';
+        var title = document.createElement('span');
+        title.className = 'toast-title';
+        title.textContent = String(message || '');
+        content.appendChild(title);
+        toast.appendChild(content);
+        container.appendChild(toast);
+        setTimeout(function () {
+            toast.style.transition = 'opacity 0.3s';
+            toast.style.opacity = '0';
+            setTimeout(function () { toast.remove(); }, 350);
+        }, 4000);
+    }
+
+    /* ---- Request-call modal + form ---- */
+    function wireRequestModal() {
+        var overlay = document.getElementById('requestModal');
+        if (!overlay) return;
+
+        window.openRequestModal = function () {
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            var first = overlay.querySelector('input:not([type="hidden"])');
+            if (first) { setTimeout(function () { first.focus(); }, 80); }
+        };
+        window.closeRequestModal = function () {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) { window.closeRequestModal(); }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                window.closeRequestModal();
+            }
+        });
+
+        var form = document.getElementById('requestForm');
+        if (!form) return;
+
+        /* Phone auto-format */
+        var phoneInput = document.getElementById('requestPhone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function () {
+                var digits = this.value.replace(/\D/g, '');
+                if (digits.startsWith('7') || digits.startsWith('8')) { digits = digits.slice(1); }
+                var v = '+7';
+                if (digits.length > 0) { v += ' (' + digits.slice(0, 3); }
+                if (digits.length >= 3) { v += ') ' + digits.slice(3, 6); }
+                if (digits.length >= 6) { v += '-' + digits.slice(6, 8); }
+                if (digits.length >= 8) { v += '-' + digits.slice(8, 10); }
+                this.value = v;
+            });
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var nameVal = (document.getElementById('requestName') || {}).value || '';
+            var phoneVal = (document.getElementById('requestPhone') || {}).value || '';
+            var digits = phoneVal.replace(/\D/g, '');
+            if (digits.length < 10) {
+                if (phoneInput) { phoneInput.focus(); }
+                showLandingToast('Укажите корректный номер телефона', 'error');
+                return;
+            }
+
+            var submitBtn = form.querySelector('[type="submit"]');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Отправляем…'; }
+
+            fetch('/api/request-call', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: nameVal.trim(), phone: phoneVal.trim() })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    form.innerHTML = [
+                        '<div class="modal-success">',
+                        '<div class="modal-success-icon"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>',
+                        '<h2>Заявка принята!</h2>',
+                        '<p class="modal-success-lead">Перезвоним в течение 15 минут.</p>',
+                        '<p class="modal-success-sub">Если не дозвонимся — сами свяжитесь по <a href="tel:+79088360606">+7 (908) 836-06-06</a></p>',
+                        '</div>'
+                    ].join('');
+                    setTimeout(function () { window.closeRequestModal(); }, 3500);
+                } else {
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Жду звонка'; }
+                    showLandingToast(data.error || 'Ошибка. Попробуйте ещё раз.', 'error');
+                }
+            })
+            .catch(function () {
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Жду звонка'; }
+                showLandingToast('Не удалось отправить. Позвоните нам напрямую.', 'error');
+            });
+        });
+    }
+
     function init() {
         initPageLoader();
         wireThemeToggles();
+        wireHeaderScroll();
+        wireMobileMenu();
+        wireRequestModal();
         wireScrollProgress();
         wireBackToTop();
         wireReveal();
