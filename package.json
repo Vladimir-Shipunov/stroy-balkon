@@ -10,6 +10,9 @@
     "build": "npm run build:three && npm run check",
     "check": "node scripts/smoke-test.js",
     "typecheck": "tsc --noEmit",
+    "dev:app": "vite",
+    "build:app": "vite build",
+    "preview:app": "vite preview",
     "test": "node scripts/smoke-test.js"
   },
   "keywords": [
@@ -35,12 +38,17 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^8.0.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "swiper": "^12.2.0",
     "three": "^0.184.0",
     "uuid": "^14.0.0",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.0.2",
     "eslint": "^8.56.0",
     "nodemon": "^3.0.2",
     "prettier": "^3.8.3",

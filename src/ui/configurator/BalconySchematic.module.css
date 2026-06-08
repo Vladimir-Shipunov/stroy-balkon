@@ -1,0 +1,128 @@
+/**
+ * BalconySchematic — fabrication-style front-elevation drawing.
+ *
+ * Pure line-art: 1px technical strokes, token colours only, no gradients or
+ * fills beyond a faint glass tint. The frame stroke colour is supplied inline
+ * from the selected finish hex; everything else consumes design tokens.
+ */
+
+.figure {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  color: var(--text-secondary);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---- Glazed field + glass tint ---- */
+.glass {
+  fill: var(--accent-50);
+  opacity: 0.6;
+}
+
+/* ---- Perimeter frame (stroke colour set inline from finish hex) ---- */
+.frame {
+  fill: none;
+  stroke-linejoin: miter;
+}
+
+/* Thin dark outline added only for very pale finishes, for contrast. */
+.frameOutline {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+/* ---- Glazing divisions ---- */
+.mullion {
+  stroke: var(--border-default);
+  stroke-width: 1;
+}
+
+.rail {
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.framedPane {
+  fill: none;
+  stroke: var(--border-default);
+  stroke-width: 1.25;
+}
+
+/* Sliding leaves. */
+.leaf {
+  fill: var(--gray-100);
+  stroke: var(--border-default);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.leafFront {
+  fill: var(--accent-100);
+  stroke: var(--border-strong);
+  stroke-width: 1.25;
+  opacity: 0.7;
+}
+
+.handle {
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ---- Railing band ---- */
+.railBand {
+  fill: var(--gray-50);
+  stroke: var(--border-default);
+  stroke-width: 1.25;
+}
+
+.railGlass {
+  fill: var(--accent-100);
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.baluster {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.slat {
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* ---- Dimension annotations ---- */
+.dimLine {
+  stroke: var(--border-default);
+  stroke-width: 1;
+}
+
+.dimTick {
+  stroke: var(--border-default);
+  stroke-width: 1;
+}
+
+.dimText {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-wide);
+}

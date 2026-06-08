@@ -1,0 +1,46 @@
+/**
+ * StepGlazing — styling for the inline glazing cross-section drawings.
+ *
+ * The SVG sits in OptionCard's media slot. It scales to the slot width, keeps a
+ * stable aspect ratio, and renders as restrained technical line-work. Colour
+ * comes from `currentColor` (inherited card text colour) with token strokes for
+ * the secondary construction lines so the primary glass line stays dominant.
+ */
+
+.section {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 120 / 48;
+  color: var(--gray-700);
+}
+
+/* Primary glass line — the dominant element of every section. */
+.glass {
+  stroke: currentColor;
+}
+
+/* Thin butt-joint between frameless panes. */
+.joint {
+  stroke: var(--gray-400);
+}
+
+/* Slim end rail caps on the semi-frameless section. */
+.rail {
+  stroke: var(--accent-600);
+}
+
+/* Full perimeter frame around each framed pane. */
+.frame {
+  stroke: var(--accent-600);
+}
+
+/* Parallel guide tracks the sliding panes run on. */
+.track {
+  stroke: var(--gray-300);
+}
+
+/* Direction arrow indicating the sliding motion. */
+.arrow {
+  stroke: var(--accent-600);
+}

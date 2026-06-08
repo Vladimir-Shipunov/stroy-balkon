@@ -179,6 +179,11 @@ export interface GlassTypeSpec {
   readonly surchargePerSqmEur: number;
   /** Indicative thermal transmittance (U-value) in W/m²K — lower is better. */
   readonly uValue: number;
+  /**
+   * Indicative visible light transmittance (Tvis) as a percentage — higher
+   * means a brighter interior. Informational; not used by the pricing engine.
+   */
+  readonly lightTransmittancePct: number;
 }
 
 /** All glass types, keyed by {@link GlassType}. */
@@ -189,6 +194,7 @@ export const GLASS_TYPES: Record<GlassType, GlassTypeSpec> = {
     description: 'Standard clear float glass with maximum light transmission.',
     surchargePerSqmEur: 0,
     uValue: 5.7,
+    lightTransmittancePct: 90,
   },
   [GlassType.Tinted]: {
     id: GlassType.Tinted,
@@ -196,6 +202,7 @@ export const GLASS_TYPES: Record<GlassType, GlassTypeSpec> = {
     description: 'Solar-tinted glass that cuts glare and reduces heat gain.',
     surchargePerSqmEur: 18,
     uValue: 5.6,
+    lightTransmittancePct: 48,
   },
   [GlassType.Frosted]: {
     id: GlassType.Frosted,
@@ -203,6 +210,7 @@ export const GLASS_TYPES: Record<GlassType, GlassTypeSpec> = {
     description: 'Obscured satin glass for privacy while keeping daylight.',
     surchargePerSqmEur: 22,
     uValue: 5.7,
+    lightTransmittancePct: 78,
   },
   [GlassType.LowE]: {
     id: GlassType.LowE,
@@ -210,6 +218,7 @@ export const GLASS_TYPES: Record<GlassType, GlassTypeSpec> = {
     description: 'Low-emissivity coated double unit for better heat retention.',
     surchargePerSqmEur: 45,
     uValue: 1.1,
+    lightTransmittancePct: 72,
   },
   [GlassType.Triple]: {
     id: GlassType.Triple,
@@ -217,6 +226,7 @@ export const GLASS_TYPES: Record<GlassType, GlassTypeSpec> = {
     description: 'Triple-glazed insulated unit with the best thermal performance.',
     surchargePerSqmEur: 95,
     uValue: 0.6,
+    lightTransmittancePct: 62,
   },
 };
 
