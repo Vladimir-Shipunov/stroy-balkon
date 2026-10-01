@@ -1,5 +1,5 @@
 /**
- * @file React entry point for the configurator SPA.
+ * @file React entry point for the БАЛКОН-МСК site.
  * Mounts the application into the `#root` element defined in `index.html`.
  */
 import { StrictMode } from 'react';

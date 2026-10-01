@@ -1,13 +1,12 @@
 {
   "name": "balcony-configurator-pro",
   "version": "2.0.0",
-  "description": "Профессиональный конфигуратор отделки балконов с 3D визуализацией",
+  "description": "Конфигуратор отделки балконов: готовые 2D-сцены, материалы, мебель и свет",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
-    "build:three": "esbuild src/three-bundle.js --bundle --format=iife --global-name=__threeSetup --outfile=public/vendor/three.global.js --minify",
-    "build": "npm run build:three && npm run check",
+    "build": "npm run build:app && npm run check",
     "check": "node scripts/smoke-test.js",
     "typecheck": "tsc --noEmit",
     "dev:app": "vite",
@@ -18,13 +17,13 @@
   "keywords": [
     "balcony",
     "configurator",
-    "3d",
     "visualization",
     "construction"
   ],
   "author": "BalconyConfig Team",
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "@phosphor-icons/web": "^2.1.2",
     "axios": "^1.6.2",
     "better-sqlite3": "^9.2.2",
@@ -40,8 +39,8 @@
     "nodemailer": "^8.0.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.4",
     "swiper": "^12.2.0",
-    "three": "^0.184.0",
     "uuid": "^14.0.0",
     "zustand": "^5.0.14"
   },
@@ -49,9 +48,11 @@
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^6.0.2",
+    "adm-zip": "^0.5.17",
     "eslint": "^8.56.0",
     "nodemon": "^3.0.2",
     "prettier": "^3.8.3",
+    "sharp": "^0.35.0",
     "typescript": "^5.9.3",
     "vite": "^8.0.16"
   },

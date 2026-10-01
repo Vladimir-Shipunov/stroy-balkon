@@ -1,0 +1,69 @@
+.gate {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(70% 80% at 80% 0%, rgba(196, 154, 40, 0.14) 0%, transparent 60%),
+    var(--bg-warm);
+}
+
+.gateCard {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.gateTitle {
+  font-size: 1.6rem;
+  margin-top: 8px;
+}
+
+.gateSub {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-top: -8px;
+}
+
+.input {
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+.error {
+  color: #c23b3b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-top: -6px;
+}
+
+.backLink {
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.backLink:hover {
+  color: var(--gold-deep);
+}

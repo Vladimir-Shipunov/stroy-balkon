@@ -1,6 +1,51 @@
 import { defineConfig } from 'vite';
+import type { Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'node:path';
+import { extname, resolve } from 'node:path';
+import { createReadStream, existsSync, statSync } from 'node:fs';
+
+const IMAGE_TYPES: Record<string, string> = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+};
+
+/**
+ * Dev-only static server for the configurator's 2D scene images under `public/vam/`.
+ *
+ * The SPA build disables Vite's `publicDir` (outDir lives under `public/`), so
+ * the dev server would otherwise answer these requests with the SPA's
+ * `index.html`. In production they are served by Express (which statically
+ * serves all of `public/`); this fills the gap for `dev:app`.
+ */
+function servePublicImages(): Plugin {
+  const prefixes = ['/vam/'];
+  return {
+    name: 'serve-public-images-dev',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const url = req.url ?? '';
+        const prefix = prefixes.find((p) => url.startsWith(p));
+        if (!prefix) {
+          return next();
+        }
+        const rel = decodeURIComponent(url.split('?')[0] ?? '');
+        const root = resolve(__dirname, `public${prefix}`);
+        const filePath = resolve(__dirname, `public${rel}`);
+        const type = IMAGE_TYPES[extname(filePath).toLowerCase()];
+        if (!type || !filePath.startsWith(root) || !existsSync(filePath) || !statSync(filePath).isFile()) {
+          return next();
+        }
+        res.setHeader('Content-Type', type);
+        res.setHeader('Cache-Control', 'no-cache');
+        createReadStream(filePath).pipe(res);
+        return undefined;
+      });
+    },
+  };
+}
 
 /**
  * Vite config for the React configurator SPA.
@@ -20,7 +65,7 @@ export default defineConfig(({ command }) => ({
   // The SPA imports its own assets; do not copy the legacy `public/` tree into
   // the build output (outDir lives under public/, so publicDir must be off).
   publicDir: false,
-  plugins: [react()],
+  plugins: [react(), servePublicImages()],
   server: {
     // Bind on all interfaces so both IPv4 (127.0.0.1) and IPv6 loopback resolve
     // (Windows localhost defaults to IPv6, which some clients can't reach).

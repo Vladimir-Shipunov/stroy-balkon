@@ -113,7 +113,7 @@ class EmailService {
                     <tr><td>Name</td><td>${this._escape(order.clientName)}</td></tr>
                     <tr><td>Phone</td><td>${this._escape(order.clientPhone)}</td></tr>
                     <tr><td>Balcony type</td><td>${this._escape(order.balconyType)}</td></tr>
-                    <tr><td>Size</td><td>${this._escape(order.balconySize)} m</td></tr>
+                    ${order.balconySize > 0 ? `<tr><td>Size</td><td>${this._escape(order.balconySize)} m</td></tr>` : ''}
                 </table>
                 <p>We will contact you soon to clarify the details.</p>
             `)
@@ -128,8 +128,10 @@ class EmailService {
                 <tr><td>Phone</td><td>${this._escape(order.clientPhone)}</td></tr>
                 <tr><td>Email</td><td>${this._escape(order.clientEmail || 'not provided')}</td></tr>
                 <tr><td>Balcony type</td><td>${this._escape(order.balconyType)}</td></tr>
-                <tr><td>Size</td><td>${this._escape(order.balconySize)} m</td></tr>
-                <tr><td>Shape</td><td>${this._escape(order.balconyShape)}</td></tr>
+                ${order.balconySize > 0 ? `<tr><td>Size</td><td>${this._escape(order.balconySize)} m</td></tr>` : ''}
+                ${(Array.isArray(order.metadata?.summary) ? order.metadata.summary.slice(0, 20) : [])
+                    .map((row) => `<tr><td>${this._escape(row?.label)}</td><td>${this._escape(row?.value)}</td></tr>`)
+                    .join('')}
             </table>
         `);
     }

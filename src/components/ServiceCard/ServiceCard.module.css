@@ -1,0 +1,132 @@
+.card {
+  --tone: var(--gold);
+  --tone-soft: var(--gold-soft);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base),
+    border-color var(--dur-base);
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--tone);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--tone);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.tone_gold {
+  --tone: #c49a28;
+  --tone-soft: rgba(196, 154, 40, 0.12);
+}
+.tone_sky {
+  --tone: #4d7fa6;
+  --tone-soft: rgba(77, 127, 166, 0.12);
+}
+.tone_wood {
+  --tone: #9a6f3e;
+  --tone-soft: rgba(154, 111, 62, 0.12);
+}
+.tone_slate {
+  --tone: #5b6470;
+  --tone-soft: rgba(91, 100, 112, 0.12);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.glyph {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: var(--tone-soft);
+  color: var(--tone);
+}
+
+.price {
+  text-align: right;
+  line-height: 1.1;
+}
+
+.priceFrom {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+}
+
+.priceValue {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.priceUnit {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.title {
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+}
+
+.tagline {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+}
+
+.features svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--tone);
+}

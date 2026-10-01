@@ -8,6 +8,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
+const Anthropic = require('@anthropic-ai/sdk');
 const logger = require('./utils/logger');
 const { cleanPhone, cleanString } = require('./utils/validation');
 
@@ -16,6 +17,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// AI assistant — created only if a key is configured (otherwise the endpoint
+// degrades gracefully).
+const anthropicClient = process.env.ANTHROPIC_API_KEY
+    ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    : null;
+const AI_MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 const UPLOAD_EXTENSIONS = new Set(['.jpg', '.jpeg', '.jpe', '.png', '.gif', '.webp']);
 const UPLOAD_MIME_TYPES = new Set([
     'image/jpeg',
@@ -55,6 +63,15 @@ const callRequestLimiter = rateLimit({
     keyGenerator: (req) => req.ip
 });
 
+const aiChatLimiter = rateLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 40,
+    message: { success: false, error: 'Слишком много сообщений. Немного подождите.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => req.ip
+});
+
 const siteUrl = process.env.SITE_URL || 'http://localhost:3000';
 const siteHost = (() => {
     try { return new URL(siteUrl).hostname; } catch { return 'localhost'; }
@@ -81,9 +98,16 @@ const allowedOrigins = new Set(
     [siteUrl, 'http://localhost:3000', 'http://127.0.0.1:3000']
         .filter(Boolean)
 );
+// In development the Vite dev server runs on a different origin (5173/5174 + LAN
+// IPs) and proxies /api here — allow local origins so the SPA can reach the API.
+const devOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|172\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/;
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.has(origin)) {
+        if (
+            !origin ||
+            allowedOrigins.has(origin) ||
+            (NODE_ENV !== 'production' && devOriginPattern.test(origin))
+        ) {
             callback(null, true);
         } else {
             callback(new Error('CORS: origin not allowed'));
@@ -160,10 +184,8 @@ const { createAdminGuard } = require('./middleware/admin-auth');
 const adminGuard = createAdminGuard();
 
 const ordersRouter = require('./routes/orders');
-const materialsRouter = require('./routes/materials');
 
 app.use('/api/orders', ordersRouter({ db, emailService, telegramBot, adminGuard }));
-app.use('/api/materials', materialsRouter({ db, adminGuard }));
 
 app.get('/api/hero-slides', (req, res) => {
     try {
@@ -338,6 +360,136 @@ app.post('/api/request-call', callRequestLimiter, async (req, res) => {
     }
 });
 
+/* ------------------------------------------------------------------ *
+ * AI renovation advisor (Claude)
+ * ------------------------------------------------------------------ */
+
+// Values the assistant may set in the 2D configurator. They must match the ids in
+// src/pages/Configurator/vamCatalog.ts / ChatWidget.tsx (which maps them onto the
+// catalogue and drops anything the current layout doesn't have).
+const AI_VALID = {
+    layout: ['sapozhok', 'lodochka', 'utyuzhok', 'loggia', 'long-loggia', 'khrushchevka'],
+    wallFamily: ['laminat', 'vagonka', 'parket', 'mdf'],
+    floorFamily: ['laminat', 'plitka'],
+    glazing: ['classic', 'panoramic'],
+    plintus: ['none', 'white', 'grey', 'brown'],
+    lamp: ['none', 'pendant', 'flat', 'cylinder', 'loft', 'track-black', 'track-white']
+};
+
+// Furniture the assistant may add (one per reply) — mapped to the scene's items in ChatWidget.tsx.
+const AI_OBJECT_TYPES = [
+    'cabinet-2door', 'cabinet-3door', 'cabinet-4door', 'cabinet-low',
+    'bar-stool', 'dryer', 'plant'
+];
+
+function buildAiSystemPrompt(page, config) {
+    return `Ты — эксперт-консультант компании «БАЛКОН-МСК» по ремонту и остеклению балконов в Москве. Отвечай по-русски, дружелюбно и профессионально. Помогай клиенту выбрать остекление, утепление, отделку, мебель и освещение; объясняй различия и сроки. Стоимость в конфигураторе не считается — на вопрос о цене мягко предложи бесплатный замер и точную смету от специалиста. Ответы краткие: 2–4 предложения, если не просят подробнее.
+
+Текущая страница пользователя: ${page}.
+Текущая конфигурация балкона: ${JSON.stringify(config)}.
+
+Ты можешь менять сцену в конфигураторе. Используй ТОЛЬКО эти id значений:
+- layout (форма балкона): sapozhok=Сапожок, lodochka=Лодочка, utyuzhok=Утюжок, loggia=Обычная лоджия, long-loggia=Удлинённая лоджия, khrushchevka=Хрущёвка
+- wallFamily (отделка стен): laminat=Ламинат, vagonka=Вагонка, parket=Стеновой паркет, mdf=МДФ-панели (МДФ — только для сапожка)
+- floorFamily (пол): laminat=Ламинат, plitka=Плитка
+- glazing (остекление): classic=Окна от парапета, panoramic=Панорамное (в пол; у Утюжка только «от парапета»)
+- plintus: none=без плинтуса, white=белый, grey=серый, brown=тёмно-коричневый
+- lamp (потолочный светильник): none=без, pendant=подвесной, flat=плоский, cylinder=накладной цилиндр, loft=лофт-клетка, track-black=трековый чёрный, track-white=трековый белый
+
+Ты также можешь добавить один предмет на балкон (по одному за раз, положение выбирает сам конфигуратор) — поле "addObject" с ТОЧНО одним из этих id:
+cabinet-2door=Шкаф на 2 дверцы, cabinet-3door=Шкаф на 3 дверцы, cabinet-4door=Шкаф на 4 дверцы, cabinet-low=Низкий шкаф с подушками, bar-stool=Барный стул, dryer=Сушилка для белья, plant=Комнатное растение.
+
+Отвечай СТРОГО одним JSON-объектом без markdown и без тройных кавычек, в формате:
+{"message":"<текст ответа>","config":{<только нужные поля из списка выше, опционально>},"addObject":<id предмета или null>,"lead":<true если клиент готов заказать/записаться, иначе false>}
+Если менять конфигурацию не нужно — опусти config или передай {}. Если добавлять предмет не нужно — передай null. Других полей не добавляй.`;
+}
+
+function parseAiResponse(text) {
+    let obj = null;
+    try {
+        obj = JSON.parse(text);
+    } catch {
+        const start = text.indexOf('{');
+        const end = text.lastIndexOf('}');
+        if (start !== -1 && end > start) {
+            try { obj = JSON.parse(text.slice(start, end + 1)); } catch { obj = null; }
+        }
+    }
+    if (!obj || typeof obj !== 'object') {
+        return { message: text.trim() || 'Извините, не удалось обработать ответ.', config: {}, addObject: null, lead: false };
+    }
+    const message = typeof obj.message === 'string' && obj.message.trim()
+        ? obj.message.trim()
+        : (text.trim() || 'Чем ещё помочь?');
+    const config = {};
+    if (obj.config && typeof obj.config === 'object') {
+        for (const key of Object.keys(AI_VALID)) {
+            const value = obj.config[key];
+            if (typeof value === 'string' && AI_VALID[key].includes(value)) {
+                config[key] = value;
+            }
+        }
+    }
+    const addObject = typeof obj.addObject === 'string' && AI_OBJECT_TYPES.includes(obj.addObject)
+        ? obj.addObject
+        : null;
+    return { message, config, addObject, lead: obj.lead === true };
+}
+
+app.post('/api/ai-chat', aiChatLimiter, async (req, res) => {
+    if (!anthropicClient) {
+        return res.status(503).json({
+            success: false,
+            error: 'AI-консультант временно недоступен. Оставьте заявку или позвоните нам.'
+        });
+    }
+    try {
+        const body = req.body || {};
+        const page = cleanString(body.page, { max: 80 }) || 'сайт';
+        const incomingConfig = (body.config && typeof body.config === 'object') ? body.config : {};
+        const config = {};
+        for (const key of Object.keys(AI_VALID)) {
+            const value = incomingConfig[key];
+            if (typeof value === 'string') config[key] = value.slice(0, 40);
+        }
+        const messages = Array.isArray(body.messages)
+            ? body.messages
+                .filter((m) => m && (m.role === 'user' || m.role === 'assistant')
+                    && typeof m.content === 'string' && m.content.trim())
+                .slice(-12)
+                .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }))
+            : [];
+        while (messages.length && messages[0].role === 'assistant') {
+            messages.shift();
+        }
+        if (!messages.length || messages[messages.length - 1].role !== 'user') {
+            return res.status(400).json({ success: false, error: 'Пустое сообщение' });
+        }
+        const response = await anthropicClient.messages.create({
+            model: AI_MODEL,
+            max_tokens: 700,
+            system: buildAiSystemPrompt(page, config),
+            messages
+        });
+        const text = response.content
+            .filter((block) => block.type === 'text')
+            .map((block) => block.text)
+            .join('')
+            .trim();
+        const parsed = parseAiResponse(text);
+        return res.json({
+            success: true,
+            message: parsed.message,
+            config: parsed.config,
+            addObject: parsed.addObject,
+            lead: parsed.lead
+        });
+    } catch (error) {
+        logger.error('AI chat error', error);
+        return res.status(500).json({ success: false, error: 'Не удалось получить ответ. Попробуйте ещё раз.' });
+    }
+});
+
 app.get('/api/statistics', adminGuard, (req, res) => {
     try {
         const stats = db.getStatistics();
@@ -378,20 +530,25 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, '../public'), {
+    // Without this, express.static's own default ("serve index.html for a
+    // directory request") auto-resolves bare '/' to the legacy public/index.html
+    // *before* the explicit '/' route below ever runs — silently overriding it.
+    index: false,
     maxAge: NODE_ENV === 'production' ? '7d' : 0,
     etag: true
 }));
 
+// The React SPA (public/app/, built by `npm run build:app`) owns every
+// top-level page route — '/', '/configurator', '/services', etc. It used to
+// be reachable only under '/app/...' while these legacy static pages sat at
+// the real routes; that's fixed now, so the SPA is what visitors actually see.
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/app/index.html'));
 });
 
+// No SPA equivalent exists for this one yet — keep serving the legacy static page.
 app.get('/privacy', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/privacy.html'));
-});
-
-app.get('/configurator', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/configurator.html'));
 });
 
 app.use((req, res) => {
@@ -407,7 +564,7 @@ app.use((req, res) => {
         return res.status(404).send('Not found');
     }
 
-    return res.sendFile(path.join(__dirname, '../public/index.html'));
+    return res.sendFile(path.join(__dirname, '../public/app/index.html'));
 });
 
 app.use((err, req, res, next) => {
@@ -443,8 +600,6 @@ const server = app.listen(PORT, () => {
     console.log('============================================');
     console.log('Доступные эндпоинты:');
     console.log('  GET  /api/health - Проверка состояния');
-    console.log('  GET  /api/materials - Все материалы');
-    console.log('  GET  /api/materials/:category - Материалы категории');
     console.log('  POST /api/orders - Создать заказ');
     console.log('  GET  /api/orders/:id - Получить заказ');
     console.log('  POST /api/upload - Загрузить файл');

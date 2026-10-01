@@ -1,0 +1,813 @@
+/* ===== Shell ===== */
+.app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== App bar ===== */
+.bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 62px;
+  padding: 0 22px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 5;
+}
+
+.barBrand {
+  flex: none;
+}
+
+.barDivider {
+  width: 1px;
+  height: 26px;
+  background: var(--border);
+}
+
+.barTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.barSpacer {
+  flex: 1;
+}
+
+.barBack {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+
+.barBack:hover {
+  color: var(--gold-deep);
+  background: var(--gold-light);
+}
+
+.barPhone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.barPhone svg {
+  color: var(--gold-deep);
+}
+
+.barPhone:hover {
+  color: var(--gold-deep);
+}
+
+/* ===== Workspace ===== */
+.workspace {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.panel {
+  background: var(--surface);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 18px 28px;
+}
+
+.panel::-webkit-scrollbar {
+  width: 9px;
+}
+
+.panel::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9px;
+  border: 2px solid var(--surface);
+}
+
+.panelLeft {
+  width: 286px;
+  flex: none;
+  border-right: 1px solid var(--border);
+}
+
+.panelRight {
+  width: 264px;
+  flex: none;
+  border-left: 1px solid var(--border);
+}
+
+/* ===== Left panel ===== */
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panelHeadTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all var(--dur-fast);
+}
+
+.resetBtn:hover {
+  color: var(--gold-deep);
+  border-color: var(--gold);
+  background: var(--gold-light);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding-top: 22px;
+}
+
+.sectionLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* Shape cards */
+
+.shapeName {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.shapeHint {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+/* Select + fields */
+
+.select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 11px 36px 11px 13px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-strong);
+  background-color: var(--surface);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+}
+
+.select:hover {
+  border-color: var(--gold);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+/* Dimensions */
+
+/* Segmented buttons */
+
+.segBtn {
+  flex: 1;
+  padding: 9px 4px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all var(--dur-fast);
+}
+
+.segBtn:hover {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+
+.segBtn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+/* Checkboxes */
+.checkList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  transition: all var(--dur-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.check:hover {
+  border-color: var(--border-strong);
+}
+
+.check.active {
+  border-color: var(--gold);
+  background: var(--gold-light);
+}
+
+.checkBox {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--dur-fast);
+}
+
+.check.active .checkBox {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.checkText {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkName {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.checkHint {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+/* ===== Center stage ===== */
+.center {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(196, 154, 40, 0.05) 0%, transparent 60%),
+    var(--bg);
+}
+
+.toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.liveTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3da35a;
+  box-shadow: 0 0 0 4px rgba(61, 163, 90, 0.18);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.toolbarHint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.toolbarSpacer {
+  flex: 1;
+}
+
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  transition: all var(--dur-fast);
+}
+
+.downloadBtn:hover {
+  color: var(--gold-deep);
+  border-color: var(--gold);
+}
+
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  background: #dfe6ea;
+  display: flex;
+}
+
+.stageChips {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  max-width: 70%;
+  pointer-events: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ===== Right panel ===== */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+}
+
+.tab {
+  flex: 1;
+  padding: 9px 4px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all var(--dur-fast);
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  background: var(--surface);
+  color: var(--gold-deep);
+  box-shadow: var(--shadow-xs);
+}
+
+.subTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.subTab {
+  flex: 1;
+  padding: 7px 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all var(--dur-fast);
+}
+
+.subTab:hover {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+
+.subTab.active {
+  background: var(--gold-light);
+  border-color: var(--gold);
+  color: var(--gold-deep);
+}
+
+.hint {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+/* Materials — catalogue cards + variation strips */
+
+/* Variation strip — collapsed by default, expands to 200ms reveal */
+
+/* Empty category placeholder */
+
+/* Furniture cards */
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.selCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 8px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--dur-fast), border-color var(--dur-fast);
+}
+
+.selCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.selCard.active {
+  border-color: var(--gold);
+  background: var(--gold-light);
+}
+
+.selName {
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Placed objects list (furniture tab) */
+
+/* Price tab */
+
+.priceValue {
+  flex: none;
+  font-weight: 600;
+  color: var(--text-soft);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Lighting cards */
+
+/* ===== Bottom bar ===== */
+.bottomBar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 13px 24px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 12px rgba(40, 33, 18, 0.05);
+}
+
+.bottomText {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.bottomCta {
+  margin-left: auto;
+  flex: none;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .panelLeft {
+    width: 250px;
+  }
+  .panelRight {
+    width: 240px;
+  }
+}
+
+@media (max-width: 860px) {
+  .app {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+  .workspace {
+    flex-direction: column;
+    overflow: visible;
+  }
+  .panelLeft,
+.panelRight {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    overflow-y: visible;
+  }
+  /* The scene stays pinned while the option panels scroll underneath it. */
+  .center {
+    order: -1;
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    padding: 10px 12px;
+    gap: 8px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .toolbarHint {
+    display: none;
+  }
+  .bottomBar {
+    position: sticky;
+    bottom: 0;
+  }
+  .bottomText {
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .barTitle,
+.barBack {
+    display: none;
+  }
+  /* Collapse the phone number to an icon-only call button. */
+  .barPhone {
+    font-size: 0;
+    gap: 0;
+  }
+  .bottomText {
+    display: none;
+  }
+  .bottomCta {
+    width: 100%;
+  }
+  /* The shape/glazing chips (top-left) and camera-view buttons (top-right)
+     both grow wider than half the viewport at this width and collide —
+     drop the camera toolbar to the bottom-right corner of the stage instead. */
+  
+  .stageChips {
+    max-width: 85%;
+  }
+}
+
+/* Four tabs (materials / furniture / light / price) must fit the narrow tablet side panel. */
+@media (max-width: 1024px) and (min-width: 861px) {
+  .tab {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 9px 3px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+}
+
+/* Drop the toolbar hint on narrower screens before it pushes "Скачать" out. */
+@media (max-width: 1100px) {
+  .toolbarHint {
+    display: none;
+  }
+}
+
+/* 2D scenes are square: hug the picture instead of leaving grey side bars. */
+.stage {
+  flex: none;
+  /* As wide as the column allows, but never taller than the space under the app bar. */
+  width: min(100%, max(280px, calc(100dvh - 230px)));
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  align-self: center;
+}
+
+@media (max-width: 860px) {
+  .stage {
+    width: min(100%, 46dvh);
+  }
+}
+
+/* 2D scenes (as in the app): layout picker, finish families, colour swatches */
+.layoutGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.layoutCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+  text-align: left;
+  transition: transform var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
+}
+
+.layoutCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.layoutCard.active {
+  border-color: var(--gold);
+  background: var(--gold-light);
+}
+
+.layoutThumb {
+  flex: none;
+  width: 96px;
+  height: 64px;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.layoutText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.glazingGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.glazingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 6px 8px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-xs);
+  text-align: center;
+  transition: transform var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
+}
+
+.glazingCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.glazingCard.active {
+  border-color: var(--gold);
+  background: var(--gold-light);
+}
+
+.glazingThumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: #8a8f96;
+}
+
+.familyRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.familyRow .segBtn {
+  flex: 1 1 calc(50% - 7px);
+}
+
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 9px;
+}
+
+.swatch {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--dur-fast), border-color var(--dur-fast);
+}
+
+.swatch:hover {
+  transform: scale(1.08);
+}
+
+.swatch.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-light);
+}
+
+.swatchCheck {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+}
+
+.itemThumb {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  background: #8a8f96;
+}
+

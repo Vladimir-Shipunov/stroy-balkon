@@ -1,0 +1,3372 @@
+{
+  "chair": [
+    {
+      "category": "chair",
+      "parentChain": [
+        "chair"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "chair1_1",
+      "colorIndex": null,
+      "frameCount": 11,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/chair/chair1_1_1.webp",
+      "avgColorHex": "#969696",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "chair",
+      "parentChain": [
+        "chair"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "chair2_1",
+      "colorIndex": null,
+      "frameCount": 11,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/chair/chair2_1_1.webp",
+      "avgColorHex": "#666666",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "chair",
+      "parentChain": [
+        "chair"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf0_1",
+      "colorIndex": null,
+      "frameCount": 1,
+      "emptyFrameCount": 1,
+      "sampleFile": null,
+      "avgColorHex": null,
+      "width": null,
+      "height": null
+    }
+  ],
+  "dryer": [
+    {
+      "category": "dryer",
+      "parentChain": [
+        "dryer"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "chair1_1",
+      "colorIndex": null,
+      "frameCount": 9,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/dryer/chair1_1_1.webp",
+      "avgColorHex": "#000000",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "dryer",
+      "parentChain": [
+        "dryer"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "chair2_1",
+      "colorIndex": null,
+      "frameCount": 9,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/dryer/chair2_1_1.webp",
+      "avgColorHex": "#010101",
+      "width": 1200,
+      "height": 1200
+    }
+  ],
+  "flowers": [
+    {
+      "category": "flowers",
+      "parentChain": [
+        "flowers"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "chair1_1",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/flowers/chair1_1_1.webp",
+      "avgColorHex": "#62624e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "flowers",
+      "parentChain": [
+        "flowers"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "chair2_1",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/flowers/chair2_1_1.webp",
+      "avgColorHex": "#000000",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "laminat_podokonnik": [
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik1",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik1_1.webp",
+      "avgColorHex": "#aaaaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik2",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik2_1.webp",
+      "avgColorHex": "#999999",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik6",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik6_1.webp",
+      "avgColorHex": "#a4a492",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik61",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik61_1.webp",
+      "avgColorHex": "#999999",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik7",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik7_1.webp",
+      "avgColorHex": "#9d9d89",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik71",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik71_1.webp",
+      "avgColorHex": "#666666",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik8",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik8_1.webp",
+      "avgColorHex": "#b1b19d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik81",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik81_1.webp",
+      "avgColorHex": "#b8aa9c",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik9",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik9_1.webp",
+      "avgColorHex": "#b6b692",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik91",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/podokonnik91_1.webp",
+      "avgColorHex": "#aaaaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama10",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama10_1.webp",
+      "avgColorHex": "#767673",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama101",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama101_1.webp",
+      "avgColorHex": "#807d78",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama3",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama3_1.webp",
+      "avgColorHex": "#686866",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama31",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama31_1.webp",
+      "avgColorHex": "#7a7c81",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama4",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama4_1.webp",
+      "avgColorHex": "#757878",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama41",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama41_1.webp",
+      "avgColorHex": "#818487",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama5",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama5_1.webp",
+      "avgColorHex": "#818181",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama51",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama51_1.webp",
+      "avgColorHex": "#9a9a9e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama6",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama6_1.webp",
+      "avgColorHex": "#7b7f7b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama61",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama61_1.webp",
+      "avgColorHex": "#8e9292",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama7",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama7_1.webp",
+      "avgColorHex": "#958f85",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama71",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama71_1.webp",
+      "avgColorHex": "#868379",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama8",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama8_1.webp",
+      "avgColorHex": "#817e7a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama81",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama81_1.webp",
+      "avgColorHex": "#928b80",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama9",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama9_1.webp",
+      "avgColorHex": "#958d7f",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik",
+      "parentChain": [
+        "laminat_podokonnik"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "rama91",
+      "colorIndex": null,
+      "frameCount": 6,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik/rama91_1.webp",
+      "avgColorHex": "#aa9d8c",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "laminat_podokonnik2": [
+    {
+      "category": "laminat_podokonnik2",
+      "parentChain": [
+        "laminat_podokonnik2"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik1",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik2/podokonnik1_1.webp",
+      "avgColorHex": "#999999",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik2",
+      "parentChain": [
+        "laminat_podokonnik2"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "podokonnik2",
+      "colorIndex": null,
+      "frameCount": 3,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/laminat_podokonnik2/podokonnik2_1.webp",
+      "avgColorHex": "#c4b19d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "laminat_podokonnik2",
+      "parentChain": [
+        "laminat_podokonnik2"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf1_1",
+      "colorIndex": null,
+      "frameCount": 1,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/laminat_podokonnik2/shkaf1_1_18.webp",
+      "avgColorHex": "#271414",
+      "width": 1200,
+      "height": 1200
+    }
+  ],
+  "(root-accessory)": [
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "lamp1",
+      "colorIndex": null,
+      "frameCount": 7,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/lamp1_1.webp",
+      "avgColorHex": "#bfbfbf",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "lamp11",
+      "colorIndex": null,
+      "frameCount": 7,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/lamp11_1.webp",
+      "avgColorHex": "#aaaaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "lamp2",
+      "colorIndex": null,
+      "frameCount": 7,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/lamp2_1.webp",
+      "avgColorHex": "#1a1a1a",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "lamp21",
+      "colorIndex": null,
+      "frameCount": 7,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/lamp21_1.webp",
+      "avgColorHex": "#1a1a1a",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "lodjia",
+      "colorIndex": null,
+      "frameCount": 1,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/lodjia.webp",
+      "avgColorHex": "#828285",
+      "width": 260,
+      "height": 260
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus1",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus1_1.webp",
+      "avgColorHex": "#555555",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus11",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus11_1.webp",
+      "avgColorHex": "#aaaaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus2",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus2_1.webp",
+      "avgColorHex": "#808080",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus21",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus21_1.webp",
+      "avgColorHex": "#000000",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus22",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus22_1.webp",
+      "avgColorHex": "#ffffff",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus3",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus3_1.webp",
+      "avgColorHex": "#5555aa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus31",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus31_1.webp",
+      "avgColorHex": "#aaaaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus4",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus4_1.webp",
+      "avgColorHex": "#808080",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus41",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus41_1.webp",
+      "avgColorHex": "#ff8080",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus51",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus51_1.webp",
+      "avgColorHex": "#808080",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus6",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus6_1.webp",
+      "avgColorHex": "#aaaaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "(root-accessory)",
+      "parentChain": [],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "plintus61",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/plintus61_1.webp",
+      "avgColorHex": "#999999",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "mdf": [
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena1/cvet1_0.webp",
+      "avgColorHex": "#857066",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena10/cvet1_0.webp",
+      "avgColorHex": "#a6a0a0",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena2/cvet1_0.webp",
+      "avgColorHex": "#5b4949",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena3/cvet1_0.webp",
+      "avgColorHex": "#b5aaa7",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena4/cvet1_0.webp",
+      "avgColorHex": "#9c847b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena6/cvet1_0.webp",
+      "avgColorHex": "#5d4646",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena7/cvet1_0.webp",
+      "avgColorHex": "#5e4d44",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena9/cvet1_0.webp",
+      "avgColorHex": "#998877",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena1/cvet2_0.webp",
+      "avgColorHex": "#664d4d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "mdf",
+      "parentChain": [
+        "mdf",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 6,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/mdf/stena6/cvet2_0.webp",
+      "avgColorHex": "#958472",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "shkaf": [
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp0",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp0_1.webp",
+      "avgColorHex": "#020202",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp0_1",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp0_1_1.webp",
+      "avgColorHex": "#050505",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp0_2",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp0_2_1.webp",
+      "avgColorHex": "#060606",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp1",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp1_1.webp",
+      "avgColorHex": "#030303",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp1_1",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp1_1_1.webp",
+      "avgColorHex": "#080808",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp1_2",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp1_2_1.webp",
+      "avgColorHex": "#0a0a0a",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp2",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp2_1.webp",
+      "avgColorHex": "#060606",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp2_1",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp2_1_1.webp",
+      "avgColorHex": "#101010",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp2_2",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp2_2_1.webp",
+      "avgColorHex": "#141414",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp3",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp3_1.webp",
+      "avgColorHex": "#080808",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp3_1",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp3_1_1.webp",
+      "avgColorHex": "#161616",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf_ldsp3_2",
+      "colorIndex": null,
+      "frameCount": 13,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf_ldsp3_2_1.webp",
+      "avgColorHex": "#1c1c1c",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf0",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf0_1.webp",
+      "avgColorHex": "#010101",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf0_1",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf0_1_1.webp",
+      "avgColorHex": "#606040",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf0_2",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf0_2_1.webp",
+      "avgColorHex": "#664d4d",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf1",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf1_1.webp",
+      "avgColorHex": "#020202",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf1_1",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf1_1_1.webp",
+      "avgColorHex": "#897662",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf1_2",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf1_2_1.webp",
+      "avgColorHex": "#807050",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf11",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf11_1.webp",
+      "avgColorHex": "#d5aa80",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf111",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf111_1.webp",
+      "avgColorHex": "#efdfcf",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf1111",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf1111_1.webp",
+      "avgColorHex": "#cccc99",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf2",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf2_1.webp",
+      "avgColorHex": "#050505",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf2_1",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf2_1_1.webp",
+      "avgColorHex": "#8b7468",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf2_2",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf2_2_1.webp",
+      "avgColorHex": "#100e0c",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf22",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf22_1.webp",
+      "avgColorHex": "#ccb399",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf222",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf222_1.webp",
+      "avgColorHex": "#ede4c8",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf2222",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf2222_1.webp",
+      "avgColorHex": "#c6aaaa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf3",
+      "colorIndex": null,
+      "frameCount": 20,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf3_1.webp",
+      "avgColorHex": "#060606",
+      "width": 1200,
+      "height": 1200
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf3_1",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf3_1_1.webp",
+      "avgColorHex": "#b09e8d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf33",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf33_1.webp",
+      "avgColorHex": "#ebc49d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf333",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf333_1.webp",
+      "avgColorHex": "#f2ebd0",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "shkaf",
+      "parentChain": [
+        "shkaf"
+      ],
+      "shapeVariant": null,
+      "sizeVariant": null,
+      "name": "shkaf3333",
+      "colorIndex": null,
+      "frameCount": 16,
+      "emptyFrameCount": 1,
+      "sampleFile": "construktor/shkaf/shkaf3333_1.webp",
+      "avgColorHex": "#bfbfaa",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "sten_parket": [
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena1/cvet1_0.webp",
+      "avgColorHex": "#a39985",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena10/cvet1_0.webp",
+      "avgColorHex": "#a9a3a3",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena2/cvet1_0.webp",
+      "avgColorHex": "#7f6d5b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena3/cvet1_0.webp",
+      "avgColorHex": "#c3b8b5",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena6/cvet1_0.webp",
+      "avgColorHex": "#745d5d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena7/cvet1_0.webp",
+      "avgColorHex": "#806f5e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena1/cvet2_0.webp",
+      "avgColorHex": "#b1a793",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 1,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena3/cvet2_17.webp",
+      "avgColorHex": "#372424",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena6/cvet2_0.webp",
+      "avgColorHex": "#b6a492",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet3",
+      "colorIndex": 3,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena1/cvet3_0.webp",
+      "avgColorHex": "#717155",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet3",
+      "colorIndex": 3,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena6/cvet3_0.webp",
+      "avgColorHex": "#c1b09e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena1/cvet4_0.webp",
+      "avgColorHex": "#b9a28b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena10/cvet4_0.webp",
+      "avgColorHex": "#c3b8b2",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena2/cvet4_0.webp",
+      "avgColorHex": "#887766",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena3/cvet4_0.webp",
+      "avgColorHex": "#bcb1af",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena6/cvet4_0.webp",
+      "avgColorHex": "#b9a28b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena7/cvet4_0.webp",
+      "avgColorHex": "#95806a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena1/cvet5_0.webp",
+      "avgColorHex": "#bfaa95",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena6/cvet5_0.webp",
+      "avgColorHex": "#d1b9a2",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": "4m",
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena10/cvet6_0.webp",
+      "avgColorHex": "#b9b0b0",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": "4m",
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena2/cvet6_0.webp",
+      "avgColorHex": "#84724f",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena3/cvet6_0.webp",
+      "avgColorHex": "#a69e94",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena6/cvet6_0.webp",
+      "avgColorHex": "#ae9e83",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "sten_parket",
+      "parentChain": [
+        "sten_parket",
+        "4m",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": "4m",
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/sten_parket/4m/stena7/cvet6_0.webp",
+      "avgColorHex": "#78694b",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena1": [
+    {
+      "category": "stena1",
+      "parentChain": [
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena1/cvet1_0.webp",
+      "avgColorHex": "#523d29",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena1",
+      "parentChain": [
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena1/cvet2_0.webp",
+      "avgColorHex": "#62453b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena1",
+      "parentChain": [
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet3",
+      "colorIndex": 3,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena1/cvet3_0.webp",
+      "avgColorHex": "#391c1c",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena1",
+      "parentChain": [
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena1/cvet4_0.webp",
+      "avgColorHex": "#462e2e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena1",
+      "parentChain": [
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": null,
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena1/cvet5_0.webp",
+      "avgColorHex": "#55402b",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena10": [
+    {
+      "category": "stena10",
+      "parentChain": [
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena10/cvet1_0.webp",
+      "avgColorHex": "#847b7b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena10",
+      "parentChain": [
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena10/cvet4_0.webp",
+      "avgColorHex": "#8b7f7a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena10",
+      "parentChain": [
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena10/cvet6_0.webp",
+      "avgColorHex": "#a79e9e",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena2": [
+    {
+      "category": "stena2",
+      "parentChain": [
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 12,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena2/cvet1_0.webp",
+      "avgColorHex": "#372412",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena2",
+      "parentChain": [
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena2/cvet4_0.webp",
+      "avgColorHex": "#372412",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena2",
+      "parentChain": [
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena2/cvet6_0.webp",
+      "avgColorHex": "#3c2b1a",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena3": [
+    {
+      "category": "stena3",
+      "parentChain": [
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 12,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena3/cvet1_0.webp",
+      "avgColorHex": "#8b7a74",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena3",
+      "parentChain": [
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena3/cvet4_0.webp",
+      "avgColorHex": "#877b76",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena3",
+      "parentChain": [
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena3/cvet6_0.webp",
+      "avgColorHex": "#8d817a",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena4": [
+    {
+      "category": "stena4",
+      "parentChain": [
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena4/cvet1_0.webp",
+      "avgColorHex": "#634a3a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena4",
+      "parentChain": [
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena4/cvet4_0.webp",
+      "avgColorHex": "#6a4e39",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena4",
+      "parentChain": [
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena4/cvet6_0.webp",
+      "avgColorHex": "#7a5943",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena4",
+      "parentChain": [
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "potolok1",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena4/potolok1_0.webp",
+      "avgColorHex": "#b8b8c1",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena4",
+      "parentChain": [
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "potolok2",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena4/potolok2_0.webp",
+      "avgColorHex": "#cdc6cd",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena4",
+      "parentChain": [
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": null,
+      "name": "potolok3",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena4/potolok3_0.webp",
+      "avgColorHex": "#c8c8c8",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena5": [
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/cvet1_0.webp",
+      "avgColorHex": "#36281b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/cvet2_0.webp",
+      "avgColorHex": "#61493d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/cvet4_0.webp",
+      "avgColorHex": "#3a2323",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/cvet5_0.webp",
+      "avgColorHex": "#604a40",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/cvet6_0.webp",
+      "avgColorHex": "#391c1c",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "plitka_cvet1",
+      "colorIndex": 1,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/plitka_cvet1_0.webp",
+      "avgColorHex": "#9f8a80",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "plitka_cvet2",
+      "colorIndex": 2,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/plitka_cvet2_0.webp",
+      "avgColorHex": "#7f7468",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "plitka_cvet3",
+      "colorIndex": 3,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/plitka_cvet3_0.webp",
+      "avgColorHex": "#5e5151",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "plitka_cvet4",
+      "colorIndex": 4,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/plitka_cvet4_0.webp",
+      "avgColorHex": "#aa9e92",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena5",
+      "parentChain": [
+        "stena5"
+      ],
+      "shapeVariant": "stena5",
+      "sizeVariant": null,
+      "name": "plitka_cvet5",
+      "colorIndex": 5,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena5/plitka_cvet5_0.webp",
+      "avgColorHex": "#715555",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena6": [
+    {
+      "category": "stena6",
+      "parentChain": [
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena6/cvet1_0.webp",
+      "avgColorHex": "#2e2e17",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena6",
+      "parentChain": [
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena6/cvet2_0.webp",
+      "avgColorHex": "#52372e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena6",
+      "parentChain": [
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet3",
+      "colorIndex": 3,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena6/cvet3_0.webp",
+      "avgColorHex": "#614f3e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena6",
+      "parentChain": [
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena6/cvet4_0.webp",
+      "avgColorHex": "#462e2e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena6",
+      "parentChain": [
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena6/cvet5_0.webp",
+      "avgColorHex": "#5d462e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena6",
+      "parentChain": [
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena6/cvet6_0.webp",
+      "avgColorHex": "#634938",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena7": [
+    {
+      "category": "stena7",
+      "parentChain": [
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena7/cvet1_0.webp",
+      "avgColorHex": "#33221a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena7",
+      "parentChain": [
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena7/cvet4_0.webp",
+      "avgColorHex": "#2b2b15",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena7",
+      "parentChain": [
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena7/cvet6_0.webp",
+      "avgColorHex": "#3c2d1e",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena8": [
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/cvet1_0.webp",
+      "avgColorHex": "#36281b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/cvet2_0.webp",
+      "avgColorHex": "#664d40",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/cvet4_0.webp",
+      "avgColorHex": "#372c21",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/cvet5_0.webp",
+      "avgColorHex": "#5c473d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/cvet6_0.webp",
+      "avgColorHex": "#493724",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "plitka_cvet1",
+      "colorIndex": 1,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/plitka_cvet1_0.webp",
+      "avgColorHex": "#a38f7a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "plitka_cvet2",
+      "colorIndex": 2,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/plitka_cvet2_0.webp",
+      "avgColorHex": "#7a6f64",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "plitka_cvet3",
+      "colorIndex": 3,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/plitka_cvet3_0.webp",
+      "avgColorHex": "#6b5e51",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "plitka_cvet4",
+      "colorIndex": 4,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/plitka_cvet4_0.webp",
+      "avgColorHex": "#bfb399",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena8",
+      "parentChain": [
+        "stena8"
+      ],
+      "shapeVariant": "stena8",
+      "sizeVariant": null,
+      "name": "plitka_cvet5",
+      "colorIndex": 5,
+      "frameCount": 3,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena8/plitka_cvet5_0.webp",
+      "avgColorHex": "#6d6d5b",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "stena9": [
+    {
+      "category": "stena9",
+      "parentChain": [
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena9/cvet1_0.webp",
+      "avgColorHex": "#5e4433",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena9",
+      "parentChain": [
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 9,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena9/cvet4_0.webp",
+      "avgColorHex": "#624b3c",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena9",
+      "parentChain": [
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 11,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena9/cvet6_0.webp",
+      "avgColorHex": "#71533c",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena9",
+      "parentChain": [
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "potolok1",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena9/potolok1_0.webp",
+      "avgColorHex": "#bcbcbc",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena9",
+      "parentChain": [
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "potolok2",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena9/potolok2_0.webp",
+      "avgColorHex": "#c3bcc3",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "stena9",
+      "parentChain": [
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": null,
+      "name": "potolok3",
+      "colorIndex": null,
+      "frameCount": 4,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/stena9/potolok3_0.webp",
+      "avgColorHex": "#c3c3c3",
+      "width": 800,
+      "height": 800
+    }
+  ],
+  "vagonka": [
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena1/cvet1_0.webp",
+      "avgColorHex": "#b8a38f",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena10/cvet1_0.webp",
+      "avgColorHex": "#b5aca6",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena2/cvet1_0.webp",
+      "avgColorHex": "#927f5b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena3/cvet1_0.webp",
+      "avgColorHex": "#ccc3b8",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena4/cvet1_0.webp",
+      "avgColorHex": "#bfaf97",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena6/cvet1_0.webp",
+      "avgColorHex": "#8b745d",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena7/cvet1_0.webp",
+      "avgColorHex": "#918066",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": "4m",
+      "name": "cvet1",
+      "colorIndex": 1,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena9/cvet1_0.webp",
+      "avgColorHex": "#bbb399",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena1/cvet2_0.webp",
+      "avgColorHex": "#bab193",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet2",
+      "colorIndex": 2,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena6/cvet2_0.webp",
+      "avgColorHex": "#ad9b89",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet3",
+      "colorIndex": 3,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena1/cvet3_0.webp",
+      "avgColorHex": "#717155",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet3",
+      "colorIndex": 3,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena6/cvet3_0.webp",
+      "avgColorHex": "#c1b99e",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena1/cvet4_0.webp",
+      "avgColorHex": "#b9a28b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena10/cvet4_0.webp",
+      "avgColorHex": "#c6bbb0",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena2/cvet4_0.webp",
+      "avgColorHex": "#998866",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena3/cvet4_0.webp",
+      "avgColorHex": "#bfb7ac",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena4/cvet4_0.webp",
+      "avgColorHex": "#dcc6aa",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena6/cvet4_0.webp",
+      "avgColorHex": "#b9a28b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena7/cvet4_0.webp",
+      "avgColorHex": "#95806a",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": "4m",
+      "name": "cvet4",
+      "colorIndex": 4,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena9/cvet4_0.webp",
+      "avgColorHex": "#d2bca5",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena1"
+      ],
+      "shapeVariant": "stena1",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena1/cvet5_0.webp",
+      "avgColorHex": "#bfaa95",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena10"
+      ],
+      "shapeVariant": "stena10",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena10/cvet5_0.webp",
+      "avgColorHex": "#b9b0b0",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena2"
+      ],
+      "shapeVariant": "stena2",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena2/cvet5_0.webp",
+      "avgColorHex": "#847258",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena3"
+      ],
+      "shapeVariant": "stena3",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena3/cvet5_0.webp",
+      "avgColorHex": "#a59d92",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena4"
+      ],
+      "shapeVariant": "stena4",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena4/cvet5_0.webp",
+      "avgColorHex": "#bcb190",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 15,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena6/cvet5_0.webp",
+      "avgColorHex": "#d1b9a2",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena7"
+      ],
+      "shapeVariant": "stena7",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena7/cvet5_0.webp",
+      "avgColorHex": "#78694b",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena9"
+      ],
+      "shapeVariant": "stena9",
+      "sizeVariant": "4m",
+      "name": "cvet5",
+      "colorIndex": 5,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena9/cvet5_0.webp",
+      "avgColorHex": "#c1b293",
+      "width": 800,
+      "height": 800
+    },
+    {
+      "category": "vagonka",
+      "parentChain": [
+        "vagonka",
+        "4m",
+        "stena6"
+      ],
+      "shapeVariant": "stena6",
+      "sizeVariant": "4m",
+      "name": "cvet6",
+      "colorIndex": 6,
+      "frameCount": 19,
+      "emptyFrameCount": 0,
+      "sampleFile": "construktor/vagonka/4m/stena6/cvet6_0.webp",
+      "avgColorHex": "#ae9e83",
+      "width": 800,
+      "height": 800
+    }
+  ]
+}

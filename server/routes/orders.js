@@ -25,7 +25,9 @@ module.exports = function createOrdersRouter(deps) {
     router.post('/', async (req, res) => {
         try {
             const orderData = cleanObject(req.body);
-            const missingFields = ['clientName', 'clientPhone', 'balconySize', 'balconyType']
+            // The 2D configurator has no measured size — the surveyor takes it later — so
+            // `balconySize` is optional (stored as 0 when absent).
+            const missingFields = ['clientName', 'clientPhone', 'balconyType']
                 .filter((field) => !orderData[field]);
 
             if (missingFields.length) {
@@ -38,7 +40,7 @@ module.exports = function createOrdersRouter(deps) {
             const clientName = cleanString(orderData.clientName, { max: 120 });
             const clientPhone = cleanPhone(orderData.clientPhone);
             const clientEmail = cleanEmail(orderData.clientEmail);
-            const balconySize = cleanNumber(orderData.balconySize, { min: 0.5, max: 20, fallback: NaN });
+            const balconySize = cleanNumber(orderData.balconySize, { min: 0, max: 20, fallback: 0 });
 
             if (clientName.length < 2 || clientPhone.length < 10 || !Number.isFinite(balconySize)) {
                 return res.status(400).json({
@@ -62,7 +64,9 @@ module.exports = function createOrdersRouter(deps) {
                 materialsPrice: cleanNumber(orderData.materialsPrice, { min: 0, max: 100000000, fallback: 0 }),
                 workPrice: cleanNumber(orderData.workPrice, { min: 0, max: 100000000, fallback: 0 }),
                 totalPrice: cleanNumber(orderData.totalPrice, { min: 0, max: 100000000, fallback: 0 }),
-                screenshot: cleanString(orderData.screenshot, { max: 1000 }) || null,
+                // A captured PNG preview is a base64 data: URL — can legitimately run to
+                // several hundred KB of text, well past the usual short-string caps.
+                screenshot: cleanString(orderData.screenshot, { max: 4000000 }) || null,
                 metadata: cleanObject(orderData.metadata),
                 status: 'new',
                 createdAt: new Date().toISOString(),

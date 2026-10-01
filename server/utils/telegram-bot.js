@@ -78,9 +78,11 @@ class TelegramBot {
 
     _formatOrderMessage(order) {
         const safe = (value) => this._escapeHtml(value || '');
-        const materialsList = order.materials?.slice(0, 5).map(
-            (m) => `• ${safe(m.name)} (${safe(m.quantity)} ${safe(m.unit)})`
-        ).join('\n') || 'Материалы не выбраны';
+        // The configurator sends its human-readable summary as metadata.summary rows.
+        const summary = Array.isArray(order.metadata?.summary) ? order.metadata.summary.slice(0, 20) : [];
+        const configList = summary
+            .map((row) => `• ${safe(row?.label)}: ${safe(row?.value)}`)
+            .join('\n') || 'Конфигурация не выбрана';
         const siteUrl = process.env.SITE_URL || '';
         const orderLink = siteUrl ? `${siteUrl}/admin/orders/${safe(order.id)}` : '';
 
@@ -94,12 +96,9 @@ ${order.clientEmail ? `Email: ${safe(order.clientEmail)}` : ''}
 
 <b>Параметры балкона</b>
 Тип: ${safe(order.balconyType)}
-Размер: ${safe(order.balconySize)} м
-Форма: ${safe(order.balconyShape)}
-
-<b>Материалы</b>
-${materialsList}
-${order.materials?.length > 5 ? `\n... и ещё ${order.materials.length - 5}` : ''}
+${order.balconySize > 0 ? `Размер: ${safe(order.balconySize)} м\n` : ''}
+<b>Конфигурация</b>
+${configList}
 
 Дата: ${new Date(order.createdAt).toLocaleString('ru-RU')}
 ${orderLink ? `Ссылка: ${orderLink}` : ''}

@@ -1,52 +1,96 @@
 /**
- * @file Application root — a compact professional top bar over the configurator.
+ * @file Application root — routing, modal provider, scroll restoration.
+ *
+ * Marketing pages share the `Layout` shell (header + footer); the configurator
+ * renders full-screen on its own route. Pages are code-split with `lazy()` so the
+ * initial bundle stays small (Lighthouse budget).
+ *
+ * The router basename is always `/` — the app is served at the site root
+ * (`/`, `/configurator`, `/services`...) in both dev and prod (see
+ * `server/server.js`'s catch-all). This is intentionally independent of Vite's
+ * own `base` (`/app/` in prod), which only controls where the *built JS/CSS
+ * asset files* are requested from (`/app/assets/...`) — the physical files
+ * stay under `public/app/` so the build never collides with the legacy static
+ * site's own files in `public/`, but the HTML shell that references them is
+ * served at every top-level route, not just under `/app/`.
  */
+import { lazy, Suspense } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { CallModalProvider } from '../components/CallModal/CallModalProvider';
+import { ChatWidget } from '../components/ChatWidget/ChatWidget';
+import { Layout } from '../components/Layout/Layout';
+import { PageLoader } from '../components/PageLoader';
+import { ScrollToTop } from '../components/ScrollToTop';
+import { ConfiguratorProvider } from '../pages/Configurator/ConfiguratorContext';
 
-import { useConfiguratorStore } from '../store/configuratorStore';
-import { formatEurPrecise } from '../lib/ui/money';
-import { ConfiguratorPage } from '../ui/configurator/ConfiguratorPage';
-import styles from './App.module.css';
+const Home = lazy(() => import('../pages/Home/Home').then((m) => ({ default: m.Home })));
+const Services = lazy(() =>
+  import('../pages/Services/Services').then((m) => ({ default: m.Services })),
+);
+const Portfolio = lazy(() =>
+  import('../pages/Portfolio/Portfolio').then((m) => ({ default: m.Portfolio })),
+);
+const About = lazy(() => import('../pages/About/About').then((m) => ({ default: m.About })));
+const Contacts = lazy(() =>
+  import('../pages/Contacts/Contacts').then((m) => ({ default: m.Contacts })),
+);
+const Configurator = lazy(() =>
+  import('../pages/Configurator/Configurator').then((m) => ({ default: m.Configurator })),
+);
+const OrdersAdmin = lazy(() =>
+  import('../pages/Admin/OrdersAdmin').then((m) => ({ default: m.OrdersAdmin })),
+);
+const NotFound = lazy(() =>
+  import('../pages/NotFound/NotFound').then((m) => ({ default: m.NotFound })),
+);
 
+/**
+ * The application shell.
+ * @returns The rendered app.
+ */
 export function App(): JSX.Element {
-  const total = useConfiguratorStore((s) => s.currentPrice.total);
-
   return (
-    <div className={styles.app}>
-      <header className={styles.header}>
-        <div className={styles.brand}>
-          <span className={styles.mark} aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" focusable="false">
-              <rect
-                x="3"
-                y="3"
-                width="18"
-                height="18"
-                rx="1.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              />
-              <path
-                d="M12 3v18M3 12h18"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-              />
-            </svg>
-          </span>
-          <span className={styles.brandText}>
-            <span className={styles.brandName}>Balcony Glazing</span>
-            <span className={styles.brandSub}>Configurator &amp; Quote</span>
-          </span>
-        </div>
-
-        <div className={styles.headerRight}>
-          <span className={styles.totalLabel}>Live total (incl. VAT)</span>
-          <span className={styles.totalValue}>{formatEurPrecise(total)}</span>
-        </div>
-      </header>
-
-      <ConfiguratorPage />
-    </div>
+    <BrowserRouter>
+      <ConfiguratorProvider>
+        <CallModalProvider>
+          <ScrollToTop />
+          <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="services" element={<Services />} />
+            <Route path="portfolio" element={<Portfolio />} />
+            <Route path="about" element={<About />} />
+            <Route path="contacts" element={<Contacts />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+          <Route
+            path="configurator"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <Configurator />
+              </Suspense>
+            }
+          />
+          <Route
+            path="admin/orders"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <OrdersAdmin />
+              </Suspense>
+            }
+          />
+          <Route
+            path="admin/orders/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <OrdersAdmin />
+              </Suspense>
+            }
+          />
+          </Routes>
+          <ChatWidget />
+        </CallModalProvider>
+      </ConfiguratorProvider>
+    </BrowserRouter>
   );
 }

@@ -1,0 +1,258 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 248, 245, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: background var(--dur-base), border-color var(--dur-base),
+    box-shadow var(--dur-base);
+}
+
+.scrolled {
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.inner {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.brand {
+  flex: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.navLink {
+  position: relative;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+
+.navLink:hover {
+  color: var(--text);
+  background: var(--gold-soft);
+}
+
+.navLinkActive {
+  color: var(--gold-deep);
+}
+
+.navLinkActive::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.phone svg {
+  color: var(--gold-deep);
+}
+
+.phone:hover {
+  color: var(--gold-deep);
+}
+
+.configBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 18px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border-strong);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  transition: border-color var(--dur-fast), color var(--dur-fast),
+    background var(--dur-fast), transform var(--dur-fast);
+}
+
+.configBtn:hover {
+  border-color: var(--gold);
+  color: var(--gold-deep);
+  background: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+.callBtn {
+  padding: 12px 22px;
+  font-size: 0.9rem;
+}
+
+.burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+}
+
+/* ---- Mobile drawer ---- */
+.drawer {
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  width: min(360px, 86vw);
+  height: calc(100dvh - var(--header-h));
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 101;
+  overflow-y: auto;
+  /* Mounted only when open (see Header.tsx), so it slides in on mount and adds
+     no page width when closed. */
+  animation: drawerIn var(--dur-base) var(--ease-out);
+}
+
+@keyframes drawerIn {
+  from {
+    transform: translateX(105%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.scrim {
+  position: fixed;
+  inset: var(--header-h) 0 0 0;
+  background: rgba(26, 22, 14, 0.4);
+  z-index: 100;
+  animation: fade var(--dur-base);
+}
+
+.drawerNav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawerLink {
+  padding: 14px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.drawerLinkActive {
+  color: var(--gold-deep);
+}
+
+.drawerConfig {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 14px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--gold-light);
+  color: var(--gold-deep);
+  font-weight: 700;
+}
+
+.drawerFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drawerPhone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.drawerFoot .btn {
+  width: 100%;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1080px) {
+  .configBtn {
+    display: none;
+  }
+}
+
+/* The drawer is a mobile-only affordance; keep it out of the desktop DOM box. */
+@media (min-width: 921px) {
+  .drawer,
+  .scrim {
+    display: none;
+  }
+}
+
+@media (max-width: 920px) {
+  .nav,
+  .phone {
+    display: none;
+  }
+  .burger {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 560px) {
+  /* `.actions .callBtn` outranks the global `.btn` display rule. */
+  .actions .callBtn {
+    display: none;
+  }
+  .inner {
+    gap: 12px;
+  }
+}

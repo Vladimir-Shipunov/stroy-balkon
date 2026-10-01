@@ -1,13 +1,74 @@
 /**
- * Design tokens for the configurator.
+ * БАЛКОН-МСК — global design tokens.
  *
- * A restrained, professional B2B system: a neutral gray scale plus a single
- * steel-blue accent. No gradients, no decorative color. All component CSS
- * Modules consume these variables — never hard-coded hex/px.
+ * Aesthetic: "warm architectural luxury". A single warm-gold brand accent over
+ * a soft bone-white canvas, near-black warm ink, generous air, layered soft
+ * shadows. Display type is Fraunces (high-contrast serif); UI/body is Manrope.
+ *
+ * Plain global stylesheet (imported once in main.tsx) — every module consumes
+ * these via var().
  */
 
 :root {
-  /* ---- Spacing scale (4 / 8 / 12 / 16 / 24 / 32 / 48) ---- */
+  /* ---- Brand: warm gold ---- */
+  --gold: #c49a28;
+  --gold-light: #fdf8ec;
+  --gold-hover: #a8841f;
+  --gold-deep: #8a6c14;
+  --gold-soft: rgba(196, 154, 40, 0.12);
+  --gold-line: rgba(196, 154, 40, 0.32);
+
+  /* ---- Canvas / surfaces ---- */
+  --bg: #faf8f5;
+  --bg-warm: #f4efe7;
+  --bg-deep: #1c1a16; /* dark sections (footer, immersive bands) */
+  --surface: #ffffff;
+  --surface-sunken: #f4f2ee;
+
+  /* ---- Ink ---- */
+  --text: #1a1a1a;
+  --text-soft: #3c3a35;
+  --text-muted: #6b6b6b;
+  --text-faint: #9a958c;
+  --text-on-dark: #f3eee4;
+  --text-on-dark-muted: #a8a194;
+
+  /* ---- Lines ---- */
+  --border: #e8e3da;
+  --border-strong: #d8d1c4;
+  --border-dark: rgba(243, 238, 228, 0.14);
+
+  /* ---- Radius ---- */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* ---- Shadows (warm-tinted, layered) ---- */
+  --shadow-xs: 0 1px 2px rgba(40, 33, 18, 0.06);
+  --shadow-sm: 0 2px 8px rgba(40, 33, 18, 0.06);
+  --shadow-md: 0 8px 24px rgba(40, 33, 18, 0.08);
+  --shadow-lg: 0 18px 48px rgba(40, 33, 18, 0.12);
+  --shadow-xl: 0 32px 80px rgba(40, 33, 18, 0.18);
+  --shadow-gold: 0 10px 28px rgba(196, 154, 40, 0.34);
+
+  /* ---- Typography ---- */
+  --font-display: 'Fraunces', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --fs-eyebrow: 0.75rem;
+  --fs-body: 1rem;
+  --fs-lead: 1.1875rem;
+
+  /* fluid display sizes */
+  --fs-h1: clamp(2.6rem, 1.4rem + 5.2vw, 5.5rem);
+  --fs-h2: clamp(2rem, 1.3rem + 2.8vw, 3.5rem);
+  --fs-h3: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
+  --fs-h4: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+
+  /* ---- Spacing ---- */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -16,117 +77,26 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
 
-  /* ---- Neutral gray scale ---- */
-  --gray-0: #ffffff;
-  --gray-25: #fbfcfd;
-  --gray-50: #f6f8fa;
-  --gray-100: #eceff3;
-  --gray-200: #dce1e8;
-  --gray-300: #c2cad6;
-  --gray-400: #97a2b2;
-  --gray-500: #6b7686;
-  --gray-600: #4d5765;
-  --gray-700: #353d49;
-  --gray-800: #232a33;
-  --gray-900: #141a21;
-
-  /* ---- Brand accent (steel blue) ---- */
-  --accent-50: #eef4fb;
-  --accent-100: #d6e4f5;
-  --accent-200: #adc8ea;
-  --accent-300: #7ea7da;
-  --accent-400: #4f84c6;
-  --accent-500: #2e66ac;
-  --accent-600: #1f5390;
-  --accent-700: #194374;
-  --accent-800: #15375f;
-
-  /* ---- Semantic ---- */
-  --danger-50: #fdecec;
-  --danger-100: #f9d4d4;
-  --danger-500: #c23b3b;
-  --danger-600: #a32d2d;
-  --success-50: #eaf6ee;
-  --success-500: #2f8a4e;
-  --success-600: #246e3e;
-  --warning-50: #fcf3e6;
-  --warning-500: #b9791a;
-
-  /* ---- Surface / border / text roles ---- */
-  --surface-page: var(--gray-50);
-  --surface-raised: var(--gray-0);
-  --surface-sunken: var(--gray-100);
-  --surface-hover: var(--gray-50);
-  --surface-accent-soft: var(--accent-50);
-
-  --border-subtle: var(--gray-200);
-  --border-default: var(--gray-300);
-  --border-strong: var(--gray-400);
-  --border-accent: var(--accent-500);
-
-  --text-primary: var(--gray-900);
-  --text-secondary: var(--gray-600);
-  --text-tertiary: var(--gray-500);
-  --text-muted: var(--gray-400);
-  --text-on-accent: var(--gray-0);
-  --text-accent: var(--accent-600);
-
-  /* ---- Typography ---- */
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Consolas', monospace;
-
-  --text-2xs: 11px;
-  --text-xs: 12px;
-  --text-sm: 13px;
-  --text-base: 14px;
-  --text-md: 15px;
-  --text-lg: 17px;
-  --text-xl: 20px;
-  --text-2xl: 24px;
-  --text-3xl: 30px;
-
-  --weight-regular: 400;
-  --weight-medium: 500;
-  --weight-semibold: 600;
-  --weight-bold: 700;
-
-  --leading-tight: 1.2;
-  --leading-snug: 1.35;
-  --leading-normal: 1.55;
-
-  --tracking-wide: 0.02em;
-  --tracking-wider: 0.06em;
-
-  /* ---- Radius ---- */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-pill: 999px;
-
-  /* ---- Elevation (subtle, no heavy drop shadows) ---- */
-  --shadow-xs: 0 1px 2px rgba(20, 26, 33, 0.04);
-  --shadow-sm: 0 1px 2px rgba(20, 26, 33, 0.06), 0 1px 1px rgba(20, 26, 33, 0.04);
-  --shadow-md: 0 4px 12px rgba(20, 26, 33, 0.08), 0 1px 3px rgba(20, 26, 33, 0.06);
-  --shadow-lg: 0 12px 28px rgba(20, 26, 33, 0.1), 0 2px 6px rgba(20, 26, 33, 0.06);
-  --ring-accent: 0 0 0 3px var(--accent-100);
+  /* ---- Layout ---- */
+  --content-max: 1240px;
+  --content-wide: 1440px;
+  --header-h: 76px;
 
   /* ---- Motion ---- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-fast: 120ms;
-  --duration-base: 180ms;
-
-  /* ---- Layout ---- */
-  --layout-max: 1480px;
-  --layout-gap: var(--space-6);
-  --sidebar-width: 40%;
-  --content-width: 60%;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 600ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --duration-fast: 0ms;
-    --duration-base: 0ms;
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
   }
 }

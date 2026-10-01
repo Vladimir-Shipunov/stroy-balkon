@@ -1,0 +1,154 @@
+/**
+ * @file RoomRenderer — builds a plan's room once (faces + baked light, cached per
+ * plan), then draws a camera view of it with the current finishes. Pure computation
+ * on typed arrays: it runs inside a Web Worker (`worker.ts`) or, as a fallback,
+ * on the main thread.
+ */
+import type { PlanGeom } from '../planShapes';
+import { bakeLight } from './lighting';
+import type { FaceLight } from './lighting';
+import { lampRow } from './lamps';
+import { Mode, addGlow, drawFace, makeBasis, makeTarget, project, resetTarget, resolve } from './raster';
+import type { Shade, Target } from './raster';
+import { buildRoom } from './scene';
+import type { RoomModel } from './scene';
+import { PICK } from './types';
+import type { CameraSpec, EnvData, Face, RenderPaint, TexData } from './types';
+
+export interface RenderOutput {
+  readonly rgba: Uint8ClampedArray<ArrayBuffer>;
+  readonly ids: Uint8Array;
+  readonly w: number;
+  readonly h: number;
+  readonly ms: number;
+  /** Where the ceiling light hangs in the picture (percent), null when it is out of view. */
+  readonly lamp: readonly [number, number] | null;
+}
+
+/** Bare surfaces before a finish is chosen: grey plaster walls, concrete floor, white ceiling. */
+const BARE: Readonly<Record<string, readonly [number, number, number]>> = {
+  sill: [0.95, 0.95, 0.94],
+  plintus: [0.95, 0.95, 0.94],
+  wall: [0.6, 0.61, 0.62],
+  floor: [0.43, 0.44, 0.45],
+  ceiling: [0.8, 0.81, 0.81],
+};
+const WHITE: readonly [number, number, number] = [0.93, 0.93, 0.92];
+const DARK: readonly [number, number, number] = [0.2, 0.2, 0.21];
+const CURTAIN: readonly [number, number, number] = [0.92, 0.9, 0.86];
+
+function hexRgb(hex: string): [number, number, number] {
+  const n = parseInt(hex.replace('#', '').slice(0, 6), 16);
+  if (!Number.isFinite(n)) return [0.8, 0.8, 0.8];
+  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+interface Built {
+  readonly room: RoomModel;
+  readonly lights: FaceLight[];
+}
+
+export class RoomRenderer {
+  private readonly built = new Map<string, Built>();
+  private readonly textures = new Map<string, TexData>();
+  private env: EnvData | null = null;
+  private target: Target | null = null;
+
+  addTexture(url: string, tex: TexData): void {
+    this.textures.set(url, tex);
+  }
+
+  hasTexture(url: string): boolean {
+    return this.textures.has(url);
+  }
+
+  setEnv(env: EnvData): void {
+    this.env = env;
+  }
+
+  private build(key: string, g: PlanGeom): Built {
+    let b = this.built.get(key);
+    if (!b) {
+      const room = buildRoom(g);
+      b = { room, lights: bakeLight(g, room) };
+      this.built.set(key, b);
+    }
+    return b;
+  }
+
+  /** The room of `g` (cached under `key`) seen from `cam`, `size` px square, `ss`x supersampled. */
+  render(key: string, g: PlanGeom, cam: CameraSpec, paint: RenderPaint, size = 800, ss = 2): RenderOutput {
+    const t0 = performance.now();
+    const { room, lights } = this.build(key, g);
+    if (this.target?.w !== size * ss) this.target = makeTarget(size * ss, size * ss);
+    else resetTarget(this.target);
+    const target = this.target;
+    const basis = makeBasis(cam, size * ss, size * ss);
+    const frame = hexRgb(paint.frame);
+    room.faces.forEach((f, i) => {
+      const light = lights[i]!;
+      const lm = typeof light === 'number' ? null : light;
+      const L = typeof light === 'number' ? light : 1;
+      drawFace(target, basis, f, this.shade(f, paint, frame, lm, L), f.pick);
+    });
+    if (paint.lamp) this.drawLamps(target, basis, room, paint.lamp);
+    const out = resolve(target, ss);
+    return { ...out, ms: performance.now() - t0, lamp: this.lampSpot(target, basis, room) };
+  }
+
+  /** The picture position (percent) of the nearest ceiling light that is in view. */
+  private lampSpot(target: Target, basis: ReturnType<typeof makeBasis>, room: RoomModel): readonly [number, number] | null {
+    let best: readonly [number, number] | null = null;
+    let bestDist = Infinity;
+    for (const p of room.lamps) {
+      // Aim a little under the ceiling point: where the lamp body hangs.
+      const at = project(basis, [p[0], p[1], p[2] - 120]);
+      if (!at || at[0] < 0 || at[0] > target.w || at[1] < 0 || at[1] > target.h) continue;
+      const d = Math.hypot(p[0] - basis.C[0], p[1] - basis.C[1]);
+      if (d < bestDist) {
+        bestDist = d;
+        best = [(at[0] / target.w) * 100, (at[1] / target.h) * 100];
+      }
+    }
+    return best;
+  }
+
+  private shade(f: Face, paint: RenderPaint, frame: readonly number[], lm: Shade['lm'], light: number): Shade {
+    const base = { tex: null, tile: 1000, lm, light, env: null };
+    switch (f.kind) {
+      case 'paint': {
+        const p = paint.surfaces[f.paint];
+        const bare = BARE[f.paint === 'P:floor' ? 'floor' : f.paint === 'P:ceiling' ? 'ceiling' : f.paint === 'P:sill' ? 'sill' : f.paint === 'P:plintus' ? 'plintus' : 'wall']!;
+        const tex = p?.tex ? this.textures.get(p.tex) : undefined;
+        // Varnished floors and sills catch the light at grazing angles.
+        const gloss = f.paint === 'P:floor' ? 0.9 : f.paint === 'P:sill' ? 0.5 : 0;
+        if (p && tex) return { ...base, mode: Mode.Texture, r: 1, g: 1, b: 1, tex, tile: p.tile ?? 800, gloss };
+        const c = p ? hexRgb(p.color) : bare;
+        return { ...base, mode: Mode.Flat, r: c[0], g: c[1], b: c[2], gloss };
+      }
+      case 'frame':
+        return { ...base, mode: Mode.Flat, r: frame[0]! * f.tint, g: frame[1]! * f.tint, b: frame[2]! * f.tint };
+      case 'glass':
+        return { ...base, mode: Mode.Glass, r: 1, g: 1, b: 1, env: this.env };
+      case 'curtain':
+        return { ...base, mode: Mode.Curtain, r: CURTAIN[0], g: CURTAIN[1], b: CURTAIN[2] };
+      case 'lamp':
+        return { ...base, mode: Mode.Emit, r: 1, g: 0.97, b: 0.9 };
+      case 'dark':
+        return { ...base, mode: Mode.Flat, r: DARK[0] * f.tint, g: DARK[1] * f.tint, b: DARK[2] * f.tint };
+      default:
+        return { ...base, mode: Mode.Flat, r: WHITE[0] * f.tint, g: WHITE[1] * f.tint, b: WHITE[2] * f.tint };
+    }
+  }
+
+  /** The row of ceiling lights of the chosen model, with a soft bloom round their glowing parts. */
+  private drawLamps(target: Target, basis: ReturnType<typeof makeBasis>, room: RoomModel, model: number): void {
+    const set = lampRow(model, room.lamps);
+    for (const part of set.parts) {
+      // Lit parts: a simple top-light so the shade reads as a solid.
+      const L = part.emit ? 1 : 0.74 + 0.16 * part.face.n[2];
+      drawFace(target, basis, part.face, { mode: part.emit ? Mode.Emit : Mode.Flat, r: part.rgb[0], g: part.rgb[1], b: part.rgb[2], tex: null, tile: 1, lm: null, light: L, env: null }, PICK.light);
+    }
+    for (const g of set.glows) addGlow(target, basis, g.at, g.radius, g.strength);
+  }
+}

@@ -1,0 +1,27 @@
+.canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #8a8f96;
+  overflow: hidden;
+  border-radius: var(--radius-lg, 18px);
+}
+
+.layers {
+  position: absolute;
+  inset: 0;
+}
+
+.mirror {
+  transform: scaleX(-1);
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}

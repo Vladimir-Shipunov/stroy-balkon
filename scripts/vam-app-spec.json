@@ -1,0 +1,2832 @@
+{
+ "2": [
+  {
+   "bg": [
+    "img2_0"
+   ],
+   "hotspots": [
+    {
+     "id": "1_5",
+     "popups": [
+      {
+       "cls": "shkaf0_1",
+       "file": "laminat_podokonnik/shkaf0_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_1_"
+       ]
+      },
+      {
+       "cls": "shkaf1_1",
+       "file": "laminat_podokonnik/shkaf1_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_1_"
+       ]
+      },
+      {
+       "cls": "shkaf2_1",
+       "file": "laminat_podokonnik/shkaf2_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf2_1_"
+       ]
+      },
+      {
+       "cls": "shkaf3_1",
+       "file": "laminat_podokonnik/shkaf3_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf3_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0_1",
+       "file": "laminat_podokonnik/shkaf_ldsp0_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1_1",
+       "file": "laminat_podokonnik/shkaf_ldsp1_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp2_1",
+       "file": "laminat_podokonnik/shkaf_ldsp2_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp2_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp3_1",
+       "file": "laminat_podokonnik/shkaf_ldsp3_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp3_1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/stena2/cvet1_",
+        "construktor/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2",
+       "file": "strn_parket/sten_parket_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena2/cvet1_",
+        "construktor/sten_parket/4m/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena2/cvet1_",
+        "construktor/vagonka/4m/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen2",
+       "file": "mdf/mdf_panel_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/mdf/stena2/cvet1_",
+        "construktor/mdf/stena7/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3",
+       "file": "vert_laminat/MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/stena10/cvet1_",
+        "construktor/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet1_",
+        "construktor/sten_parket/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet1_",
+        "construktor/vagonka/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen3",
+       "file": "mdf/mdf_panel_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/mdf/stena10/cvet1_",
+        "construktor/mdf/stena3/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4",
+       "file": "vert_laminat/MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet1_",
+        "construktor/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_1",
+       "file": "vert_laminat/MyPopupScreen4_1.dart",
+       "prefixes": [
+        "construktor/stena4/potolok1_",
+        "construktor/stena9/potolok1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet1_",
+        "construktor/vagonka/4m/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen4",
+       "file": "mdf/mdf_panel_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/mdf/stena4/cvet1_",
+        "construktor/mdf/stena9/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5",
+       "file": "vert_laminat/MyPopupScreen5.dart",
+       "prefixes": [
+        "construktor/stena5/cvet1_",
+        "construktor/stena8/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_6",
+       "file": "vert_laminat/MyPopupScreen5_6.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet3_",
+        "construktor/stena8/plitka_cvet3_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img3_0",
+    "img3_6"
+   ],
+   "hotspots": [
+    {
+     "id": "6",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6",
+       "file": "vert_laminat/MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/stena6/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6",
+       "file": "strn_parket/sten_parket_MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen6",
+       "file": "mdf/mdf_panel_MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/mdf/stena6/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_podokonnik.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik1_",
+        "construktor/laminat_podokonnik/podokonnik2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_rama7.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama71_",
+        "construktor/laminat_podokonnik/rama7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_5",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen8_5",
+       "file": "laminat_podokonnik/laminat_podokonnik2_5.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik61_",
+        "construktor/laminat_podokonnik/podokonnik7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_5",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7_2",
+       "file": "laminat_podokonnik/laminat_rama7_2.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama51_",
+        "construktor/laminat_podokonnik/rama6_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_2",
+     "popups": [
+      {
+       "cls": "plintus4",
+       "file": "laminat_podokonnik/plintus_4.dart",
+       "prefixes": [
+        "construktor/plintus11_",
+        "construktor/plintus1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8",
+     "popups": [
+      {
+       "cls": "light8",
+       "file": "laminat_podokonnik/light8.dart",
+       "prefixes": [
+        "construktor/lamp21_",
+        "construktor/lamp2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "6_5",
+     "popups": [
+      {
+       "cls": "shkaf0_2",
+       "file": "laminat_podokonnik/shkaf0_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_2_"
+       ]
+      },
+      {
+       "cls": "shkaf1_2",
+       "file": "laminat_podokonnik/shkaf1_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0_2",
+       "file": "laminat_podokonnik/shkaf_ldsp0_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1_2",
+       "file": "laminat_podokonnik/shkaf_ldsp1_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8_decor",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2_chair.dart",
+       "prefixes": [
+        "construktor/chair/chair1_1_",
+        "construktor/chair/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2dryer",
+       "file": "vert_laminat/MyPopupScreen2_dryer.dart",
+       "prefixes": [
+        "construktor/dryer/chair1_1_",
+        "construktor/dryer/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2flowers",
+       "file": "vert_laminat/MyPopupScreen2_flowers.dart",
+       "prefixes": [
+        "construktor/flowers/chair1_1_",
+        "construktor/flowers/chair2_1_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "3": [
+  {
+   "bg": [
+    "img22_0",
+    "img2_7"
+   ],
+   "hotspots": [
+    {
+     "id": "1_1",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_1",
+       "file": "vert_laminat/MyPopupScreen1_1.dart",
+       "prefixes": [
+        "construktor/stena1/cvet2_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen1_1",
+       "file": "strn_parket/sten_parket_MyPopupScreen1_1.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena1/cvet2_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen1_1",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen1_1.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena1/cvet2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3",
+       "file": "vert_laminat/MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/stena10/cvet1_",
+        "construktor/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet1_",
+        "construktor/sten_parket/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet1_",
+        "construktor/vagonka/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen3",
+       "file": "mdf/mdf_panel_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/mdf/stena10/cvet1_",
+        "construktor/mdf/stena3/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4",
+       "file": "vert_laminat/MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet1_",
+        "construktor/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_1",
+       "file": "vert_laminat/MyPopupScreen4_1.dart",
+       "prefixes": [
+        "construktor/stena4/potolok1_",
+        "construktor/stena9/potolok1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet1_",
+        "construktor/vagonka/4m/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen4",
+       "file": "mdf/mdf_panel_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/mdf/stena4/cvet1_",
+        "construktor/mdf/stena9/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_1",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_1",
+       "file": "vert_laminat/MyPopupScreen5_1.dart",
+       "prefixes": [
+        "construktor/stena5/cvet2_",
+        "construktor/stena8/cvet2_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_7",
+       "file": "vert_laminat/MyPopupScreen5_7.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet4_",
+        "construktor/stena8/plitka_cvet4_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img33_0",
+    "img3_7"
+   ],
+   "hotspots": [
+    {
+     "id": "7",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_podokonnik.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik1_",
+        "construktor/laminat_podokonnik/podokonnik2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_rama7.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama71_",
+        "construktor/laminat_podokonnik/rama7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_8",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7_5",
+       "file": "laminat_podokonnik/laminat_rama7_5.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama31_",
+        "construktor/laminat_podokonnik/rama4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_3",
+     "popups": [
+      {
+       "cls": "plintus4_1",
+       "file": "laminat_podokonnik/plintus_4_1.dart",
+       "prefixes": [
+        "construktor/plintus21_",
+        "construktor/plintus2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8",
+     "popups": [
+      {
+       "cls": "light8",
+       "file": "laminat_podokonnik/light8.dart",
+       "prefixes": [
+        "construktor/lamp21_",
+        "construktor/lamp2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8_decor",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2_chair.dart",
+       "prefixes": [
+        "construktor/chair/chair1_1_",
+        "construktor/chair/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2dryer",
+       "file": "vert_laminat/MyPopupScreen2_dryer.dart",
+       "prefixes": [
+        "construktor/dryer/chair1_1_",
+        "construktor/dryer/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2flowers",
+       "file": "vert_laminat/MyPopupScreen2_flowers.dart",
+       "prefixes": [
+        "construktor/flowers/chair1_1_",
+        "construktor/flowers/chair2_1_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "4": [
+  {
+   "bg": [
+    "img4_0"
+   ],
+   "hotspots": [
+    {
+     "id": "1_6",
+     "popups": [
+      {
+       "cls": "shkaf0_1",
+       "file": "laminat_podokonnik/shkaf0_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_1_"
+       ]
+      },
+      {
+       "cls": "shkaf1_1",
+       "file": "laminat_podokonnik/shkaf1_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0_1",
+       "file": "laminat_podokonnik/shkaf_ldsp0_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1_1",
+       "file": "laminat_podokonnik/shkaf_ldsp1_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "2_1",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2_1",
+       "file": "vert_laminat/MyPopupScreen2_1.dart",
+       "prefixes": [
+        "construktor/stena1/cvet3_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2_1",
+       "file": "strn_parket/sten_parket_MyPopupScreen2_1.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena1/cvet3_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2_1",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2_1.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena1/cvet3_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen1",
+       "file": "mdf/mdf_panel_MyPopupScreen1.dart",
+       "prefixes": [
+        "construktor/mdf/stena1/cvet2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/stena2/cvet1_",
+        "construktor/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2",
+       "file": "strn_parket/sten_parket_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena2/cvet1_",
+        "construktor/sten_parket/4m/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena2/cvet1_",
+        "construktor/vagonka/4m/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen2",
+       "file": "mdf/mdf_panel_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/mdf/stena2/cvet1_",
+        "construktor/mdf/stena7/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3",
+       "file": "vert_laminat/MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/stena10/cvet1_",
+        "construktor/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet1_",
+        "construktor/sten_parket/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet1_",
+        "construktor/vagonka/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen3",
+       "file": "mdf/mdf_panel_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/mdf/stena10/cvet1_",
+        "construktor/mdf/stena3/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4",
+       "file": "vert_laminat/MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet1_",
+        "construktor/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_1",
+       "file": "vert_laminat/MyPopupScreen4_1.dart",
+       "prefixes": [
+        "construktor/stena4/potolok1_",
+        "construktor/stena9/potolok1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet1_",
+        "construktor/vagonka/4m/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen4",
+       "file": "mdf/mdf_panel_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/mdf/stena4/cvet1_",
+        "construktor/mdf/stena9/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5",
+       "file": "vert_laminat/MyPopupScreen5.dart",
+       "prefixes": [
+        "construktor/stena5/cvet1_",
+        "construktor/stena8/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_6",
+       "file": "vert_laminat/MyPopupScreen5_6.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet3_",
+        "construktor/stena8/plitka_cvet3_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img3_0",
+    "img3_6"
+   ],
+   "hotspots": [
+    {
+     "id": "6",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6",
+       "file": "vert_laminat/MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/stena6/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6",
+       "file": "strn_parket/sten_parket_MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen6",
+       "file": "mdf/mdf_panel_MyPopupScreen6.dart",
+       "prefixes": [
+        "construktor/mdf/stena6/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_podokonnik.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik1_",
+        "construktor/laminat_podokonnik/podokonnik2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_rama7.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama71_",
+        "construktor/laminat_podokonnik/rama7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_4",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7_1",
+       "file": "laminat_podokonnik/laminat_rama7_1.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama51_",
+        "construktor/laminat_podokonnik/rama5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_4",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen8_4",
+       "file": "laminat_podokonnik/laminat_podokonnik2_4.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik61_",
+        "construktor/laminat_podokonnik/podokonnik6_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_2",
+     "popups": [
+      {
+       "cls": "plintus4",
+       "file": "laminat_podokonnik/plintus_4.dart",
+       "prefixes": [
+        "construktor/plintus11_",
+        "construktor/plintus1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8",
+     "popups": [
+      {
+       "cls": "light8",
+       "file": "laminat_podokonnik/light8.dart",
+       "prefixes": [
+        "construktor/lamp21_",
+        "construktor/lamp2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "6_5",
+     "popups": [
+      {
+       "cls": "shkaf0_2",
+       "file": "laminat_podokonnik/shkaf0_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_2_"
+       ]
+      },
+      {
+       "cls": "shkaf1_2",
+       "file": "laminat_podokonnik/shkaf1_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0_2",
+       "file": "laminat_podokonnik/shkaf_ldsp0_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1_2",
+       "file": "laminat_podokonnik/shkaf_ldsp1_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8_decor",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2_chair.dart",
+       "prefixes": [
+        "construktor/chair/chair1_1_",
+        "construktor/chair/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2dryer",
+       "file": "vert_laminat/MyPopupScreen2_dryer.dart",
+       "prefixes": [
+        "construktor/dryer/chair1_1_",
+        "construktor/dryer/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2flowers",
+       "file": "vert_laminat/MyPopupScreen2_flowers.dart",
+       "prefixes": [
+        "construktor/flowers/chair1_1_",
+        "construktor/flowers/chair2_1_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "5": [
+  {
+   "bg": [
+    "img5_0"
+   ],
+   "hotspots": [
+    {
+     "id": "3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3",
+       "file": "vert_laminat/MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/stena10/cvet1_",
+        "construktor/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet1_",
+        "construktor/sten_parket/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet1_",
+        "construktor/vagonka/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen3",
+       "file": "mdf/mdf_panel_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/mdf/stena10/cvet1_",
+        "construktor/mdf/stena3/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4",
+       "file": "vert_laminat/MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet1_",
+        "construktor/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_1",
+       "file": "vert_laminat/MyPopupScreen4_1.dart",
+       "prefixes": [
+        "construktor/stena4/potolok1_",
+        "construktor/stena9/potolok1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet1_",
+        "construktor/vagonka/4m/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen4",
+       "file": "mdf/mdf_panel_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/mdf/stena4/cvet1_",
+        "construktor/mdf/stena9/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_1",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_1",
+       "file": "vert_laminat/MyPopupScreen5_1.dart",
+       "prefixes": [
+        "construktor/stena5/cvet2_",
+        "construktor/stena8/cvet2_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_7",
+       "file": "vert_laminat/MyPopupScreen5_7.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet4_",
+        "construktor/stena8/plitka_cvet4_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img33_0",
+    "img3_7"
+   ],
+   "hotspots": [
+    {
+     "id": "7",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_podokonnik.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik1_",
+        "construktor/laminat_podokonnik/podokonnik2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_rama7.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama71_",
+        "construktor/laminat_podokonnik/rama7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_7",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7_4",
+       "file": "laminat_podokonnik/laminat_rama7_4.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama31_",
+        "construktor/laminat_podokonnik/rama3_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_4",
+     "popups": [
+      {
+       "cls": "plintus4_2",
+       "file": "laminat_podokonnik/plintus_4_2.dart",
+       "prefixes": [
+        "construktor/plintus21_",
+        "construktor/plintus22_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8",
+     "popups": [
+      {
+       "cls": "light8",
+       "file": "laminat_podokonnik/light8.dart",
+       "prefixes": [
+        "construktor/lamp21_",
+        "construktor/lamp2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8_decor",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2_chair.dart",
+       "prefixes": [
+        "construktor/chair/chair1_1_",
+        "construktor/chair/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2dryer",
+       "file": "vert_laminat/MyPopupScreen2_dryer.dart",
+       "prefixes": [
+        "construktor/dryer/chair1_1_",
+        "construktor/dryer/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2flowers",
+       "file": "vert_laminat/MyPopupScreen2_flowers.dart",
+       "prefixes": [
+        "construktor/flowers/chair1_1_",
+        "construktor/flowers/chair2_1_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "6": [
+  {
+   "bg": [
+    "img2_0"
+   ],
+   "hotspots": [
+    {
+     "id": "1_5",
+     "popups": [
+      {
+       "cls": "shkaf0_1",
+       "file": "laminat_podokonnik/shkaf0_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_1_"
+       ]
+      },
+      {
+       "cls": "shkaf1_1",
+       "file": "laminat_podokonnik/shkaf1_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_1_"
+       ]
+      },
+      {
+       "cls": "shkaf2_1",
+       "file": "laminat_podokonnik/shkaf2_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf2_1_"
+       ]
+      },
+      {
+       "cls": "shkaf3_1",
+       "file": "laminat_podokonnik/shkaf3_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf3_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0_1",
+       "file": "laminat_podokonnik/shkaf_ldsp0_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1_1",
+       "file": "laminat_podokonnik/shkaf_ldsp1_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp2_1",
+       "file": "laminat_podokonnik/shkaf_ldsp2_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp2_1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp3_1",
+       "file": "laminat_podokonnik/shkaf_ldsp3_1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp3_1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/stena2/cvet1_",
+        "construktor/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2",
+       "file": "strn_parket/sten_parket_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena2/cvet1_",
+        "construktor/sten_parket/4m/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena2/cvet1_",
+        "construktor/vagonka/4m/stena7/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen2",
+       "file": "mdf/mdf_panel_MyPopupScreen2.dart",
+       "prefixes": [
+        "construktor/mdf/stena2/cvet1_",
+        "construktor/mdf/stena7/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3",
+       "file": "vert_laminat/MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/stena10/cvet1_",
+        "construktor/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet1_",
+        "construktor/sten_parket/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet1_",
+        "construktor/vagonka/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen3",
+       "file": "mdf/mdf_panel_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/mdf/stena10/cvet1_",
+        "construktor/mdf/stena3/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4",
+       "file": "vert_laminat/MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet1_",
+        "construktor/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_1",
+       "file": "vert_laminat/MyPopupScreen4_1.dart",
+       "prefixes": [
+        "construktor/stena4/potolok1_",
+        "construktor/stena9/potolok1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet1_",
+        "construktor/vagonka/4m/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen4",
+       "file": "mdf/mdf_panel_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/mdf/stena4/cvet1_",
+        "construktor/mdf/stena9/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5",
+       "file": "vert_laminat/MyPopupScreen5.dart",
+       "prefixes": [
+        "construktor/stena5/cvet1_",
+        "construktor/stena8/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_6",
+       "file": "vert_laminat/MyPopupScreen5_6.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet3_",
+        "construktor/stena8/plitka_cvet3_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img6_0"
+   ],
+   "hotspots": [
+    {
+     "id": "9",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6_1",
+       "file": "vert_laminat/MyPopupScreen6_1.dart",
+       "prefixes": [
+        "construktor/stena6/cvet2_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6_1",
+       "file": "strn_parket/sten_parket_MyPopupScreen6_1.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet2_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6_1",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6_1.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet2_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen6_1",
+       "file": "mdf/mdf_panel_MyPopupScreen6_1.dart",
+       "prefixes": [
+        "construktor/mdf/stena6/cvet2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_podokonnik.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik1_",
+        "construktor/laminat_podokonnik/podokonnik2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_rama7.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama71_",
+        "construktor/laminat_podokonnik/rama7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen8",
+       "file": "laminat_podokonnik/laminat_podokonnik2.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik71_",
+        "construktor/laminat_podokonnik/podokonnik7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_6",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen8_6",
+       "file": "laminat_podokonnik/laminat_rama8_6.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama61_",
+        "construktor/laminat_podokonnik/rama6_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_2",
+     "popups": [
+      {
+       "cls": "plintus4",
+       "file": "laminat_podokonnik/plintus_4.dart",
+       "prefixes": [
+        "construktor/plintus11_",
+        "construktor/plintus1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8",
+     "popups": [
+      {
+       "cls": "light8",
+       "file": "laminat_podokonnik/light8.dart",
+       "prefixes": [
+        "construktor/lamp21_",
+        "construktor/lamp2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "6_6",
+     "popups": [
+      {
+       "cls": "shkaf0_2",
+       "file": "laminat_podokonnik/shkaf0_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_2_"
+       ]
+      },
+      {
+       "cls": "shkaf1_2",
+       "file": "laminat_podokonnik/shkaf1_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_2_"
+       ]
+      },
+      {
+       "cls": "shkaf2_2",
+       "file": "laminat_podokonnik/shkaf2_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf2_2_"
+       ]
+      },
+      {
+       "cls": "shkaf3_2",
+       "file": "laminat_podokonnik/shkaf3_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0_2",
+       "file": "laminat_podokonnik/shkaf_ldsp0_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1_2",
+       "file": "laminat_podokonnik/shkaf_ldsp1_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp2_2",
+       "file": "laminat_podokonnik/shkaf_ldsp2_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp2_2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp3_2",
+       "file": "laminat_podokonnik/shkaf_ldsp3_2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp3_2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8_decor",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2_chair.dart",
+       "prefixes": [
+        "construktor/chair/chair1_1_",
+        "construktor/chair/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2dryer",
+       "file": "vert_laminat/MyPopupScreen2_dryer.dart",
+       "prefixes": [
+        "construktor/dryer/chair1_1_",
+        "construktor/dryer/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2flowers",
+       "file": "vert_laminat/MyPopupScreen2_flowers.dart",
+       "prefixes": [
+        "construktor/flowers/chair1_1_",
+        "construktor/flowers/chair2_1_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "7": [
+  {
+   "bg": [
+    "img22_0",
+    "img2_7"
+   ],
+   "hotspots": [
+    {
+     "id": "1_1",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_1",
+       "file": "vert_laminat/MyPopupScreen1_1.dart",
+       "prefixes": [
+        "construktor/stena1/cvet2_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen1_1",
+       "file": "strn_parket/sten_parket_MyPopupScreen1_1.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena1/cvet2_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen1_1",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen1_1.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena1/cvet2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3",
+       "file": "vert_laminat/MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/stena10/cvet1_",
+        "construktor/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet1_",
+        "construktor/sten_parket/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet1_",
+        "construktor/vagonka/4m/stena3/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen3",
+       "file": "mdf/mdf_panel_MyPopupScreen3.dart",
+       "prefixes": [
+        "construktor/mdf/stena10/cvet1_",
+        "construktor/mdf/stena3/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4",
+       "file": "vert_laminat/MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet1_",
+        "construktor/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_1",
+       "file": "vert_laminat/MyPopupScreen4_1.dart",
+       "prefixes": [
+        "construktor/stena4/potolok1_",
+        "construktor/stena9/potolok1_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet1_",
+        "construktor/vagonka/4m/stena9/cvet1_"
+       ]
+      },
+      {
+       "cls": "mdf_panel_MyPopupScreen4",
+       "file": "mdf/mdf_panel_MyPopupScreen4.dart",
+       "prefixes": [
+        "construktor/mdf/stena4/cvet1_",
+        "construktor/mdf/stena9/cvet1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_1",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_1",
+       "file": "vert_laminat/MyPopupScreen5_1.dart",
+       "prefixes": [
+        "construktor/stena5/cvet2_",
+        "construktor/stena8/cvet2_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_7",
+       "file": "vert_laminat/MyPopupScreen5_7.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet4_",
+        "construktor/stena8/plitka_cvet4_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img7_0"
+   ],
+   "hotspots": [
+    {
+     "id": "10",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6_2",
+       "file": "vert_laminat/MyPopupScreen6_2.dart",
+       "prefixes": [
+        "construktor/stena6/cvet3_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6_2",
+       "file": "strn_parket/sten_parket_MyPopupScreen6_2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet3_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet3_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_podokonnik.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik1_",
+        "construktor/laminat_podokonnik/podokonnik2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7",
+       "file": "laminat_podokonnik/laminat_rama7.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama71_",
+        "construktor/laminat_podokonnik/rama7_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_6",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen7_3",
+       "file": "laminat_podokonnik/laminat_rama7_3.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama41_",
+        "construktor/laminat_podokonnik/rama4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8",
+     "popups": [
+      {
+       "cls": "light8",
+       "file": "laminat_podokonnik/light8.dart",
+       "prefixes": [
+        "construktor/lamp21_",
+        "construktor/lamp2_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_5",
+     "popups": [
+      {
+       "cls": "plintus4_3",
+       "file": "laminat_podokonnik/plintus_4_3.dart",
+       "prefixes": [
+        "construktor/plintus2_",
+        "construktor/plintus51_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "1_9",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_2",
+       "file": "vert_laminat/MyPopupScreen1_2.dart",
+       "prefixes": [
+        "construktor/stena1/cvet4_"
+       ]
+      },
+      {
+       "cls": "shkaf111",
+       "file": "laminat_podokonnik/shkaf111.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf111_"
+       ]
+      },
+      {
+       "cls": "shkaf222",
+       "file": "laminat_podokonnik/shkaf222.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf222_"
+       ]
+      },
+      {
+       "cls": "shkaf333",
+       "file": "laminat_podokonnik/shkaf333.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf333_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_8_decor",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2",
+       "file": "vert_laminat/MyPopupScreen2_chair.dart",
+       "prefixes": [
+        "construktor/chair/chair1_1_",
+        "construktor/chair/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2dryer",
+       "file": "vert_laminat/MyPopupScreen2_dryer.dart",
+       "prefixes": [
+        "construktor/dryer/chair1_1_",
+        "construktor/dryer/chair2_1_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen2flowers",
+       "file": "vert_laminat/MyPopupScreen2_flowers.dart",
+       "prefixes": [
+        "construktor/flowers/chair1_1_",
+        "construktor/flowers/chair2_1_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "8": [
+  {
+   "bg": [
+    "img8_0"
+   ],
+   "hotspots": [
+    {
+     "id": "1_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_2",
+       "file": "vert_laminat/MyPopupScreen1_2.dart",
+       "prefixes": [
+        "construktor/stena1/cvet4_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen1_2",
+       "file": "strn_parket/sten_parket_MyPopupScreen1_2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena1/cvet4_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen1_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen1_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena1/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "1_4",
+     "popups": [
+      {
+       "cls": "shkaf0",
+       "file": "laminat_podokonnik/shkaf0.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf0_"
+       ]
+      },
+      {
+       "cls": "shkaf1",
+       "file": "laminat_podokonnik/shkaf1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1_"
+       ]
+      },
+      {
+       "cls": "shkaf2",
+       "file": "laminat_podokonnik/shkaf2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf2_"
+       ]
+      },
+      {
+       "cls": "shkaf3",
+       "file": "laminat_podokonnik/shkaf3.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf3_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp0",
+       "file": "laminat_podokonnik/shkaf_ldsp0.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp0_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp1",
+       "file": "laminat_podokonnik/shkaf_ldsp1.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp1_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp2",
+       "file": "laminat_podokonnik/shkaf_ldsp2.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp2_"
+       ]
+      },
+      {
+       "cls": "shkaf_ldsp3",
+       "file": "laminat_podokonnik/shkaf_ldsp3.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf_ldsp3_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "2_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2_2",
+       "file": "vert_laminat/MyPopupScreen2_2.dart",
+       "prefixes": [
+        "construktor/stena2/cvet4_",
+        "construktor/stena7/cvet4_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2_2",
+       "file": "strn_parket/sten_parket_MyPopupScreen2_2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena2/cvet4_",
+        "construktor/sten_parket/4m/stena7/cvet4_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena2/cvet4_",
+        "construktor/vagonka/4m/stena7/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3_2",
+       "file": "vert_laminat/MyPopupScreen3_2.dart",
+       "prefixes": [
+        "construktor/stena10/cvet4_",
+        "construktor/stena3/cvet4_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3_2",
+       "file": "strn_parket/sten_parket_MyPopupScreen3_2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet4_",
+        "construktor/sten_parket/4m/stena3/cvet4_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet4_",
+        "construktor/vagonka/4m/stena3/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4_2",
+       "file": "vert_laminat/MyPopupScreen4_2.dart",
+       "prefixes": [
+        "construktor/stena4/cvet4_",
+        "construktor/stena9/cvet4_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_3",
+       "file": "vert_laminat/MyPopupScreen4_3.dart",
+       "prefixes": [
+        "construktor/stena4/potolok2_",
+        "construktor/stena9/potolok2_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet4_",
+        "construktor/vagonka/4m/stena9/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_2",
+       "file": "vert_laminat/MyPopupScreen5_2.dart",
+       "prefixes": [
+        "construktor/stena5/cvet4_",
+        "construktor/stena8/cvet4_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_5",
+       "file": "vert_laminat/MyPopupScreen5_5.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet2_",
+        "construktor/stena8/plitka_cvet2_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img8_1"
+   ],
+   "hotspots": [
+    {
+     "id": "6_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6_22",
+       "file": "vert_laminat/MyPopupScreen6_22.dart",
+       "prefixes": [
+        "construktor/stena6/cvet4_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6_22",
+       "file": "strn_parket/sten_parket_MyPopupScreen6_22.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet4_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6_22",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6_22.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_1",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7_1",
+       "file": "laminat_podokonnik/laminat_podokonnik7_1.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik91_",
+        "construktor/laminat_podokonnik/podokonnik9_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_1",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen8_1",
+       "file": "laminat_podokonnik/laminat_podokonnik8_1.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik81_",
+        "construktor/laminat_podokonnik/podokonnik8_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_2",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen8_1",
+       "file": "laminat_podokonnik/laminat_rama8_1.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama81_",
+        "construktor/laminat_podokonnik/rama8_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_2",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7_2",
+       "file": "laminat_podokonnik/laminat_podokonnik7_2.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama91_",
+        "construktor/laminat_podokonnik/rama9_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_7",
+     "popups": [
+      {
+       "cls": "light9",
+       "file": "laminat_podokonnik/light9.dart",
+       "prefixes": [
+        "construktor/lamp11_",
+        "construktor/lamp1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_1",
+     "popups": [
+      {
+       "cls": "plintus6_1",
+       "file": "laminat_podokonnik/plintus_6_1.dart",
+       "prefixes": [
+        "construktor/plintus31_",
+        "construktor/plintus3_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "1_10",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_2",
+       "file": "vert_laminat/MyPopupScreen1_2.dart",
+       "prefixes": [
+        "construktor/stena1/cvet4_"
+       ]
+      },
+      {
+       "cls": "shkaf1111",
+       "file": "laminat_podokonnik/shkaf1111.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf1111_"
+       ]
+      },
+      {
+       "cls": "shkaf2222",
+       "file": "laminat_podokonnik/shkaf2222.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf2222_"
+       ]
+      },
+      {
+       "cls": "shkaf3333",
+       "file": "laminat_podokonnik/shkaf3333.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf3333_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "9": [
+  {
+   "bg": [
+    "img9_0"
+   ],
+   "hotspots": [
+    {
+     "id": "1_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_3",
+       "file": "vert_laminat/MyPopupScreen1_3.dart",
+       "prefixes": [
+        "construktor/stena1/cvet5_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen1_3",
+       "file": "strn_parket/sten_parket_MyPopupScreen1_3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena1/cvet5_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen1_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen1_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena1/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3_2",
+       "file": "vert_laminat/MyPopupScreen3_2.dart",
+       "prefixes": [
+        "construktor/stena10/cvet4_",
+        "construktor/stena3/cvet4_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3_2",
+       "file": "strn_parket/sten_parket_MyPopupScreen3_2.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet4_",
+        "construktor/sten_parket/4m/stena3/cvet4_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet4_",
+        "construktor/vagonka/4m/stena3/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4_2",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4_2",
+       "file": "vert_laminat/MyPopupScreen4_2.dart",
+       "prefixes": [
+        "construktor/stena4/cvet4_",
+        "construktor/stena9/cvet4_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_3",
+       "file": "vert_laminat/MyPopupScreen4_3.dart",
+       "prefixes": [
+        "construktor/stena4/potolok2_",
+        "construktor/stena9/potolok2_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4_2",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4_2.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet4_",
+        "construktor/vagonka/4m/stena9/cvet4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_3",
+       "file": "vert_laminat/MyPopupScreen5_3.dart",
+       "prefixes": [
+        "construktor/stena5/cvet5_",
+        "construktor/stena8/cvet5_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_4",
+       "file": "vert_laminat/MyPopupScreen5_4.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet1_",
+        "construktor/stena8/plitka_cvet1_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img9_1"
+   ],
+   "hotspots": [
+    {
+     "id": "6_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6_3",
+       "file": "vert_laminat/MyPopupScreen6_3.dart",
+       "prefixes": [
+        "construktor/stena6/cvet5_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6_3",
+       "file": "strn_parket/sten_parket_MyPopupScreen6_3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet5_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_1",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7_1",
+       "file": "laminat_podokonnik/laminat_podokonnik7_1.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/podokonnik91_",
+        "construktor/laminat_podokonnik/podokonnik9_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_3",
+     "popups": [
+      {
+       "cls": "laminat_rama_MyPopupScreen8_2",
+       "file": "laminat_podokonnik/laminat_rama8_2.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama101_",
+        "construktor/laminat_podokonnik/rama10_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "7_2",
+     "popups": [
+      {
+       "cls": "laminat_podokonnik_MyPopupScreen7_2",
+       "file": "laminat_podokonnik/laminat_podokonnik7_2.dart",
+       "prefixes": [
+        "construktor/laminat_podokonnik/rama91_",
+        "construktor/laminat_podokonnik/rama9_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_7",
+     "popups": [
+      {
+       "cls": "light9",
+       "file": "laminat_podokonnik/light9.dart",
+       "prefixes": [
+        "construktor/lamp11_",
+        "construktor/lamp1_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9",
+     "popups": [
+      {
+       "cls": "plintus6",
+       "file": "laminat_podokonnik/plintus_6.dart",
+       "prefixes": [
+        "construktor/plintus41_",
+        "construktor/plintus4_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "1_8",
+     "popups": [
+      {
+       "cls": "MyPopupScreen1_2",
+       "file": "vert_laminat/MyPopupScreen1_2.dart",
+       "prefixes": [
+        "construktor/stena1/cvet4_"
+       ]
+      },
+      {
+       "cls": "shkaf11",
+       "file": "laminat_podokonnik/shkaf11.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf11_"
+       ]
+      },
+      {
+       "cls": "shkaf22",
+       "file": "laminat_podokonnik/shkaf22.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf22_"
+       ]
+      },
+      {
+       "cls": "shkaf33",
+       "file": "laminat_podokonnik/shkaf33.dart",
+       "prefixes": [
+        "construktor/shkaf/shkaf33_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "10": [
+  {
+   "bg": [
+    "img10_0"
+   ],
+   "hotspots": [
+    {
+     "id": "2_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2_4",
+       "file": "vert_laminat/MyPopupScreen2_4.dart",
+       "prefixes": [
+        "construktor/stena2/cvet6_",
+        "construktor/stena7/cvet6_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2_3",
+       "file": "strn_parket/sten_parket_MyPopupScreen2_3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena2/cvet6_",
+        "construktor/sten_parket/4m/stena7/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena2/cvet5_",
+        "construktor/vagonka/4m/stena7/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3_4",
+       "file": "vert_laminat/MyPopupScreen3_4.dart",
+       "prefixes": [
+        "construktor/stena10/cvet6_",
+        "construktor/stena3/cvet6_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3_3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3_3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet6_",
+        "construktor/sten_parket/4m/stena3/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet5_",
+        "construktor/vagonka/4m/stena3/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4_3nat",
+       "file": "vert_laminat/MyPopupScreen4_3nat.dart",
+       "prefixes": [
+        "construktor/stena4/potolok3_",
+        "construktor/stena9/potolok3_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_4",
+       "file": "vert_laminat/MyPopupScreen4_4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet6_",
+        "construktor/stena9/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet5_",
+        "construktor/vagonka/4m/stena9/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_4pol",
+       "file": "vert_laminat/MyPopupScreen5_4pol.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet5_",
+        "construktor/stena8/plitka_cvet5_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_8",
+       "file": "vert_laminat/MyPopupScreen5_8.dart",
+       "prefixes": [
+        "construktor/stena5/cvet6_",
+        "construktor/stena8/cvet6_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img10_1"
+   ],
+   "hotspots": [
+    {
+     "id": "6_4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6_4",
+       "file": "vert_laminat/MyPopupScreen6_4.dart",
+       "prefixes": [
+        "construktor/stena6/cvet6_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6_4",
+       "file": "strn_parket/sten_parket_MyPopupScreen6_4.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6_4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6_4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet6_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_6",
+     "popups": [
+      {
+       "cls": "plintus7",
+       "file": "laminat_podokonnik/plintus_7.dart",
+       "prefixes": [
+        "construktor/plintus61_",
+        "construktor/plintus6_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "11": [
+  {
+   "bg": [
+    "img10_0"
+   ],
+   "hotspots": [
+    {
+     "id": "2_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen2_4",
+       "file": "vert_laminat/MyPopupScreen2_4.dart",
+       "prefixes": [
+        "construktor/stena2/cvet6_",
+        "construktor/stena7/cvet6_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen2_3",
+       "file": "strn_parket/sten_parket_MyPopupScreen2_3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena2/cvet6_",
+        "construktor/sten_parket/4m/stena7/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen2_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen2_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena2/cvet5_",
+        "construktor/vagonka/4m/stena7/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "3_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen3_4",
+       "file": "vert_laminat/MyPopupScreen3_4.dart",
+       "prefixes": [
+        "construktor/stena10/cvet6_",
+        "construktor/stena3/cvet6_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen3_3",
+       "file": "strn_parket/sten_parket_MyPopupScreen3_3.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena10/cvet6_",
+        "construktor/sten_parket/4m/stena3/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen3_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen3_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena10/cvet5_",
+        "construktor/vagonka/4m/stena3/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "4_3",
+     "popups": [
+      {
+       "cls": "MyPopupScreen4_3nat",
+       "file": "vert_laminat/MyPopupScreen4_3nat.dart",
+       "prefixes": [
+        "construktor/stena4/potolok3_",
+        "construktor/stena9/potolok3_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen4_4",
+       "file": "vert_laminat/MyPopupScreen4_4.dart",
+       "prefixes": [
+        "construktor/stena4/cvet6_",
+        "construktor/stena9/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen4_3",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen4_3.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena4/cvet5_",
+        "construktor/vagonka/4m/stena9/cvet5_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "5_4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen5_4pol",
+       "file": "vert_laminat/MyPopupScreen5_4pol.dart",
+       "prefixes": [
+        "construktor/stena5/plitka_cvet5_",
+        "construktor/stena8/plitka_cvet5_"
+       ]
+      },
+      {
+       "cls": "MyPopupScreen5_8",
+       "file": "vert_laminat/MyPopupScreen5_8.dart",
+       "prefixes": [
+        "construktor/stena5/cvet6_",
+        "construktor/stena8/cvet6_"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "bg": [
+    "img10_1"
+   ],
+   "hotspots": [
+    {
+     "id": "6_4",
+     "popups": [
+      {
+       "cls": "MyPopupScreen6_4",
+       "file": "vert_laminat/MyPopupScreen6_4.dart",
+       "prefixes": [
+        "construktor/stena6/cvet6_"
+       ]
+      },
+      {
+       "cls": "Sten_parket_MyPopupScreen6_4",
+       "file": "strn_parket/sten_parket_MyPopupScreen6_4.dart",
+       "prefixes": [
+        "construktor/sten_parket/4m/stena6/cvet6_"
+       ]
+      },
+      {
+       "cls": "Vert_vagonka_MyPopupScreen6_4",
+       "file": "vert_vagonka/Vert_vagonka_MyPopupScreen6_4.dart",
+       "prefixes": [
+        "construktor/vagonka/4m/stena6/cvet6_"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "8_9_6",
+     "popups": [
+      {
+       "cls": "plintus7",
+       "file": "laminat_podokonnik/plintus_7.dart",
+       "prefixes": [
+        "construktor/plintus61_",
+        "construktor/plintus6_"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

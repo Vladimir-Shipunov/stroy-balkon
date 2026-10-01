@@ -1,0 +1,87 @@
+/**
+ * @file Shared types of the plan-mode room renderer (`render/`): a balcony built
+ * from its plan (`planShapes.ts`) as planar faces, lit by the daylight from its
+ * windows and drawn per pixel in software — no 3D engine.
+ */
+
+export type Vec3 = readonly [number, number, number];
+
+/** How a face is shaded. */
+export type FaceKind =
+  /** A finish the customer picks (walls, parapets, floor, ceiling): texture or colour from the paint. */
+  | 'paint'
+  /** Window glass: the street behind it. */
+  | 'glass'
+  /** A window frame profile in the chosen frame colour. */
+  | 'frame'
+  /** Fixed white parts (sills, the apartment's door/window frames, drip sills). */
+  | 'white'
+  /** The apartment seen through its door/window glass: tulle curtains. */
+  | 'curtain'
+  /** Light-emitting lamp parts. */
+  | 'lamp'
+  /** Fixed dark parts (handles' shadows, door threshold). */
+  | 'dark';
+
+export interface Face {
+  /** Planar outline in mm (y up = into the plan, z up = height); further loops are holes. */
+  readonly loops: readonly (readonly Vec3[])[];
+  /** Unit normal on the side the face is seen from. */
+  readonly n: Vec3;
+  /** Texture / light-map frame: origin and two unit in-plane axes. */
+  readonly o: Vec3;
+  readonly u: Vec3;
+  readonly v: Vec3;
+  readonly kind: FaceKind;
+  /** Paint key of `paint` faces: `P:w3`, `P:floor`, `P:ceiling`. */
+  readonly paint: string;
+  /** Surface id written to the id buffer (tap targets); 0 = none. */
+  readonly pick: number;
+  /** Light-mapped (large surfaces) or lit by one value (small parts). */
+  readonly map: boolean;
+  /** Albedo multiplier of fixed parts (white / dark / frame shading). */
+  readonly tint: number;
+}
+
+/** A tileable texture: RGB floats per mip level, power-of-two square. */
+export interface TexData {
+  readonly levels: readonly { readonly size: number; readonly rgb: Float32Array }[];
+}
+
+/** An outdoor panorama: RGB floats, azimuth 0..2π across, elevation `elTop`..`elBottom` down. */
+export interface EnvData {
+  readonly w: number;
+  readonly h: number;
+  readonly rgb: Float32Array;
+  readonly elTop: number;
+  readonly elBottom: number;
+}
+
+/** What paints a `paint` face: a texture (with the world size of one tile, mm) or a flat colour. */
+export interface SurfacePaint {
+  readonly color: string;
+  readonly tex?: string;
+  readonly tile?: number;
+}
+
+export interface RenderPaint {
+  readonly surfaces: Readonly<Record<string, SurfacePaint>>;
+  /** Window frame colour (hex). */
+  readonly frame: string;
+  /** Lamp model (1..6) or none. */
+  readonly lamp: number | null;
+}
+
+export interface CameraSpec {
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
+  /** Viewing direction in the plan (unit). */
+  readonly fx: number;
+  readonly fy: number;
+  /** Horizontal = vertical field of view (square image), radians. */
+  readonly fov: number;
+}
+
+/** Ids written to the id buffer for the non-wall surfaces (walls use their 1-based edge number). */
+export const PICK = { floor: 40, ceiling: 41, frame: 42, light: 43, sill: 44, plinth: 45 } as const;
