@@ -17,9 +17,7 @@ export const EYE = 1450;
 export const FOV = (78 * Math.PI) / 180;
 
 const GLASS_SET = 46; // glass behind the face of the frame
-const FRAME_W = 64; // outer frame profile
-const MULLION_W = 80;
-const SASH_W = 46;
+const FRAME_B = 64; // width of a window's frame ring (twice that between two windows)
 const UNIT = 900; // ~one sash per 0.9 m of glazing
 export const PARAPET_D = 160; // parapet box: its face is this far into the room
 export const SILL_D = 250; // window sill depth from the frame (90 mm overhang)
@@ -150,77 +148,50 @@ function offsetChain(g: PlanGeom, chain: readonly number[], off: number): { pts:
 type Emit = (s0: number, s1: number, z0: number, z1: number, off: number, tint: number) => void;
 
 /**
- * The outer frame of a window — jambs, top and bottom bars, mullions and an optional
- * transom — as bars that never overlap (coplanar overlaps would flicker by depth).
- * `cuts` are the mullion centres along the window, `transom` the height of a cross bar.
+ * A window unit on the plane of edge `e` (`off` mm into the room): the app's window image,
+ * 9-sliced so its frame ring stays `FRAME_B` mm wide. `frame` units are recoloured by the
+ * customer's frame colour and see-through in the middle; `house` units are the apartment's own.
  */
-function frameBars(emit: Emit, len: number, zb: number, zt: number, cuts: readonly number[], transom: number | null, off: number): void {
-  emit(0, FRAME_W, zb, zt, off, 1);
-  emit(len - FRAME_W, len, zb, zt, off, 1);
-  const edges = [FRAME_W, ...cuts.flatMap((c) => [c - MULLION_W / 2, c + MULLION_W / 2]), len - FRAME_W];
-  for (let k = 0; k + 1 < edges.length; k += 2) {
-    const a = edges[k]!;
-    const b = edges[k + 1]!;
-    emit(a, b, zt - FRAME_W, zt, off, 1);
-    emit(a, b, zb, zb + FRAME_W, off, 1);
-    if (transom !== null) emit(a, b, transom - MULLION_W / 2, transom + MULLION_W / 2, off, 1);
-  }
-  for (const c of cuts) {
-    const s0 = c - MULLION_W / 2;
-    const s1 = c + MULLION_W / 2;
-    if (transom === null) {
-      emit(s0, s1, zb + FRAME_W, zt - FRAME_W, off, 1);
-    } else {
-      emit(s0, s1, zb + FRAME_W, transom - MULLION_W / 2, off, 1);
-      emit(s0, s1, transom - MULLION_W / 2, transom + MULLION_W / 2, off, 1);
-      emit(s0, s1, transom + MULLION_W / 2, zt - FRAME_W, off, 1);
-    }
-  }
+function unitFace(e: Edge, off: number, s0: number, s1: number, z0: number, z1: number, img: 'house' | 'frame', pick: number, tint = 1): Face {
+  const f = vface(e, off, s0, s1, z0, z1, 'unit', img === 'house' ? 'U:house' : 'P:frame', pick, false, tint);
+  return { ...f, unit: { img, u0: s0, u1: s1, v0: z0, v1: z1, b: FRAME_B } };
 }
 
-/** A sash: a narrower frame round the pane s0..s1 x z0..z1, bars not overlapping. */
-function sashBars(emit: Emit, s0: number, s1: number, z0: number, z1: number, off: number): void {
-  emit(s0, s0 + SASH_W, z0, z1, off, 0.97);
-  emit(s1 - SASH_W, s1, z0, z1, off, 0.97);
-  emit(s0 + SASH_W, s1 - SASH_W, z0, z0 + SASH_W, off, 0.97);
-  emit(s0 + SASH_W, s1 - SASH_W, z1 - SASH_W, z1, off, 0.97);
-}
-
-/** Frames, sashes, handles and glass of one glazed edge. */
+/** Frames, handles and glass of one glazed edge: one window unit per ~0.9 m (two stacked when the windows go to the floor). */
 function glazingFaces(e: Edge, zb: number, zt: number, transom: number | null, out: Face[]): void {
   const frame: Emit = (s0, s1, z0, z1, off, tint) => {
     if (s1 - s0 > 1 && z1 - z0 > 1) out.push(vface(e, off, s0, s1, z0, z1, 'frame', 'P:frame', PICK.frame, false, tint));
   };
   out.push(vface(e, -GLASS_SET, 0, e.len, zb, zt, 'glass', '', PICK.frame, false));
   const units = Math.max(1, Math.round(e.len / UNIT));
-  const cuts = Array.from({ length: units - 1 }, (_, k) => ((k + 1) * e.len) / units);
-  frameBars(frame, e.len, zb, zt, cuts, transom, 0);
-  const bounds = [FRAME_W, ...cuts.flatMap((c) => [c - MULLION_W / 2, c + MULLION_W / 2]), e.len - FRAME_W];
+  const cuts = [0, ...Array.from({ length: units - 1 }, (_, k) => ((k + 1) * e.len) / units), e.len];
+  const rows: [number, number][] = transom === null ? [[zb, zt]] : [[zb, transom], [transom, zt]];
   for (let k = 0; k < units; k += 1) {
-    const s0 = bounds[2 * k]!;
-    const s1 = bounds[2 * k + 1]!;
-    const panes: [number, number][] = transom === null ? [[zb + FRAME_W, zt - FRAME_W]] : [[zb + FRAME_W, transom - MULLION_W / 2], [transom + MULLION_W / 2, zt - FRAME_W]];
-    panes.forEach(([z0, z1], pi) => {
-      // Depth of the frame around the pane (frame face -> glass).
-      out.push(sideFace(e, s0, 0, -GLASS_SET, z0, z1, 1, 'frame', 'P:frame', PICK.frame, false, 0.8));
-      out.push(sideFace(e, s1, 0, -GLASS_SET, z0, z1, -1, 'frame', 'P:frame', PICK.frame, false, 0.8));
-      out.push(hface(e, s0, s1, 0, -GLASS_SET, z0, true, 'frame', 'P:frame', PICK.frame, false, 0.9));
-      out.push(hface(e, s0, s1, 0, -GLASS_SET, z1, false, 'frame', 'P:frame', PICK.frame, false, 0.72));
-      // The sash: a narrower frame just behind the outer one, on the main (upper) panes.
-      if (pi === panes.length - 1 && s1 - s0 > 3 * SASH_W) {
-        sashBars(frame, s0, s1, z0, z1, -14);
-        // A handle on every other sash, on its side next to the mullion.
-        if (k % 2 === 0 && units > 1) {
-          const hs = k === units - 1 ? s0 + SASH_W * 0.5 : s1 - SASH_W * 0.5;
-          const hz = Math.min(z1 - 250, z0 + (z1 - z0) * 0.45);
-          frame(hs - 11, hs + 11, hz - 60, hz + 70, 22, 1.05);
-        }
+    const u0 = cuts[k]!;
+    const u1 = cuts[k + 1]!;
+    rows.forEach(([z0, z1], ri) => {
+      out.push(unitFace(e, 0, u0, u1, z0, z1, 'frame', PICK.frame));
+      // The frame's depth round the pane (frame face -> glass).
+      const s0 = u0 + FRAME_B;
+      const s1 = u1 - FRAME_B;
+      const p0 = z0 + FRAME_B;
+      const p1 = z1 - FRAME_B;
+      if (s1 - s0 < 10 || p1 - p0 < 10) return;
+      out.push(sideFace(e, s0, 0, -GLASS_SET, p0, p1, 1, 'frame', 'P:frame', PICK.frame, false, 0.8));
+      out.push(sideFace(e, s1, 0, -GLASS_SET, p0, p1, -1, 'frame', 'P:frame', PICK.frame, false, 0.8));
+      out.push(hface(e, s0, s1, 0, -GLASS_SET, p0, true, 'frame', 'P:frame', PICK.frame, false, 0.9));
+      out.push(hface(e, s0, s1, 0, -GLASS_SET, p1, false, 'frame', 'P:frame', PICK.frame, false, 0.72));
+      // A handle on every other window, on its side next to the mullion (the main, upper row).
+      if (ri === rows.length - 1 && k % 2 === 0 && units > 1 && s1 - s0 > 150) {
+        const hs = k === units - 1 ? s0 + 24 : s1 - 24;
+        const hz = Math.min(p1 - 250, p0 + (p1 - p0) * 0.45);
+        frame(hs - 11, hs + 11, hz - 60, hz + 70, 22, 1.05);
       }
     });
   }
 }
 
-/** The balcony block in the house wall: reveals, frames, curtains behind the glass, drip sill. */
+/** The balcony block in the house wall: reveals, the app's window images, curtains behind the glass, drip sill. */
 function openingFaces(e: Edge, o: { kind: 'door' | 'window'; from: number; to: number }, zt: number, out: Face[]): Vec3[] {
   const zb = o.kind === 'door' ? 0 : HOUSE_WINDOW_BOTTOM;
   const hole = vrect(e, 0, o.from, o.to, zb, zt);
@@ -242,26 +213,21 @@ function openingFaces(e: Edge, o: { kind: 'door' | 'window'; from: number; to: n
     if (s1 - s0 > 1 && z1 - z0 > 1) out.push(vface(e, off, s0, s1, z0, z1, 'white', '', 0, false, 0.96 * tint));
   };
   const L = o.to - o.from;
-  // Tulle behind the glass.
+  // Tulle behind the glass (seen only if the window image is missing).
   out.push(vface(e, back, o.from, o.to, zb, zt, 'curtain', '', 0, false));
-  // Frame bars in the block's own coordinates (0 at `from`).
-  const local: Emit = (s0, s1, z0, z1, off, tint) => white(o.from + s0, o.from + s1, z0, z1, fo + off, tint);
+  const unit = (s0: number, s1: number, z0: number, z1: number): void => {
+    out.push(unitFace(e, fo, o.from + s0, o.from + s1, z0, z1, 'house', 0, 0.96));
+  };
   if (o.kind === 'door') {
-    // A glazed balcony door: a solid leaf below the window line, glass above it.
-    const split = HOUSE_WINDOW_BOTTOM;
-    local(0, FRAME_W, 0, zt, 0, 1);
-    local(L - FRAME_W, L, 0, zt, 0, 1);
-    local(FRAME_W, L - FRAME_W, zt - FRAME_W, zt, 0, 1);
-    local(FRAME_W, L - FRAME_W, 0, 24, 0, 1);
-    local(FRAME_W, L - FRAME_W, 24, split, 6, 0.93);
-    local(FRAME_W, L - FRAME_W, split, split + MULLION_W, 0, 1);
-    sashBars(local, FRAME_W, L - FRAME_W, split + MULLION_W, zt - FRAME_W, 10);
-    local(L - FRAME_W - SASH_W / 2 - 11, L - FRAME_W - SASH_W / 2 + 11, 980, 1130, 30, 1.02);
+    // A glazed balcony door: a transom at window height, a window image on each side of it.
+    unit(0, L, 0, HOUSE_WINDOW_BOTTOM);
+    unit(0, L, HOUSE_WINDOW_BOTTOM, zt);
+    white(o.from + L - FRAME_B - 36, o.from + L - FRAME_B - 14, 980, 1130, fo + 30, 1.02);
+  } else if (L > 900) {
+    unit(0, L / 2, zb, zt);
+    unit(L / 2, L, zb, zt);
   } else {
-    const cuts = L > 900 ? [L / 2] : [];
-    frameBars(local, L, zb, zt, cuts, null, 0);
-    const bounds = [FRAME_W, ...cuts.flatMap((c) => [c - MULLION_W / 2, c + MULLION_W / 2]), L - FRAME_W];
-    for (let k = 0; k + 1 < bounds.length; k += 2) sashBars(local, bounds[k]!, bounds[k + 1]!, zb + FRAME_W, zt - FRAME_W, 10);
+    unit(0, L, zb, zt);
   }
   return hole;
 }

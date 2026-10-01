@@ -3,7 +3,8 @@
  * baked light, decoded textures and the street panorama) and answers render
  * requests from the page, so a repaint never blocks the UI.
  */
-import { loadEnv, loadTexture } from './assets';
+import { loadEnv, loadTexture, loadUnitImage } from './assets';
+import { WIN_FRAME_URL, WIN_HOUSE_URL } from './units';
 import { RoomRenderer } from './renderer';
 import type { RenderOutput } from './renderer';
 import type { PlanGeom } from '../planShapes';
@@ -51,6 +52,19 @@ function ensureTexture(url: string): Promise<void> {
   return p;
 }
 
+function ensureUnitImage(url: string): Promise<void> {
+  if (renderer.hasUnitImage(url)) return Promise.resolve();
+  let p = loading.get(url);
+  if (!p) {
+    p = loadUnitImage(url)
+      .then((img) => renderer.addUnitImage(url, img))
+      .catch(() => undefined) // a missing image falls back to a plain panel
+      .finally(() => loading.delete(url));
+    loading.set(url, p);
+  }
+  return p;
+}
+
 function ensureEnv(): Promise<void> {
   envReady ??= loadEnv(STREET_URL, 2048, 512, 40, -40)
     .then((e) => renderer.setEnv(e))
@@ -61,7 +75,7 @@ function ensureEnv(): Promise<void> {
 ctx.onmessage = (e: MessageEvent<RenderRequest>): void => {
   const r = e.data;
   const urls = Object.values(r.paint.surfaces).flatMap((s) => (s.tex ? [s.tex] : []));
-  void Promise.all([ensureEnv(), ...urls.map(ensureTexture)])
+  void Promise.all([ensureEnv(), ensureUnitImage(WIN_HOUSE_URL), ensureUnitImage(WIN_FRAME_URL), ...urls.map(ensureTexture)])
     .then(() => {
       const out = renderer.render(r.key, r.geom, r.cam, r.paint, r.size, r.ss);
       const res: RenderResponse = { id: r.id, ok: true, out };

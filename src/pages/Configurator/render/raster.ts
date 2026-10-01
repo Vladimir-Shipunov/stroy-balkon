@@ -7,7 +7,8 @@
  * colour times the baked light, and their surface id is kept for the tap targets.
  */
 import type { LightMap } from './lighting';
-import type { CameraSpec, EnvData, Face, TexData, Vec3 } from './types';
+import type { CameraSpec, EnvData, Face, TexData, UnitImage, UnitMap, Vec3 } from './types';
+import { FRAME_SHADE_MAX, sampleUnit, unitPixel } from './units';
 
 export interface Target {
   readonly w: number;
@@ -115,7 +116,7 @@ export function addGlow(t: Target, bs: Basis, at: Vec3, radiusMm: number, streng
 }
 
 /** How a face is shaded. */
-export const Mode = { Texture: 0, Flat: 1, Glass: 2, Curtain: 3, Emit: 4 } as const;
+export const Mode = { Texture: 0, Flat: 1, Glass: 2, Curtain: 3, Emit: 4, Unit: 5 } as const;
 export type Mode = (typeof Mode)[keyof typeof Mode];
 
 export interface Shade {
@@ -132,6 +133,10 @@ export interface Shade {
   readonly env: EnvData | null;
   /** Sheen strength (0 = matte): a Fresnel glow that grows towards grazing angles, as on varnished floors. */
   readonly gloss?: number;
+  /** `Unit` faces: the window image and its placement; `recolor` multiplies the image's grey shading by (r, g, b), else it is shown as is. */
+  readonly img?: UnitImage | null;
+  readonly unit?: UnitMap | null;
+  readonly recolor?: boolean;
 }
 
 const dot = (a: Vec3, b: Vec3): number => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
@@ -261,6 +266,31 @@ function span(
     // A hair of tolerance: coplanar parts (frame bars that overlap in a corner) resolve to the
     // face drawn later, instead of flickering between the two by rounding error.
     if (!(tt > 0) || tt > depth[idx]! * 1.000003) continue;
+    if (mode === Mode.Unit) {
+      // A window image: see-through pixels (the glass of a frame profile) leave the depth untouched.
+      const uu = u0 + tt * ul;
+      const vv = v0 + tt * vl;
+      const tx = num / (den + na);
+      const ty = num / (den + nb);
+      const foot = Math.max(Math.abs(u0 + tx * (ul + ua) - uu), Math.abs(u0 + ty * (ul + ub) - uu), Math.abs(v0 + tx * (vl + va) - vv), Math.abs(v0 + ty * (vl + vb) - vv));
+      sampleUnit(s.img!, s.unit!, uu, vv, foot);
+      if (unitPixel[3]! < 0.5) continue;
+      depth[idx] = tt;
+      ids[idx] = pick;
+      const o = idx * 3;
+      if (s.recolor) {
+        const k = unitPixel[0]! * FRAME_SHADE_MAX * s.light;
+        rgb[o] = s.r * k;
+        rgb[o + 1] = s.g * k;
+        rgb[o + 2] = s.b * k;
+      } else {
+        const k = 0.82 + 0.18 * s.light;
+        rgb[o] = unitPixel[0]! * s.r * k;
+        rgb[o + 1] = unitPixel[1]! * s.g * k;
+        rgb[o + 2] = unitPixel[2]! * s.b * k;
+      }
+      continue;
+    }
     depth[idx] = tt;
     ids[idx] = pick;
     const o = idx * 3;

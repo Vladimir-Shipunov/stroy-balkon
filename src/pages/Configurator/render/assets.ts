@@ -3,7 +3,8 @@
  * finish textures (float RGB with a mip chain) and the street panorama. Uses
  * `fetch` + `createImageBitmap` + `OffscreenCanvas`, so it works inside the worker.
  */
-import type { EnvData, TexData } from './types';
+import type { EnvData, TexData, UnitImage } from './types';
+import { makeUnitImage } from './units';
 
 const TEX_SIZE = 512;
 
@@ -59,4 +60,18 @@ export async function loadEnv(url: string, w: number, h: number, elTopDeg: numbe
     rgb[i * 3 + 2] = data[i * 4 + 2]! / 255;
   }
   return { w, h, rgb, elTop: (elTopDeg * Math.PI) / 180, elBottom: (elBottomDeg * Math.PI) / 180 };
+}
+
+/** A window unit image (RGBA, any size) with its mip chain. */
+export async function loadUnitImage(url: string): Promise<UnitImage> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  const bmp = await createImageBitmap(await res.blob());
+  const canvas = new OffscreenCanvas(bmp.width, bmp.height);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('2d context unavailable');
+  ctx.drawImage(bmp, 0, 0);
+  const img = makeUnitImage(bmp.width, bmp.height, ctx.getImageData(0, 0, bmp.width, bmp.height).data);
+  bmp.close();
+  return img;
 }

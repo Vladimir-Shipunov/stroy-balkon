@@ -6,7 +6,8 @@
 import type { PlanGeom } from '../planShapes';
 import { RoomRenderer } from './renderer';
 import type { RenderOutput } from './renderer';
-import type { CameraSpec, EnvData, RenderPaint, TexData } from './types';
+import type { CameraSpec, EnvData, RenderPaint, TexData, UnitImage } from './types';
+import { WIN_FRAME_URL, WIN_HOUSE_URL, makeUnitImage } from './units';
 
 const renderer = new RoomRenderer();
 const loading = new Map<string, Promise<void>>();
@@ -70,6 +71,23 @@ function env(img: HTMLImageElement): EnvData {
   return { w, h, rgb, elTop: (40 * Math.PI) / 180, elBottom: (-40 * Math.PI) / 180 };
 }
 
+function unitImage(img: HTMLImageElement): UnitImage {
+  return makeUnitImage(img.naturalWidth, img.naturalHeight, pixels(img, img.naturalWidth, img.naturalHeight));
+}
+
+function ensureUnitImage(url: string): Promise<void> {
+  if (renderer.hasUnitImage(url)) return Promise.resolve();
+  let p = loading.get(url);
+  if (!p) {
+    p = image(url)
+      .then((img) => renderer.addUnitImage(url, unitImage(img)))
+      .catch(() => undefined)
+      .finally(() => loading.delete(url));
+    loading.set(url, p);
+  }
+  return p;
+}
+
 function ensureTexture(url: string): Promise<void> {
   if (renderer.hasTexture(url)) return Promise.resolve();
   let p = loading.get(url);
@@ -88,6 +106,6 @@ export async function renderOnMainThread(key: string, geom: PlanGeom, cam: Camer
     .then((img) => renderer.setEnv(env(img)))
     .catch(() => undefined);
   const urls = Object.values(paint.surfaces).flatMap((s) => (s.tex ? [s.tex] : []));
-  await Promise.all([envReady, ...urls.map(ensureTexture)]);
+  await Promise.all([envReady, ensureUnitImage(WIN_HOUSE_URL), ensureUnitImage(WIN_FRAME_URL), ...urls.map(ensureTexture)]);
   return renderer.render(key, geom, cam, paint, size, ss);
 }

@@ -13,7 +13,8 @@ import type { Shade, Target } from './raster';
 import { buildRoom } from './scene';
 import type { RoomModel } from './scene';
 import { PICK } from './types';
-import type { CameraSpec, EnvData, Face, RenderPaint, TexData } from './types';
+import { WIN_FRAME_URL, WIN_HOUSE_URL } from './units';
+import type { CameraSpec, EnvData, Face, RenderPaint, TexData, UnitImage } from './types';
 
 export interface RenderOutput {
   readonly rgba: Uint8ClampedArray<ArrayBuffer>;
@@ -51,6 +52,7 @@ interface Built {
 export class RoomRenderer {
   private readonly built = new Map<string, Built>();
   private readonly textures = new Map<string, TexData>();
+  private readonly units = new Map<string, UnitImage>();
   private env: EnvData | null = null;
   private target: Target | null = null;
 
@@ -60,6 +62,14 @@ export class RoomRenderer {
 
   hasTexture(url: string): boolean {
     return this.textures.has(url);
+  }
+
+  addUnitImage(url: string, img: UnitImage): void {
+    this.units.set(url, img);
+  }
+
+  hasUnitImage(url: string): boolean {
+    return this.units.has(url);
   }
 
   setEnv(env: EnvData): void {
@@ -132,6 +142,14 @@ export class RoomRenderer {
         return { ...base, mode: Mode.Glass, r: 1, g: 1, b: 1, env: this.env };
       case 'curtain':
         return { ...base, mode: Mode.Curtain, r: CURTAIN[0], g: CURTAIN[1], b: CURTAIN[2] };
+      case 'unit': {
+        const m = f.unit;
+        const img = m ? this.units.get(m.img === 'house' ? WIN_HOUSE_URL : WIN_FRAME_URL) : undefined;
+        // Without the image (not loaded) a unit falls back to a plain white / frame-coloured panel.
+        if (!m || !img) return { ...base, mode: Mode.Flat, r: frame[0]! * f.tint, g: frame[1]! * f.tint, b: frame[2]! * f.tint };
+        if (m.img === 'house') return { ...base, mode: Mode.Unit, r: f.tint, g: f.tint, b: f.tint, img, unit: m, recolor: false };
+        return { ...base, mode: Mode.Unit, r: frame[0]!, g: frame[1]!, b: frame[2]!, img, unit: m, recolor: true };
+      }
       case 'lamp':
         return { ...base, mode: Mode.Emit, r: 1, g: 0.97, b: 0.9 };
       case 'dark':

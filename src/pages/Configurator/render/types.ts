@@ -21,7 +21,24 @@ export type FaceKind =
   /** Light-emitting lamp parts. */
   | 'lamp'
   /** Fixed dark parts (handles' shadows, door threshold). */
-  | 'dark';
+  | 'dark'
+  /** A window unit cut out of the app's render (9-slice image): `house` = the apartment's block, `frame` = a glazing profile in the chosen frame colour. */
+  | 'unit';
+
+/** Placement of a 9-slice window image on a face: the rectangle in the face's (u, v) mm, and the border ring's width in mm. */
+export interface UnitMap {
+  readonly img: 'house' | 'frame';
+  readonly u0: number;
+  readonly u1: number;
+  readonly v0: number;
+  readonly v1: number;
+  readonly b: number;
+}
+
+/** A front-on window image (frame ring + glass) with a mip chain; `a` is the alpha (0 = see-through). */
+export interface UnitImage {
+  readonly levels: readonly { readonly w: number; readonly h: number; readonly rgb: Float32Array; readonly a: Float32Array }[];
+}
 
 export interface Face {
   /** Planar outline in mm (y up = into the plan, z up = height); further loops are holes. */
@@ -41,6 +58,8 @@ export interface Face {
   readonly map: boolean;
   /** Albedo multiplier of fixed parts (white / dark / frame shading). */
   readonly tint: number;
+  /** Set on `unit` faces. */
+  readonly unit?: UnitMap;
 }
 
 /** A tileable texture: RGB floats per mip level, power-of-two square. */
