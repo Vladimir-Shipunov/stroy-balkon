@@ -23,8 +23,8 @@ export interface LightMap {
 /** A face's light: a map, or one value for small parts. */
 export type FaceLight = LightMap | number;
 
-const AMBIENT = 0.62; // light bounced around the room: reveals and corners are never black
-const SKY = 1.2;
+const AMBIENT = 0.7; // light bounced around the room: reveals and corners are never black
+const SKY = 1.3;
 const TEXEL = 50;
 
 type V = [number, number, number];
@@ -134,6 +134,15 @@ function lightAt(c: Ctx, p: Vec3, n: Vec3, top: number): number {
 export function bakeLight(g: PlanGeom, room: RoomModel): FaceLight[] {
   const c: Ctx = { g, windows: room.windows, parapet: g.floorGlazing ? 0 : g.parapetH };
   return room.faces.map((f: Face): FaceLight => {
+    // A window's frame/handles sit right at the opening, facing INTO the room — so the window
+    // they surround is never "in front of" them in the room-facing form-factor sense (it is
+    // coplanar with, or behind, their own base along their own normal) and the general model
+    // below would always read them as flat, dim ambient: physically backwards for a part that is
+    // directly exposed to the sky. Their own image already carries real shading (the `unit` faces
+    // are the app's own lit render, `win-frame`'s grey channel), so they just need full exposure
+    // here instead of a borrowed, wrong, room-interior light level.
+    if (f.kind === 'unit') return 1.15;
+    if (f.kind === 'frame') return 1.05;
     const pts = f.loops[0]!;
     const top = Math.max(...pts.map((p) => p[2]));
     const lift: Vec3 = [f.n[0] * 2, f.n[1] * 2, f.n[2] * 2];
