@@ -24,6 +24,8 @@ const OUT = path.resolve('public/vam/x');
 const MANIFEST = path.resolve('src/pages/Configurator/vamApp.generated.ts');
 const spec = JSON.parse(readFileSync(path.resolve('scripts/vam-app-spec.json'), 'utf8'));
 
+// The app's plintus icons (icon/plintus1..3): white, grey, dark brown. The layer average is a shaded render colour.
+const PLINTUS_HEX = { 1: '#f2f2ef', 2: '#afafaf', 3: '#1b0b0c' };
 const FRAME_HEX = { 0: '#f2f2ef', 1: '#c8bf9a', 2: '#3b302b', 3: '#1d1d1d', 4: '#1d1d1d', 5: '#8c4b32' };
 const FAMILY = { vert_laminat: 'laminat', vert_vagonka: 'vagonka', strn_parket: 'parket', mdf: 'mdf' };
 const FAMILY_LABEL = { laminat: 'Ламинат', vagonka: 'Вагонка', parket: 'Стеновой паркет', mdf: 'МДФ-панели' };
@@ -274,6 +276,7 @@ async function makeOption(id, label, prefixes, extra = {}) {
     }
     let hex = st.hex;
     if (/rama|podokonnik/.test(rels[0]) && FRAME_HEX[k]) hex = FRAME_HEX[k];
+    if (/plintus/.test(rels[0]) && PLINTUS_HEX[k]) hex = PLINTUS_HEX[k];
     const c = { k, hex };
     if (extra.swatch) c.swatch = extra.swatch(k);
     colors.push(c);

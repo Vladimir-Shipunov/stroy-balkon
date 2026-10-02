@@ -2272,15 +2272,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#868892"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#61626a"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1d1816"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -4048,15 +4048,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#afaeb4"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#828287"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#261f1c"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -6536,15 +6536,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#868892"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#61626a"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1d1816"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -8051,15 +8051,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#afaeb4"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#828287"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#261f1c"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -10541,15 +10541,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#868892"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#61626a"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1d1816"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -12960,15 +12960,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#939297"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#6b6b6f"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1f1916"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -15604,15 +15604,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#82858d"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#5d5e65"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1c1816"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -17131,15 +17131,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#bfb5b5"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#7a7374"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#241b17"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -18649,15 +18649,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#a09a98"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#6c6766"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1b1310"
+           "hex": "#1b0b0c"
           }
          ]
         }
@@ -19922,15 +19922,15 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "colors": [
           {
            "k": 1,
-           "hex": "#a09a98"
+           "hex": "#f2f2ef"
           },
           {
            "k": 2,
-           "hex": "#6c6766"
+           "hex": "#afafaf"
           },
           {
            "k": 3,
-           "hex": "#1b1310"
+           "hex": "#1b0b0c"
           }
          ]
         }
