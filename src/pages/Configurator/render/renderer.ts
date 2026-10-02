@@ -12,9 +12,10 @@ import { Mode, addGlow, drawFace, makeBasis, makeTarget, project, resetTarget, r
 import type { Shade, Target } from './raster';
 import { buildRoom } from './scene';
 import type { RoomModel } from './scene';
-import { PICK } from './types';
+import { LAYERS, PICK } from './types';
+import { layerOf } from './layers';
 import { WIN_FRAME_URL, WIN_HOUSE_URL } from './units';
-import type { CameraSpec, EnvData, Face, RenderPaint, TexData, UnitImage } from './types';
+import type { CameraSpec, EnvData, Face, LayerId, RenderPaint, TexData, UnitImage } from './types';
 
 export interface RenderOutput {
   readonly rgba: Uint8ClampedArray<ArrayBuffer>;
@@ -47,6 +48,8 @@ function hexRgb(hex: string): [number, number, number] {
 interface Built {
   readonly room: RoomModel;
   readonly lights: FaceLight[];
+  /** Face indices of every layer. */
+  readonly layers: ReadonlyMap<LayerId, readonly number[]>;
 }
 
 export class RoomRenderer {
@@ -80,7 +83,9 @@ export class RoomRenderer {
     let b = this.built.get(key);
     if (!b) {
       const room = buildRoom(g);
-      b = { room, lights: bakeLight(g, room) };
+      const layers = new Map<LayerId, number[]>(LAYERS.map((l) => [l, []]));
+      room.faces.forEach((f, i) => layers.get(layerOf(f))!.push(i));
+      b = { room, lights: bakeLight(g, room), layers };
       this.built.set(key, b);
     }
     return b;
@@ -89,19 +94,25 @@ export class RoomRenderer {
   /** The room of `g` (cached under `key`) seen from `cam`, `size` px square, `ss`x supersampled. */
   render(key: string, g: PlanGeom, cam: CameraSpec, paint: RenderPaint, size = 800, ss = 2): RenderOutput {
     const t0 = performance.now();
-    const { room, lights } = this.build(key, g);
+    const { room, lights, layers } = this.build(key, g);
     if (this.target?.w !== size * ss) this.target = makeTarget(size * ss, size * ss);
     else resetTarget(this.target);
     const target = this.target;
     const basis = makeBasis(cam, size * ss, size * ss);
     const frame = hexRgb(paint.frame);
-    room.faces.forEach((f, i) => {
-      const light = lights[i]!;
-      const lm = typeof light === 'number' ? null : light;
-      const L = typeof light === 'number' ? light : 1;
-      drawFace(target, basis, f, this.shade(f, paint, frame, lm, L), f.pick);
-    });
-    if (paint.lamp) this.drawLamps(target, basis, room, paint.lamp);
+    const hidden = new Set<LayerId>(paint.hide);
+    const env = hidden.has('background') ? null : this.env;
+    for (const layer of LAYERS) {
+      if (hidden.has(layer)) continue;
+      for (const i of layers.get(layer)!) {
+        const f = room.faces[i]!;
+        const light = lights[i]!;
+        const lm = typeof light === 'number' ? null : light;
+        const L = typeof light === 'number' ? light : 1;
+        drawFace(target, basis, f, this.shade(f, paint, frame, lm, L, env), f.pick);
+      }
+      if (layer === 'lamps' && paint.lamp) this.drawLamps(target, basis, room, paint.lamp, hidden.has('light'));
+    }
     const out = resolve(target, ss);
     return { ...out, ms: performance.now() - t0, lamp: this.lampSpot(target, basis, room) };
   }
@@ -123,7 +134,7 @@ export class RoomRenderer {
     return best;
   }
 
-  private shade(f: Face, paint: RenderPaint, frame: readonly number[], lm: Shade['lm'], light: number): Shade {
+  private shade(f: Face, paint: RenderPaint, frame: readonly number[], lm: Shade['lm'], light: number, env: EnvData | null): Shade {
     const base = { tex: null, tile: 1000, lm, light, env: null };
     switch (f.kind) {
       case 'paint': {
@@ -139,7 +150,7 @@ export class RoomRenderer {
       case 'frame':
         return { ...base, mode: Mode.Flat, r: frame[0]! * f.tint, g: frame[1]! * f.tint, b: frame[2]! * f.tint };
       case 'glass':
-        return { ...base, mode: Mode.Glass, r: 1, g: 1, b: 1, env: this.env };
+        return { ...base, mode: Mode.Glass, r: 1, g: 1, b: 1, env };
       case 'curtain':
         return { ...base, mode: Mode.Curtain, r: CURTAIN[0], g: CURTAIN[1], b: CURTAIN[2] };
       case 'unit': {
@@ -160,13 +171,13 @@ export class RoomRenderer {
   }
 
   /** The row of ceiling lights of the chosen model, with a soft bloom round their glowing parts. */
-  private drawLamps(target: Target, basis: ReturnType<typeof makeBasis>, room: RoomModel, model: number): void {
+  private drawLamps(target: Target, basis: ReturnType<typeof makeBasis>, room: RoomModel, model: number, noGlow: boolean): void {
     const set = lampRow(model, room.lamps);
     for (const part of set.parts) {
       // Lit parts: a simple top-light so the shade reads as a solid.
       const L = part.emit ? 1 : 0.74 + 0.16 * part.face.n[2];
       drawFace(target, basis, part.face, { mode: part.emit ? Mode.Emit : Mode.Flat, r: part.rgb[0], g: part.rgb[1], b: part.rgb[2], tex: null, tile: 1, lm: null, light: L, env: null }, PICK.light);
     }
-    for (const g of set.glows) addGlow(target, basis, g.at, g.radius, g.strength);
+    if (!noGlow) for (const g of set.glows) addGlow(target, basis, g.at, g.radius, g.strength);
   }
 }

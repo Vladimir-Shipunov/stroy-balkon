@@ -13,7 +13,8 @@ import { VAM_SHAPES, VAM_TYPES, findVamShape, findVamType } from './vamShapes';
 import type { VamGlazingDef, VamShapeDef, VamTypeDef } from './vamShapes';
 import { planSurfaces } from './planGeometry';
 import { PLAN_SHAPES } from './planShapes';
-import type { RenderPaint, SurfacePaint } from './render/types';
+import { LAYERS } from './render/types';
+import type { LayerId, RenderPaint, SurfacePaint } from './render/types';
 
 export { VAM_SHAPES, VAM_TYPES, findVamShape, findVamType };
 export type { AppHotspot, AppOption, AppSlot, AppView, HotspotKind, VamGlazingDef, VamShapeDef, VamTypeDef };
@@ -316,5 +317,12 @@ export function vamRenderPaint(sel: VamSelection): RenderPaint {
       }
     }
   }
-  return { surfaces, frame, lamp };
+  return { surfaces, frame, lamp, hide: hiddenLayers() };
+}
+
+/** Layers named in the page's `?hide=frames,glass` (a debugging aid; empty in normal use). */
+function hiddenLayers(): LayerId[] {
+  if (typeof window === 'undefined') return [];
+  const names = new URLSearchParams(window.location.search).get('hide')?.split(',') ?? [];
+  return LAYERS.filter((l) => names.includes(l));
 }

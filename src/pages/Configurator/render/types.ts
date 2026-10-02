@@ -6,6 +6,22 @@
 
 export type Vec3 = readonly [number, number, number];
 
+/**
+ * The layers of a picture, back to front. Every face of the room belongs to one, and a layer
+ * can be hidden or restyled without touching the others:
+ * - `background` — the street seen through the glass (hidden: a plain hazy sky);
+ * - `structure` — walls, parapets, floor, ceiling (the surfaces the customer finishes);
+ * - `openings` — the apartment's own door / window block, its reveals, drip sill and curtains;
+ * - `frames` — the balcony's window frames (colour from the customer's choice);
+ * - `glass` — the window glass;
+ * - `handles` — window and door handles;
+ * - `sill` — the window sills; `plinth` — the skirting;
+ * - `furniture` — cabinets, chair, dryer, flowers (sprites);
+ * - `lamps` — the ceiling lights; `shadows` — contact shadows; `light` — glows and light effects.
+ */
+export const LAYERS = ['background', 'structure', 'openings', 'frames', 'glass', 'handles', 'sill', 'plinth', 'furniture', 'lamps', 'shadows', 'light'] as const;
+export type LayerId = (typeof LAYERS)[number];
+
 /** How a face is shaded. */
 export type FaceKind =
   /** A finish the customer picks (walls, parapets, floor, ceiling): texture or colour from the paint. */
@@ -60,6 +76,8 @@ export interface Face {
   readonly tint: number;
   /** Set on `unit` faces. */
   readonly unit?: UnitMap;
+  /** The layer when it is not implied by the face's kind (`layerOf`). */
+  readonly layer?: LayerId;
 }
 
 /** A tileable texture: RGB floats per mip level, power-of-two square. */
@@ -89,6 +107,8 @@ export interface RenderPaint {
   readonly frame: string;
   /** Lamp model (1..6) or none. */
   readonly lamp: number | null;
+  /** Layers left out of the picture. */
+  readonly hide?: readonly LayerId[];
 }
 
 export interface CameraSpec {

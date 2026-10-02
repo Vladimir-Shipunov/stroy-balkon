@@ -145,8 +145,6 @@ function offsetChain(g: PlanGeom, chain: readonly number[], off: number): { pts:
   return { pts, capStart: !startHit, capEnd: !endHit };
 }
 
-type Emit = (s0: number, s1: number, z0: number, z1: number, off: number, tint: number) => void;
-
 /**
  * A window unit on the plane of edge `e` (`off` mm into the room): the app's window image,
  * 9-sliced so its frame ring stays `FRAME_B` mm wide. `frame` units are recoloured by the
@@ -159,9 +157,6 @@ function unitFace(e: Edge, off: number, s0: number, s1: number, z0: number, z1: 
 
 /** Frames, handles and glass of one glazed edge: one window unit per ~0.9 m (two stacked when the windows go to the floor). */
 function glazingFaces(e: Edge, zb: number, zt: number, transom: number | null, out: Face[]): void {
-  const frame: Emit = (s0, s1, z0, z1, off, tint) => {
-    if (s1 - s0 > 1 && z1 - z0 > 1) out.push(vface(e, off, s0, s1, z0, z1, 'frame', 'P:frame', PICK.frame, false, tint));
-  };
   out.push(vface(e, -GLASS_SET, 0, e.len, zb, zt, 'glass', '', PICK.frame, false));
   const units = Math.max(1, Math.round(e.len / UNIT));
   const cuts = [0, ...Array.from({ length: units - 1 }, (_, k) => ((k + 1) * e.len) / units), e.len];
@@ -185,7 +180,7 @@ function glazingFaces(e: Edge, zb: number, zt: number, transom: number | null, o
       if (ri === rows.length - 1 && k % 2 === 0 && units > 1 && s1 - s0 > 150) {
         const hs = k === units - 1 ? s0 + 24 : s1 - 24;
         const hz = Math.min(p1 - 250, p0 + (p1 - p0) * 0.45);
-        frame(hs - 11, hs + 11, hz - 60, hz + 70, 22, 1.05);
+        out.push({ ...vface(e, 22, hs - 11, hs + 11, hz - 60, hz + 70, 'frame', 'P:frame', PICK.frame, false, 1.05), layer: 'handles' });
       }
     });
   }
@@ -209,9 +204,6 @@ function openingFaces(e: Edge, o: { kind: 'door' | 'window'; from: number; to: n
     // The threshold continues the balcony floor under the door.
     out.push(hface(e, o.from, o.to, 0, back, 1, true, 'paint', 'P:floor', PICK.floor, true));
   }
-  const white: Emit = (s0, s1, z0, z1, off, tint) => {
-    if (s1 - s0 > 1 && z1 - z0 > 1) out.push(vface(e, off, s0, s1, z0, z1, 'white', '', 0, false, 0.96 * tint));
-  };
   const L = o.to - o.from;
   // Tulle behind the glass (seen only if the window image is missing).
   out.push(vface(e, back, o.from, o.to, zb, zt, 'curtain', '', 0, false));
@@ -222,7 +214,7 @@ function openingFaces(e: Edge, o: { kind: 'door' | 'window'; from: number; to: n
     // A glazed balcony door: a transom at window height, a window image on each side of it.
     unit(0, L, 0, HOUSE_WINDOW_BOTTOM);
     unit(0, L, HOUSE_WINDOW_BOTTOM, zt);
-    white(o.from + L - FRAME_B - 36, o.from + L - FRAME_B - 14, 980, 1130, fo + 30, 1.02);
+    out.push({ ...vface(e, fo + 30, o.from + L - FRAME_B - 36, o.from + L - FRAME_B - 14, 980, 1130, 'white', '', 0, false, 0.96 * 1.02), layer: 'handles' });
   } else if (L > 900) {
     unit(0, L / 2, zb, zt);
     unit(L / 2, L, zb, zt);
