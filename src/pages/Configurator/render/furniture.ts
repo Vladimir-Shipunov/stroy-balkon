@@ -1,25 +1,33 @@
 /**
- * @file Decor sprites cut from the app's own renders (`scripts/importVamFurniture.mjs`):
- * URLs and the real-world footprint each is drawn at. The app's colour pickers for these
- * (20 cabinet colours, 9 dryers, 4 planters) are not wired yet — one colour each, matching
- * `docs/apk-to-plan-mapping.md`'s stage-7 note.
+ * @file Decor sprites cut from the app's own renders (`scripts/importVamFurniture.mjs`),
+ * every colour the app offers: URLs, the real-world footprint each is drawn at (kept
+ * from the importer's crop aspect, so a sprite is only ever shrunk to fit, never
+ * stretched), and how many colours exist (colour 0 renders blank for all three — a
+ * placeholder swatch in the app itself, not an actual layer — so it is left out of
+ * the pickable range; confirmed by decoding every `furn-*-0.webp`, not assumed).
  */
+import type { RenderPaint } from './types';
 
-export const FURN_CABINET_URL = '/vam/tex/furn-cabinet.webp';
-export const FURN_DRYER_URL = '/vam/tex/furn-dryer.webp';
-export const FURN_FLOWERS_URL = '/vam/tex/furn-flowers.webp';
+export type FurnitureCat = keyof NonNullable<RenderPaint['furniture']>;
 
-/** Every decor image the renderer needs ready before it draws a room. */
-export const FURNITURE_URLS = [FURN_CABINET_URL, FURN_DRYER_URL, FURN_FLOWERS_URL] as const;
+export const FURNITURE_CATS: readonly FurnitureCat[] = ['cabinet', 'dryer', 'flowers'];
 
-/** A sprite's real-world size, mm (its aspect ratio as cropped by the importer). */
-export interface FurnitureSize {
-  readonly url: string;
+export function furnitureUrl(cat: FurnitureCat, k: number): string {
+  return `/vam/tex/furn-${cat}-${k}.webp`;
+}
+
+/** A category's real-world size, mm (the importer's crop aspect), and its colour range. */
+export interface FurnitureKind {
   readonly w: number;
   readonly h: number;
+  /** Colours 0..count-1; `from` is the first one worth offering (the app's own colour 0 is blank for some). */
+  readonly count: number;
+  readonly from: number;
 }
 
 // Aspect kept from the importer's crop (w/h): cabinet 1.354, dryer 1.267, flowers 1.120.
-export const CABINET_SIZE: FurnitureSize = { url: FURN_CABINET_URL, w: 700, h: 517 };
-export const DRYER_SIZE: FurnitureSize = { url: FURN_DRYER_URL, w: 650, h: 513 };
-export const FLOWERS_SIZE: FurnitureSize = { url: FURN_FLOWERS_URL, w: 300, h: 268 };
+export const FURNITURE_KIND: Readonly<Record<FurnitureCat, FurnitureKind>> = {
+  cabinet: { w: 700, h: 517, count: 20, from: 1 },
+  dryer: { w: 650, h: 513, count: 9, from: 1 },
+  flowers: { w: 300, h: 268, count: 4, from: 1 },
+};

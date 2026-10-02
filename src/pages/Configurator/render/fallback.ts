@@ -8,7 +8,7 @@ import { RoomRenderer } from './renderer';
 import type { RenderOutput } from './renderer';
 import type { CameraSpec, EnvData, RenderPaint, TexData, UnitImage } from './types';
 import { WIN_FRAME_URL, WIN_HOUSE_URL, makeUnitImage } from './units';
-import { FURNITURE_URLS } from './furniture';
+import { FURNITURE_CATS, FURNITURE_KIND, furnitureUrl } from './furniture';
 
 const renderer = new RoomRenderer();
 const loading = new Map<string, Promise<void>>();
@@ -107,6 +107,7 @@ export async function renderOnMainThread(key: string, geom: PlanGeom, cam: Camer
     .then((img) => renderer.setEnv(env(img)))
     .catch(() => undefined);
   const urls = Object.values(paint.surfaces).flatMap((s) => (s.tex ? [s.tex] : []));
-  await Promise.all([envReady, ensureUnitImage(WIN_HOUSE_URL), ensureUnitImage(WIN_FRAME_URL), ...FURNITURE_URLS.map(ensureUnitImage), ...urls.map(ensureTexture)]);
+  const furnUrls = FURNITURE_CATS.map((cat) => furnitureUrl(cat, paint.furniture?.[cat] ?? FURNITURE_KIND[cat].from));
+  await Promise.all([envReady, ensureUnitImage(WIN_HOUSE_URL), ensureUnitImage(WIN_FRAME_URL), ...furnUrls.map(ensureUnitImage), ...urls.map(ensureTexture)]);
   return renderer.render(key, geom, cam, paint, size, ss);
 }

@@ -71,9 +71,37 @@ function refOptions(screen: string, view: number, hotspot: string): readonly App
   return VAM_APP_SCREENS[screen]?.[view]?.hotspots.find((h) => h.id === hotspot)?.slots[0]?.options ?? [];
 }
 
-const PLAN_LABELS: Readonly<Record<string, string>> = { wall: 'Стены', floor: 'Пол', ceiling: 'Потолок', frame: 'Цвет рам', light: 'Светильник', sill: 'Подоконник', plintus: 'Плинтус' };
+/** One named option of a hotspot's first slot, wrapped as a single-option list (no "Материал" row — the plan only offers this one). Colour 0 renders as a blank layer for the plan's decor crops — left out, as `plintus`/`lamp` already do for their own colour 0. */
+function refOption(screen: string, view: number, hotspot: string, optionId: string): readonly AppOption[] {
+  const o = refOptions(screen, view, hotspot).find((op) => op.id === optionId);
+  return o ? [{ ...o, colors: o.colors.filter((c) => c.k > 0) }] : [];
+}
 
-/** The tap targets of a shape's plan view (one per wall, floor, ceiling, window frames). */
+/** One slot's options from a multi-slot hotspot (the app's combined "Декор" popup: a slot per decor kind). Colour 0 is a blank placeholder layer for some of these — left out, as `plintus`/`lamp` already do. */
+function refSlotOptions(screen: string, view: number, hotspot: string, slotId: string): readonly AppOption[] {
+  const opts = VAM_APP_SCREENS[screen]?.[view]?.hotspots.find((h) => h.id === hotspot)?.slots.find((s) => s.id === slotId)?.options ?? [];
+  return opts.map((o) => ({ ...o, colors: o.colors.filter((c) => c.k > 0) }));
+}
+
+const PLAN_LABELS: Readonly<Record<string, string>> = {
+  wall: 'Стены',
+  floor: 'Пол',
+  ceiling: 'Потолок',
+  frame: 'Цвет рам',
+  light: 'Светильник',
+  sill: 'Подоконник',
+  plintus: 'Плинтус',
+  cabinet: 'Шкаф',
+  dryer: 'Сушилка',
+  flowers: 'Цветы',
+};
+
+/** This plan hotspot's `AppHotspot.kind` — the generated catalogue has no dedicated `dryer`/`flowers` kind, so both fall back to `decor` (same as the app's own combined decor popup); `hotspotTitle` tells them apart by their (single) slot's own label. */
+function hotspotKindOf(surfaceKind: string): HotspotKind {
+  return surfaceKind === 'dryer' || surfaceKind === 'flowers' ? 'decor' : (surfaceKind as HotspotKind);
+}
+
+/** The tap targets of a shape's plan view (one per wall, floor, ceiling, window frames, decor). */
 export function vamPlanHotspots(shapeId: string): AppHotspot[] {
   const geom = PLAN_SHAPES[shapeId];
   if (!geom) return [];
@@ -85,10 +113,13 @@ export function vamPlanHotspots(shapeId: string): AppHotspot[] {
     light: refOptions('8', 1, '8_7'),
     sill: refOptions('2', 1, '7'),
     plintus: refOptions('2', 1, '8_9_2'),
+    cabinet: refOption('2', 0, '1_5', '0j'),
+    dryer: refSlotOptions('2', 1, '8_8_decor', 'dryer'),
+    flowers: refSlotOptions('2', 1, '8_8_decor', 'flowers'),
   };
   return planSurfaces(geom).map((surface) => ({
     id: surface.id,
-    kind: surface.kind,
+    kind: hotspotKindOf(surface.kind),
     x: 50,
     y: 50,
     slots: [{ id: 'main', label: PLAN_LABELS[surface.kind] ?? '', options: options[surface.kind] ?? [] }],
@@ -182,6 +213,10 @@ export function hotspotTitle(h: AppHotspot): string {
     const n = h.id.match(/^P:w(\d+)/)?.[1] ?? h.id.match(/^\d+/)?.[0];
     return n ? `${HOTSPOT_LABELS.wall} ${n}` : HOTSPOT_LABELS.wall;
   }
+  // The plan's dryer / planter hotspots share the app's generic "decor" kind (there is no kind of
+  // their own in the catalogue) but, unlike the app's combined decor popup, each is its own single-slot
+  // hotspot — so its own slot's label ("Сушилка" / "Цветы") is the real title, not the generic "Декор".
+  if (h.kind === 'decor' && h.slots.length === 1) return h.slots[0]!.label;
   return HOTSPOT_LABELS[h.kind];
 }
 
@@ -294,11 +329,16 @@ export function vamRenderPaint(sel: VamSelection): RenderPaint {
   const surfaces: Record<string, SurfacePaint> = {};
   let frame = '#f4f4f2';
   let lamp: number | null = null;
+  const furniture: { cabinet?: number; dryer?: number; flowers?: number } = {};
   for (const h of vamPlanHotspots(sel.shape)) {
     for (const s of h.slots) {
       const pick = sel.picks[pickKey(h.id, s.id)];
       const option = pickedOption(s, pick);
       if (!pick || !option) continue;
+      if (h.id === 'P:cabinet' || h.id === 'P:dryer' || h.id === 'P:flowers') {
+        furniture[h.id === 'P:cabinet' ? 'cabinet' : h.id === 'P:dryer' ? 'dryer' : 'flowers'] = pick.k;
+        continue;
+      }
       if (h.kind === 'light') {
         lamp = pick.k;
         continue;
@@ -317,7 +357,7 @@ export function vamRenderPaint(sel: VamSelection): RenderPaint {
       }
     }
   }
-  return { surfaces, frame, lamp, hide: hiddenLayers() };
+  return { surfaces, frame, lamp, furniture, hide: hiddenLayers() };
 }
 
 /** Layers named in the page's `?hide=frames,glass` (a debugging aid; empty in normal use). */

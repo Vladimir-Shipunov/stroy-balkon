@@ -58,9 +58,9 @@ export interface UnitImage {
   readonly levels: readonly { readonly w: number; readonly h: number; readonly rgb: Float32Array; readonly a: Float32Array }[];
 }
 
-/** Placement of a plain (non-sliced) decor image on a face: the rectangle in the face's (u, v) mm. */
+/** Placement of a plain (non-sliced) decor image on a face: which decor item and the rectangle in the face's (u, v) mm. Its colour comes from `RenderPaint.furniture` at draw time, not here — the geometry is built once per plan, the pick changes far more often. */
 export interface SpriteMap {
-  readonly img: string;
+  readonly img: 'cabinet' | 'dryer' | 'flowers';
   readonly u0: number;
   readonly u1: number;
   readonly v0: number;
@@ -122,6 +122,12 @@ export interface RenderPaint {
   readonly lamp: number | null;
   /** Layers left out of the picture. */
   readonly hide?: readonly LayerId[];
+  /** Decor colour (0-based, the app's own index) per item; absent = `FURNITURE_KIND[item].from`'s default, same as the frame colour defaulting when nothing is picked yet — a plan-mode room is always shown finished, so a tap target always has something to land on. */
+  readonly furniture?: {
+    readonly cabinet?: number;
+    readonly dryer?: number;
+    readonly flowers?: number;
+  };
 }
 
 export interface CameraSpec {
@@ -136,4 +142,4 @@ export interface CameraSpec {
 }
 
 /** Ids written to the id buffer for the non-wall surfaces (walls use their 1-based edge number). */
-export const PICK = { floor: 40, ceiling: 41, frame: 42, light: 43, sill: 44, plinth: 45 } as const;
+export const PICK = { floor: 40, ceiling: 41, frame: 42, light: 43, sill: 44, plinth: 45, cabinet: 46, dryer: 47, flowers: 48 } as const;

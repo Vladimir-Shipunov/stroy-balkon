@@ -6,9 +6,10 @@
  * id buffer.
  */
 import { PICK } from './render/types';
+import { bestWallEdge, glazedChains } from './render/scene';
 import type { PlanGeom } from './planShapes';
 
-export type SurfaceKind = 'wall' | 'floor' | 'ceiling' | 'frame' | 'light' | 'sill' | 'plintus';
+export type SurfaceKind = 'wall' | 'floor' | 'ceiling' | 'frame' | 'light' | 'sill' | 'plintus' | 'cabinet' | 'dryer' | 'flowers';
 
 export interface PlanSurface {
   /** Pick id of the catalogue: `P:w3` (wall 3), `P:floor`, `P:ceiling`, `P:frame`, `P:light`. */
@@ -32,5 +33,12 @@ export function planSurfaces(g: PlanGeom): PlanSurface[] {
   out.push({ id: 'P:light', kind: 'light', pick: PICK.light });
   if (g.kinds.includes('glazing') && !g.floorGlazing) out.push({ id: 'P:sill', kind: 'sill', pick: PICK.sill });
   out.push({ id: 'P:plintus', kind: 'plintus', pick: PICK.plinth });
+  // Decor: a bench + a dryer need a solid side wall to stand against (none on the Хрущёвка, glazed on
+  // three sides); the planter needs a sill to stand on (none when the glazing goes to the floor).
+  if (bestWallEdge(g) !== null) {
+    out.push({ id: 'P:cabinet', kind: 'cabinet', pick: PICK.cabinet });
+    out.push({ id: 'P:dryer', kind: 'dryer', pick: PICK.dryer });
+  }
+  if (!g.floorGlazing && glazedChains(g).length > 0) out.push({ id: 'P:flowers', kind: 'flowers', pick: PICK.flowers });
   return out;
 }

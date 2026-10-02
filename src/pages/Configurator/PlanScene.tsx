@@ -24,6 +24,16 @@ const DROP = <path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3z" />;
 // A plank pattern for the floor — the app's own "узор" icon, kept distinct from the
 // plain drop shared by walls and ceiling.
 const FLOOR_ICON = <path d="M3 19l7-3M3 14l7-3M3 9l7-3M11 21l10-4M11 15l10-4M11 9l10-4" />;
+// The app has one "мебель" (furniture) icon — a grid of squares — for every furniture tap
+// target (cabinet, dryer, planter alike); matches `FinishStep.tsx`'s `HotspotIcon`.
+const FURNITURE_ICON = (
+  <>
+    <rect x="4" y="4" width="6" height="6" rx="1" />
+    <rect x="14" y="4" width="6" height="6" rx="1" />
+    <rect x="4" y="14" width="6" height="6" rx="1" />
+    <rect x="14" y="14" width="6" height="6" rx="1" />
+  </>
+);
 const ICON: Readonly<Record<SurfaceKind, JSX.Element>> = {
   wall: DROP,
   floor: FLOOR_ICON,
@@ -32,6 +42,9 @@ const ICON: Readonly<Record<SurfaceKind, JSX.Element>> = {
   light: <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z" />,
   sill: DROP,
   plintus: DROP,
+  cabinet: FURNITURE_ICON,
+  dryer: FURNITURE_ICON,
+  flowers: FURNITURE_ICON,
 };
 
 /**

@@ -15,6 +15,7 @@ import type { RoomModel } from './scene';
 import { LAYERS, PICK } from './types';
 import { layerOf } from './layers';
 import { WIN_FRAME_URL, WIN_HOUSE_URL } from './units';
+import { FURNITURE_KIND, furnitureUrl } from './furniture';
 import type { CameraSpec, EnvData, Face, LayerId, RenderPaint, TexData, UnitImage } from './types';
 
 export interface RenderOutput {
@@ -163,9 +164,11 @@ export class RoomRenderer {
       }
       case 'sprite': {
         const m = f.sprite;
-        const img = m ? this.units.get(m.img) : undefined;
+        if (!m) return { ...base, mode: Mode.Flat, r: 0.5, g: 0.5, b: 0.5 };
+        const k = paint.furniture?.[m.img] ?? FURNITURE_KIND[m.img].from;
+        const img = this.units.get(furnitureUrl(m.img, k));
         // Without the image (not loaded yet — the caller preloads it before rendering) a neutral placeholder.
-        if (!m || !img) return { ...base, mode: Mode.Flat, r: 0.5, g: 0.5, b: 0.5 };
+        if (!img) return { ...base, mode: Mode.Flat, r: 0.5, g: 0.5, b: 0.5 };
         return { ...base, mode: Mode.Sprite, r: 1, g: 1, b: 1, img, sprite: m };
       }
       case 'lamp':
