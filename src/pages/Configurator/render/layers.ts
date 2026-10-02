@@ -14,6 +14,8 @@ export function layerOf(f: Face): LayerId {
       return 'frames';
     case 'unit':
       return f.unit?.img === 'house' ? 'openings' : 'frames';
+    case 'sprite':
+      return 'furniture';
     case 'curtain':
     case 'white':
     case 'dark':

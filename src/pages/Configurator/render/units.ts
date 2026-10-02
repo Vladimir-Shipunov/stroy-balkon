@@ -4,7 +4,7 @@
  * 9-slice — the frame ring keeps a fixed width in mm, only the glass in the middle
  * stretches — so a profile never gets fatter or thinner with the size of the window.
  */
-import type { UnitImage, UnitMap } from './types';
+import type { SpriteMap, UnitImage, UnitMap } from './types';
 
 export const WIN_HOUSE_URL = '/vam/tex/win-house.webp';
 export const WIN_FRAME_URL = '/vam/tex/win-frame.webp';
@@ -86,6 +86,46 @@ export function sampleUnit(img: UnitImage, m: UnitMap, u: number, v: number, foo
   const sx = slice(u - m.u0, total_u, b, UNIT_BORDER_PX.l, UNIT_BORDER_PX.r, L0.w) * k - 0.5;
   // Image rows run downwards, v upwards.
   const sy = slice(m.v1 - v, total_v, b, UNIT_BORDER_PX.t, UNIT_BORDER_PX.b, L0.h) * k - 0.5;
+  let ix = Math.floor(sx);
+  let iy = Math.floor(sy);
+  const ax = sx - ix;
+  const ay = sy - iy;
+  const x1 = Math.min(T.w - 1, Math.max(0, ix + 1));
+  const y1 = Math.min(T.h - 1, Math.max(0, iy + 1));
+  ix = Math.min(T.w - 1, Math.max(0, ix));
+  iy = Math.min(T.h - 1, Math.max(0, iy));
+  const w00 = (1 - ax) * (1 - ay);
+  const w10 = ax * (1 - ay);
+  const w01 = (1 - ax) * ay;
+  const w11 = ax * ay;
+  const p00 = iy * T.w + ix;
+  const p10 = iy * T.w + x1;
+  const p01 = y1 * T.w + ix;
+  const p11 = y1 * T.w + x1;
+  const f = T.rgb;
+  unitPixel[0] = f[p00 * 3]! * w00 + f[p10 * 3]! * w10 + f[p01 * 3]! * w01 + f[p11 * 3]! * w11;
+  unitPixel[1] = f[p00 * 3 + 1]! * w00 + f[p10 * 3 + 1]! * w10 + f[p01 * 3 + 1]! * w01 + f[p11 * 3 + 1]! * w11;
+  unitPixel[2] = f[p00 * 3 + 2]! * w00 + f[p10 * 3 + 2]! * w10 + f[p01 * 3 + 2]! * w01 + f[p11 * 3 + 2]! * w11;
+  unitPixel[3] = T.a[p00]! * w00 + T.a[p10]! * w10 + T.a[p01]! * w01 + T.a[p11]! * w11;
+}
+
+/**
+ * Sample a plain decor image at face position (u, v) mm: a straight stretch of the whole
+ * image over the box (no 9-slice ring), clamped at the edges. Writes `unitPixel`.
+ */
+export function sampleSprite(img: UnitImage, m: SpriteMap, u: number, v: number, foot: number): void {
+  const total_u = m.u1 - m.u0 || 1;
+  const total_v = m.v1 - m.v0 || 1;
+  const L0 = img.levels[0]!;
+  let lev = 0;
+  let px = (foot / total_u) * L0.w;
+  while (px > 1.5 && lev < img.levels.length - 1) {
+    px *= 0.5;
+    lev += 1;
+  }
+  const T = img.levels[lev]!;
+  const sx = ((u - m.u0) / total_u) * T.w - 0.5;
+  const sy = ((m.v1 - v) / total_v) * T.h - 0.5; // image rows run downwards, v upwards
   let ix = Math.floor(sx);
   let iy = Math.floor(sy);
   const ax = sx - ix;

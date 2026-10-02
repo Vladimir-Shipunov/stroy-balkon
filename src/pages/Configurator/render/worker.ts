@@ -5,6 +5,7 @@
  */
 import { loadEnv, loadTexture, loadUnitImage } from './assets';
 import { WIN_FRAME_URL, WIN_HOUSE_URL } from './units';
+import { FURNITURE_URLS } from './furniture';
 import { RoomRenderer } from './renderer';
 import type { RenderOutput } from './renderer';
 import type { PlanGeom } from '../planShapes';
@@ -75,7 +76,7 @@ function ensureEnv(): Promise<void> {
 ctx.onmessage = (e: MessageEvent<RenderRequest>): void => {
   const r = e.data;
   const urls = Object.values(r.paint.surfaces).flatMap((s) => (s.tex ? [s.tex] : []));
-  void Promise.all([ensureEnv(), ensureUnitImage(WIN_HOUSE_URL), ensureUnitImage(WIN_FRAME_URL), ...urls.map(ensureTexture)])
+  void Promise.all([ensureEnv(), ensureUnitImage(WIN_HOUSE_URL), ensureUnitImage(WIN_FRAME_URL), ...FURNITURE_URLS.map(ensureUnitImage), ...urls.map(ensureTexture)])
     .then(() => {
       const out = renderer.render(r.key, r.geom, r.cam, r.paint, r.size, r.ss);
       const res: RenderResponse = { id: r.id, ok: true, out };

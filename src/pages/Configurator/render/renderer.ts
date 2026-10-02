@@ -161,6 +161,13 @@ export class RoomRenderer {
         if (m.img === 'house') return { ...base, mode: Mode.Unit, r: f.tint, g: f.tint, b: f.tint, img, unit: m, recolor: false };
         return { ...base, mode: Mode.Unit, r: frame[0]!, g: frame[1]!, b: frame[2]!, img, unit: m, recolor: true };
       }
+      case 'sprite': {
+        const m = f.sprite;
+        const img = m ? this.units.get(m.img) : undefined;
+        // Without the image (not loaded yet — the caller preloads it before rendering) a neutral placeholder.
+        if (!m || !img) return { ...base, mode: Mode.Flat, r: 0.5, g: 0.5, b: 0.5 };
+        return { ...base, mode: Mode.Sprite, r: 1, g: 1, b: 1, img, sprite: m };
+      }
       case 'lamp':
         return { ...base, mode: Mode.Emit, r: 1, g: 0.97, b: 0.9 };
       case 'dark':

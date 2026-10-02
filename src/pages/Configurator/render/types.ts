@@ -39,7 +39,9 @@ export type FaceKind =
   /** Fixed dark parts (handles' shadows, door threshold). */
   | 'dark'
   /** A window unit cut out of the app's render (9-slice image): `house` = the apartment's block, `frame` = a glazing profile in the chosen frame colour. */
-  | 'unit';
+  | 'unit'
+  /** A decor cut-out (cabinet, dryer, planter) shown as drawn: a plain billboard image, no 9-slice, no recolour. */
+  | 'sprite';
 
 /** Placement of a 9-slice window image on a face: the rectangle in the face's (u, v) mm, and the border ring's width in mm. */
 export interface UnitMap {
@@ -54,6 +56,15 @@ export interface UnitMap {
 /** A front-on window image (frame ring + glass) with a mip chain; `a` is the alpha (0 = see-through). */
 export interface UnitImage {
   readonly levels: readonly { readonly w: number; readonly h: number; readonly rgb: Float32Array; readonly a: Float32Array }[];
+}
+
+/** Placement of a plain (non-sliced) decor image on a face: the rectangle in the face's (u, v) mm. */
+export interface SpriteMap {
+  readonly img: string;
+  readonly u0: number;
+  readonly u1: number;
+  readonly v0: number;
+  readonly v1: number;
 }
 
 export interface Face {
@@ -76,6 +87,8 @@ export interface Face {
   readonly tint: number;
   /** Set on `unit` faces. */
   readonly unit?: UnitMap;
+  /** Set on `sprite` faces. */
+  readonly sprite?: SpriteMap;
   /** The layer when it is not implied by the face's kind (`layerOf`). */
   readonly layer?: LayerId;
 }

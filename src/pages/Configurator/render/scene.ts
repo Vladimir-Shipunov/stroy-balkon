@@ -10,6 +10,8 @@ import { DOOR_TOP, HOUSE_WINDOW_BOTTOM, edgeOf } from '../planShapes';
 import type { PlanGeom, Pt } from '../planShapes';
 import { PICK } from './types';
 import type { CameraSpec, Face, FaceKind, Vec3 } from './types';
+import { CABINET_SIZE, DRYER_SIZE, FLOWERS_SIZE, FURN_CABINET_URL, FURN_DRYER_URL, FURN_FLOWERS_URL } from './furniture';
+import type { FurnitureSize } from './furniture';
 
 /** Eye height of both views, mm (the app's renders put the horizon at ~0.52 of the wall). */
 export const EYE = 1450;
@@ -224,6 +226,84 @@ function openingFaces(e: Edge, o: { kind: 'door' | 'window'; from: number; to: n
   return hole;
 }
 
+/** A sprite face on the plane of edge `e`, `off` mm into the room: a decor image shown as drawn, not 9-sliced. */
+function spriteFace(e: Edge, off: number, s0: number, s1: number, z0: number, z1: number, url: string): Face {
+  const f = vface(e, off, s0, s1, z0, z1, 'sprite', '', 0, false);
+  return { ...f, sprite: { img: url, u0: s0, u1: s1, v0: z0, v1: z1 } };
+}
+
+/** The longest solid side wall (not the house wall, not glazing) — a plausible spot for furniture; null when every wall is glazed (e.g. the Хрущёвка). */
+function bestWallEdge(g: PlanGeom): number | null {
+  let best: number | null = null;
+  let bestLen = 0;
+  for (let i = 0; i < g.kinds.length; i += 1) {
+    const kind = g.kinds[i]!;
+    if (kind === 'house' || kind === 'glazing') continue;
+    const len = edgeInfo(g, i).len;
+    if (len > bestLen) {
+      bestLen = len;
+      best = i;
+    }
+  }
+  return best;
+}
+
+const FURN_MARGIN = 150; // clearance from the wall's corners
+const FURN_MIN_FIT = 260; // below this the sprite would scale down to an unreadable sliver
+
+/** The sprite's size (mm) centred on `edge`, shrunk (never stretched past its own aspect) to clear the corners; null when there is no room for it at all. */
+function fitOnEdge(edge: Edge, size: FurnitureSize): { w: number; h: number; s0: number; s1: number } | null {
+  const avail = edge.len - 2 * FURN_MARGIN;
+  if (avail < FURN_MIN_FIT) return null;
+  const scale = Math.min(1, avail / size.w);
+  const w = size.w * scale;
+  const h = size.h * scale;
+  const s0 = (edge.len - w) / 2;
+  return { w, h, s0, s1: s0 + w };
+}
+
+/**
+ * Decor: a low bench and a wall-mounted drying rack against the longest solid side wall (skipped
+ * when there is none), a planter standing on the sill of the first glazed run (skipped when the
+ * glazing goes to the floor — there is no sill to stand it on). Every sprite keeps its own aspect
+ * ratio and only ever shrinks to fit, so it never stretches or floats off its wall / sill.
+ */
+function furnitureFaces(g: PlanGeom, out: Face[]): void {
+  const wallIdx = bestWallEdge(g);
+  if (wallIdx !== null) {
+    const e = edgeInfo(g, wallIdx);
+    const cab = fitOnEdge(e, CABINET_SIZE);
+    let cabTop = 0;
+    if (cab) {
+      out.push(spriteFace(e, 70, cab.s0, cab.s1, 0, cab.h, FURN_CABINET_URL));
+      cabTop = cab.h;
+    }
+    const dry = fitOnEdge(e, DRYER_SIZE);
+    if (dry) {
+      const z1 = g.ceilingH - 150;
+      const z0 = z1 - dry.h;
+      // Only when it clears the bench below by a margin — a low ceiling or a tall bench loses the dryer, not the bench.
+      if (z0 > cabTop + 150) out.push(spriteFace(e, 55, dry.s0, dry.s1, z0, z1, FURN_DRYER_URL));
+    }
+  }
+
+  if (!g.floorGlazing) {
+    const chain = glazedChains(g)[0];
+    if (chain) {
+      const e = edgeInfo(g, chain[0]!);
+      const inset = 140;
+      const avail = e.len - inset - 100;
+      if (avail >= 180) {
+        const scale = Math.min(1, avail / FLOWERS_SIZE.w);
+        const w = FLOWERS_SIZE.w * scale;
+        const h = FLOWERS_SIZE.h * scale;
+        // Stands just behind the sill's own front edge (SILL_D), on top of it.
+        out.push(spriteFace(e, SILL_D - 40, inset, inset + w, g.parapetH, g.parapetH + h, FURN_FLOWERS_URL));
+      }
+    }
+  }
+}
+
 export interface RoomModel {
   readonly faces: readonly Face[];
   /** Window (glass) rectangles: the daylight sources. */
@@ -354,6 +434,8 @@ export function buildRoom(g: PlanGeom): RoomModel {
       });
     }
   }
+
+  furnitureFaces(g, faces);
 
   // Floor and ceiling (planks / boards run along the balcony).
   faces.push(makeFace([g.poly.map((p) => v3(p, 0))], UP, [0, 0, 0], [0, 1, 0], [1, 0, 0], 'paint', 'P:floor', PICK.floor, true));
