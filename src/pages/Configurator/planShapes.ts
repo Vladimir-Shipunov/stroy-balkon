@@ -82,10 +82,16 @@ export const PLAN_SHAPES: Readonly<Record<string, PlanGeom>> = {
     kinds: ['house', 'wall', 'glazing', 'glazing', 'glazing', 'panel'],
     thin: { 1: [1395, 2085] },
     ceilingH: 2640,
+    // Door/window opening widths from a real measured П-44Т Сапожок развёртка
+    // (narodnyeokna.ru/razmery-P-44T-Sapozhok.html: door 630×2200, window 1521×1397) —
+    // the outline/area/parapet height above are kept as the least-squares passport fit
+    // (file header), not replaced by this one measured apartment's exact wall lengths,
+    // which the source itself notes vary 3-7cm unit to unit; only the opening widths
+    // (independent of that fit) are tightened to the real measured block.
     parapetH: 1070,
     openings: [
-      { kind: 'door', from: 600, to: 1350 },
-      { kind: 'window', from: 1350, to: 2500 },
+      { kind: 'door', from: 600, to: 1230 },
+      { kind: 'window', from: 1230, to: 2751 },
     ],
     dims: [
       { text: '3048', a: [0, 0], b: [3130, 0], axis: 'x', at: -480 },
@@ -103,10 +109,15 @@ export const PLAN_SHAPES: Readonly<Record<string, PlanGeom>> = {
     kinds: ['house', 'wall', 'wall', 'wall', 'glazing', 'glazing', 'wall'],
     blocks: [[[3250, -210], [3820, -210], [3820, 280], [3250, 280]]],
     ceilingH: 2660,
+    // Door/window opening widths from a real measured П-44Т Лодочка развёртка
+    // (narodnyeokna.ru/razmery-P-44T-Lodochka.html: door 665mm, window 1163mm wide —
+    // its stated window HEIGHT, 4404mm, is clearly a transcription error on that page
+    // and was not used anywhere). Outline/parapet height kept as the existing fit —
+    // same reasoning as sapozhok above.
     parapetH: 1100,
     openings: [
-      { kind: 'window', from: 440, to: 1590 },
-      { kind: 'door', from: 1590, to: 2340 },
+      { kind: 'window', from: 440, to: 1603 },
+      { kind: 'door', from: 1603, to: 2268 },
     ],
     dims: [
       { text: '3250', a: [0, 0], b: [3250, 0], axis: 'x', at: -430 },
