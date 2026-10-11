@@ -156,7 +156,8 @@ export class RoomRenderer {
         return { ...base, mode: Mode.Flat, r: c[0], g: c[1], b: c[2], gloss };
       }
       case 'frame':
-        return { ...base, mode: Mode.Flat, r: frame[0]! * f.tint, g: frame[1]! * f.tint, b: frame[2]! * f.tint };
+        // PVC profile: a mild plastic gloss, same grazing-angle sheen as the floor/sill.
+        return { ...base, mode: Mode.Flat, r: frame[0]! * f.tint, g: frame[1]! * f.tint, b: frame[2]! * f.tint, gloss: 0.4 };
       case 'glass':
         return { ...base, mode: Mode.Glass, r: 1, g: 1, b: 1, env };
       case 'curtain':

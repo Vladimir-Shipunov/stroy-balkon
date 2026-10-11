@@ -448,8 +448,14 @@ function envSample(s: Shade, bs: Basis, px: number, py: number, rgb: Float32Arra
     g = 0.65 + 0.19 * k;
     b = 0.7 + 0.2 * k;
   }
-  // Glass: a little darker, faintly cool, with a soft sheen growing towards the top.
-  const sheen = 0.04 + 0.05 * Math.max(0, Math.min(1, (bs.cy - py) / bs.cy));
+  // Glass: a little darker, faintly cool, with a soft sheen — a mild top bias (the sky is
+  // brighter than the street) plus a radial grazing-angle term (real glass reflects more
+  // steeply near the pane's edges/corners than dead centre — a believable fresnel glint,
+  // not just a flat gradient).
+  const nx = (px - bs.cx) / bs.cx;
+  const ny = (bs.cy - py) / bs.cy;
+  const grazing = Math.min(1, Math.hypot(nx, ny));
+  const sheen = 0.03 + 0.04 * Math.max(0, ny) + 0.07 * grazing * grazing * grazing;
   rgb[o] = r * 0.9 + sheen;
   rgb[o + 1] = g * 0.91 + sheen;
   rgb[o + 2] = b * 0.93 + sheen * 1.05;
@@ -497,5 +503,27 @@ export function resolve(t: Target, ss: number): { rgba: Uint8ClampedArray<ArrayB
       ids[y * w + x] = t.ids[(y * ss + half) * t.w + x * ss + half]!;
     }
   }
+  sharpen(rgba, w, h);
   return { rgba, ids, w, h };
+}
+
+/** A cheap unsharp mask on the final picture (cross-kernel blur, subtracted back in): the
+ * app's own pre-rendered photos read as crisper than a raw SSAA-filtered render of the same
+ * scene, because a camera photo has real micro-contrast a renderer's box filter softens
+ * away. Runs once per frame at output resolution (not supersampled), so it's cheap. */
+function sharpen(rgba: Uint8ClampedArray, w: number, h: number): void {
+  if (w < 3 || h < 3) return;
+  const src = rgba.slice();
+  const AMOUNT = 0.35;
+  for (let y = 1; y < h - 1; y += 1) {
+    const row = y * w;
+    for (let x = 1; x < w - 1; x += 1) {
+      const o = (row + x) * 4;
+      for (let c = 0; c < 3; c += 1) {
+        const center = src[o + c]!;
+        const blur = (src[o - 4 + c]! + src[o + 4 + c]! + src[o - w * 4 + c]! + src[o + w * 4 + c]! + center * 4) / 8;
+        rgba[o + c] = center + AMOUNT * (center - blur);
+      }
+    }
+  }
 }
