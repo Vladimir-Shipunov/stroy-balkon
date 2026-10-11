@@ -8,13 +8,26 @@ import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { VamScene } from '../Configurator/VamScene';
 import { findVamShape, vamScreen, vamViewLayerUrls } from '../Configurator/vamCatalog';
-import type { VamSelection } from '../Configurator/vamCatalog';
+import type { VamPick, VamSelection } from '../Configurator/vamCatalog';
 import styles from './SavedConfigPreview.module.css';
 
+function isVamPick(v: unknown): v is VamPick {
+  if (!v || typeof v !== 'object') return false;
+  const p = v as Partial<VamPick>;
+  return typeof p.o === 'string' && typeof p.k === 'number' && Number.isInteger(p.k) && p.k >= 0;
+}
+
+/** `scene2d` is an order's stored `metadata.scene2d` — submitted by the client at order
+ * time and only loosely checked server-side (`configValidator.js` validates the app's
+ * real photo-mode hotspot ids permissively, by design — see its file header). Treat it
+ * as untrusted: check every pick's shape here too, not just the top-level fields, before
+ * it reaches `vamViewLayerUrls()` (which builds image URLs from `pick.k`). */
 function isVamSelection(v: unknown): v is VamSelection {
   if (!v || typeof v !== 'object') return false;
   const s = v as Partial<VamSelection>;
-  return typeof s.shape === 'string' && typeof s.glazing === 'string' && typeof s.picks === 'object' && s.picks !== null;
+  if (typeof s.shape !== 'string' || typeof s.glazing !== 'string') return false;
+  if (!s.picks || typeof s.picks !== 'object') return false;
+  return Object.values(s.picks).every(isVamPick);
 }
 
 function PhotoPreview({ selection }: { readonly selection: VamSelection }): JSX.Element {

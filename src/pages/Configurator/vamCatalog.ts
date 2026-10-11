@@ -193,7 +193,11 @@ export function vamViewLayerUrls(screen: VamScreen, viewIndex: 0 | 1, picks: Rea
       for (const s of h.slots) {
         const pick = picks[pickKey(h.id, s.id)];
         const option = pickedOption(s, pick);
-        if (!pick || !option) continue;
+        // `pick.k` ends up in a URL below — picks can come from an untrusted source
+        // (an order's saved `metadata.scene2d`, read back by the admin preview), so
+        // don't trust it is one of this option's real colour indices just because the
+        // server's permissive photo-mode validation let it through as *a* integer.
+        if (!pick || !option || !option.colors.some((c) => c.k === pick.k)) continue;
         for (const l of option.layers) {
           if (l.v === viewIndex) layers.push({ url: `/vam/x/${l.p}${pick.k}.webp`, z: l.z });
         }
