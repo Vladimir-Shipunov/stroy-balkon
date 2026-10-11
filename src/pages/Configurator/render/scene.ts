@@ -15,8 +15,13 @@ import { FURNITURE_KIND } from './furniture';
 
 /** Eye height of both views, mm (the app's renders put the horizon at ~0.52 of the wall). */
 export const EYE = 1450;
-/** Field of view of the square views. */
-export const FOV = (78 * Math.PI) / 180;
+/** Field of view of the square views. 78° (the original guess) reads as a wide-angle
+ * "fisheye" lens on a narrow corridor-shaped room — verticals near the frame edges lean
+ * hard and small real architectural features (a short step wall, a mitred corner) get
+ * foreshortened into confusing slivers. A camera-like ~60° matches how the app's own
+ * pre-rendered photo scenes read (gentle, natural convergence, nothing near the edges
+ * looks "crooked") — narrower field of view, same scene, same geometry. */
+export const FOV = (60 * Math.PI) / 180;
 
 const GLASS_SET = 46; // glass behind the face of the frame
 const FRAME_B = 64; // width of a window's frame ring (twice that between two windows)
