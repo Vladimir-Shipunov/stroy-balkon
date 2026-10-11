@@ -608,12 +608,12 @@
       "typeId": "l8",
       "geometry": {
         "widthMm": {
-          "min": 6000,
-          "max": 6000
+          "min": 6043,
+          "max": 6043
         },
         "depthMm": {
-          "min": 1200,
-          "max": 1200
+          "min": 1206,
+          "max": 1206
         },
         "ceilingHeightMm": {
           "min": 2600,

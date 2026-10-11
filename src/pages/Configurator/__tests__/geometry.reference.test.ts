@@ -16,10 +16,10 @@ import { validatePlanGeom } from '../geometryValidation';
 
 /**
  * Reference values per model. `area` carries the tolerance actually achievable per
- * planShapes.ts's own file-header comment (passport-matched for the three models
- * with a real CAD drawing; exact for the three plain rectangles, which have no
- * drawing and no passport to match against — see that file's comment above
- * `loggia`/`long-loggia`/`khrushchevka`).
+ * planShapes.ts's own file-header comment: passport-matched (not exact, the source
+ * drawing is schematic) for sapozhok/lodochka/utyuzhok and for long-loggia (exact
+ * И-209А passport size, no drawing involved so no schematic slop); exact for loggia
+ * and khrushchevka, which have no cited passport number to match, only a typical size.
  */
 const REFERENCE: Readonly<
   Record<
@@ -38,7 +38,8 @@ const REFERENCE: Readonly<
   lodochka: { areaM2: 2.68, areaToleranceM2: 0.01, vertexCount: 7, openingCount: 2, ceilingH: 2660, parapetH: 1100 },
   utyuzhok: { areaM2: 4.75, areaToleranceM2: 0.01, vertexCount: 5, openingCount: 2, ceilingH: 2640, parapetH: 1050 },
   loggia: { areaM2: 3.6, areaToleranceM2: 0.001, vertexCount: 4, openingCount: 2, ceilingH: 2640, parapetH: 1050 },
-  'long-loggia': { areaM2: 7.2, areaToleranceM2: 0.001, vertexCount: 4, openingCount: 3, ceilingH: 2600, parapetH: 1100 },
+  // Real И-209А passport size (6043x1206mm, not a rounded "6 m typical") — exact area.
+  'long-loggia': { areaM2: 7.287858, areaToleranceM2: 0.000001, vertexCount: 4, openingCount: 3, ceilingH: 2600, parapetH: 1100 },
   khrushchevka: { areaM2: 2.16, areaToleranceM2: 0.001, vertexCount: 4, openingCount: 2, ceilingH: 2500, parapetH: 1000 },
 };
 

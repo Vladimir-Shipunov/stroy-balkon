@@ -136,8 +136,11 @@ export const PLAN_SHAPES: Readonly<Record<string, PlanGeom>> = {
       { text: '700', a: [0, 0], b: UTYUG_C, axis: 'along', at: 330 },
     ],
   },
-  // The straight ones have no drawing: typical sizes (П-44Т loggia; И-209А 6 m loggia 6043×1206;
-  // a Khrushchev-era balcony slab sticks out of the facade, so it is glazed on three sides).
+  // The straight ones have no owner drawing. long-loggia uses the real И-209А 6 m
+  // passport size (6043x1206mm) exactly. loggia and khrushchevka have no cited passport
+  // number, only a general description (typical П-44Т loggia size; a Khrushchev-era
+  // balcony slab sticks out of the facade, so it is glazed on three sides) — left as
+  // reasonable typical sizes rather than invented precise figures.
   loggia: {
     poly: [[0, 0], [3000, 0], [3000, 1200], [0, 1200]],
     kinds: ['house', 'wall', 'glazing', 'wall'],
@@ -153,7 +156,11 @@ export const PLAN_SHAPES: Readonly<Record<string, PlanGeom>> = {
     ],
   },
   'long-loggia': {
-    poly: [[0, 0], [6000, 0], [6000, 1200], [0, 1200]],
+    // The real И-209А 6 m loggia passport size (6043x1206), not the rounded "6 m" used
+    // before — this shape has a precise cited source (unlike loggia/khrushchevka below,
+    // which only have a general description, not a passport number), so it gets the
+    // exact figure instead of a typical-size approximation.
+    poly: [[0, 0], [6043, 0], [6043, 1206], [0, 1206]],
     kinds: ['house', 'wall', 'glazing', 'wall'],
     ceilingH: 2600,
     parapetH: 1100,
@@ -163,8 +170,8 @@ export const PLAN_SHAPES: Readonly<Record<string, PlanGeom>> = {
       { kind: 'window', from: 3700, to: 5570 },
     ],
     dims: [
-      { text: '6000', a: [0, 0], b: [6000, 0], axis: 'x', at: -760 },
-      { text: '1200', a: [6000, 0], b: [6000, 1200], axis: 'y', at: 6520 },
+      { text: '6043', a: [0, 0], b: [6043, 0], axis: 'x', at: -760 },
+      { text: '1206', a: [6043, 0], b: [6043, 1206], axis: 'y', at: 6563 },
     ],
   },
   khrushchevka: {
