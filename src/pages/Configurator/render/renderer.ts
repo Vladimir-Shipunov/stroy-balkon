@@ -187,12 +187,20 @@ export class RoomRenderer {
     }
   }
 
+  /** A fixed key-light direction (unit, mostly horizontal) for shading lamp meshes — any
+   * revolved shade (the pendant dome, the caged bulb) is built from quads that all share
+   * the same n[2] but face every compass direction, so a top-light-only term alone leaves
+   * the whole shade one flat brightness. A one-sided horizontal term gives it a real lit
+   * side and a shadow side, so it reads as a solid object instead of a painted silhouette. */
+  private static readonly LAMP_KEY: readonly [number, number] = [0.6, -0.8];
+
   /** The row of ceiling lights of the chosen model, with a soft bloom round their glowing parts. */
   private drawLamps(target: Target, basis: ReturnType<typeof makeBasis>, room: RoomModel, model: number, noGlow: boolean): void {
     const set = lampRow(model, room.lamps);
+    const [kx, ky] = RoomRenderer.LAMP_KEY;
     for (const part of set.parts) {
-      // Lit parts: a simple top-light so the shade reads as a solid.
-      const L = part.emit ? 1 : 0.74 + 0.16 * part.face.n[2];
+      const n = part.face.n;
+      const L = part.emit ? 1 : Math.min(1.15, 0.64 + 0.14 * n[2] + 0.34 * Math.max(0, n[0] * kx + n[1] * ky));
       drawFace(target, basis, part.face, { mode: part.emit ? Mode.Emit : Mode.Flat, r: part.rgb[0], g: part.rgb[1], b: part.rgb[2], tex: null, tile: 1, lm: null, light: L, env: null }, PICK.light);
     }
     if (!noGlow) for (const g of set.glows) addGlow(target, basis, g.at, g.radius, g.strength);
