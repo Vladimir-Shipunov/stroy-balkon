@@ -1,10 +1,9 @@
 /**
- * @file useZoomPan — shared zoom/pan behaviour for the plan and photo balcony
- * scenes (`PlanScene.tsx`, `VamScene.tsx`). Both stack a canvas/images layer
- * together with percentage-positioned hotspot buttons inside one wrapper; this
- * hook only ever hands back a CSS `transform` for that wrapper, so the
- * hotspots scale and move in lockstep with the picture without their own
- * percentage math changing.
+ * @file useZoomPan — shared zoom/pan behaviour for the balcony scene
+ * (`PlanScene.tsx`). Stacks a canvas layer together with percentage-positioned
+ * hotspot buttons inside one wrapper; this hook only ever hands back a CSS
+ * `transform` for that wrapper, so the hotspots scale and move in lockstep
+ * with the picture without their own percentage math changing.
  *
  * Supports mouse wheel zoom, pinch-to-zoom and single-finger pan (once
  * zoomed in) via the Pointer Events API, plus imperative `zoomIn`/`zoomOut`/

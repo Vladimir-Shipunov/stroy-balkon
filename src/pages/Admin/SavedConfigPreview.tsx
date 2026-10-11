@@ -7,8 +7,7 @@
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { PlanScene } from '../Configurator/PlanScene';
-import { VamScene } from '../Configurator/VamScene';
-import { findVamShape, vamRenderPaint, vamScreen, vamViewLayerUrls } from '../Configurator/vamCatalog';
+import { findVamShape, vamRenderPaint } from '../Configurator/vamCatalog';
 import type { VamSelection } from '../Configurator/vamCatalog';
 import { PLAN_SHAPES, planFor } from '../Configurator/planShapes';
 import { usePlanViews } from '../Configurator/usePlanViews';
@@ -25,21 +24,7 @@ function noopTitle(): string {
 function isVamSelection(v: unknown): v is VamSelection {
   if (!v || typeof v !== 'object') return false;
   const s = v as Partial<VamSelection>;
-  return typeof s.shape === 'string' && typeof s.glazing === 'string' && (s.mode === 'plan' || s.mode === 'photo') && typeof s.picks === 'object' && s.picks !== null;
-}
-
-function PhotoPreview({ selection }: { readonly selection: VamSelection }): JSX.Element {
-  const screen = useMemo(() => vamScreen(selection), [selection]);
-  const layerUrls = useMemo(() => screen.views.map((_view, i) => vamViewLayerUrls(screen, i as 0 | 1, selection.picks)), [screen, selection.picks]);
-  return (
-    <div className={styles.views}>
-      {screen.views.map((_view, i) => (
-        <div key={i} className={styles.viewCard}>
-          <VamScene layers={layerUrls[i]!} mirror={screen.mirror} viewLabel={`кадр ${i + 1}`} />
-        </div>
-      ))}
-    </div>
-  );
+  return typeof s.shape === 'string' && typeof s.glazing === 'string' && typeof s.picks === 'object' && s.picks !== null;
 }
 
 function PlanPreview({ selection }: { readonly selection: VamSelection }): JSX.Element {
@@ -65,5 +50,5 @@ function PlanPreview({ selection }: { readonly selection: VamSelection }): JSX.E
  */
 export function SavedConfigPreview({ scene2d, fallback = null }: { readonly scene2d: unknown; readonly fallback?: ReactNode }): JSX.Element | null {
   if (!isVamSelection(scene2d) || !findVamShape(scene2d.shape)) return <>{fallback}</>;
-  return scene2d.mode === 'plan' ? <PlanPreview selection={scene2d} /> : <PhotoPreview selection={scene2d} />;
+  return <PlanPreview selection={scene2d} />;
 }

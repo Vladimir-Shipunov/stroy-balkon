@@ -19,9 +19,8 @@
  *   {
  *     shape: string,              // balcony model id, e.g. "sapozhok"
  *     glazing: string,            // glazing id of that model, e.g. "parapet"
- *     mode: "plan" | "photo",     // "plan" is fully covered by the catalogue subset
  *     picks: {
- *       "<hotspotId>|<slotId>": { o: string, k: number }
+ *       "<hotspotId>|<slotId>": { o: string, k: number }   // hotspotId always "P:..."
  *     }
  *   }
  */
@@ -137,11 +136,6 @@ function validateConfig(config, options = {}) {
         return { valid: false, errors };
     }
 
-    const mode = config.mode === 'photo' ? 'photo' : 'plan';
-    if (config.mode !== undefined && config.mode !== 'plan' && config.mode !== 'photo') {
-        errors.push('mode must be "plan" or "photo"');
-    }
-
     // Fixed per-model dimensions: the catalogue has no adjustable sizing (every model
     // is one fixed shape), so a client that sends explicit dimensions must match them
     // exactly. Absent fields are fine (the configurator doesn't normally send these).
@@ -163,11 +157,7 @@ function validateConfig(config, options = {}) {
         }
     }
 
-    // Picks — only fully checkable in "plan" mode, where the catalogue subset here
-    // mirrors the real hotspot list. "photo" mode hotspots come from the app's own
-    // generated screens (vamApp.generated.ts) which are not transcribed into this
-    // catalogue — permissive by necessity (flagged above), but we still sanity-check
-    // the shape of each pick.
+    // Picks — the catalogue subset here mirrors the real (single) hotspot list.
     const picks = config.picks;
     if (picks !== undefined && !isPlainObject(picks)) {
         errors.push('picks must be an object');
@@ -181,8 +171,6 @@ function validateConfig(config, options = {}) {
                 continue;
             }
 
-            if (mode === 'photo') continue; // hotspot catalogue not transcribed for photo mode — see note above
-
             const sep = key.lastIndexOf('|');
             if (sep < 0) {
                 errors.push(`pick key "${key}" must be "<hotspotId>|<slotId>"`);
@@ -191,15 +179,10 @@ function validateConfig(config, options = {}) {
             const hotspotId = key.slice(0, sep);
             const slotId = key.slice(sep + 1);
 
-            // `picks` is one dict shared by both view modes, but "plan" and "photo" hotspot
-            // ids live in disjoint namespaces (plan ids are prefixed "P:"; photo ids are the
-            // app's own numeric screen ids — see src/pages/Configurator/vamCatalog.ts). A
-            // config saved while in "plan" mode can still carry leftover picks from an earlier
-            // "photo"-mode visit (vamCatalog.ts keeps both side by side rather than pruning on
-            // mode switch — a known, documented gap, see docs/FINAL_REPORT.md §4). Reject only
-            // picks that claim to be plan hotspots; silently skip anything else here exactly as
-            // "photo" mode already is above, instead of failing every save that touched both
-            // modes.
+            // Every current hotspot id is prefixed "P:" (see vamPlanHotspots in
+            // vamCatalog.ts). A saved config from before the single-page merge may still
+            // carry leftover picks under the old "photo" mode's numeric app-screen ids —
+            // silently skip those rather than failing the save over stale data.
             if (!hotspotId.startsWith('P:')) continue;
 
             const hotspot = hotspotsById.get(hotspotId);

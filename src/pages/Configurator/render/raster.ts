@@ -467,6 +467,12 @@ export function resolve(t: Target, ss: number): { rgba: Uint8ClampedArray<ArrayB
   const inv = 1 / (ss * ss);
   const half = ss >> 1;
   const tone = (c: number): number => (c < 0.82 ? c : 0.82 + 0.18 * (1 - Math.exp(-(c - 0.82) / 0.18)));
+  // A gentle warm grade (the app's own pre-rendered scenes read as golden-hour
+  // daylight, not a neutral CG grey) — small per-channel multipliers after the
+  // highlight rolloff, not a hue shift of the underlying light model.
+  const WR = 1.04;
+  const WG = 1.01;
+  const WB = 0.95;
   for (let y = 0; y < h; y += 1) {
     for (let x = 0; x < w; x += 1) {
       let r = 0;
@@ -484,9 +490,9 @@ export function resolve(t: Target, ss: number): { rgba: Uint8ClampedArray<ArrayB
       const vy = (y - h / 2) / (h / 2);
       const vig = 1 - 0.13 * (vx * vx + vy * vy);
       const o = (y * w + x) * 4;
-      rgba[o] = 255 * tone(r * inv) * vig;
-      rgba[o + 1] = 255 * tone(g * inv) * vig;
-      rgba[o + 2] = 255 * tone(b * inv) * vig;
+      rgba[o] = 255 * tone(r * inv) * vig * WR;
+      rgba[o + 1] = 255 * tone(g * inv) * vig * WG;
+      rgba[o + 2] = 255 * tone(b * inv) * vig * WB;
       rgba[o + 3] = 255;
       ids[y * w + x] = t.ids[(y * ss + half) * t.w + x * ss + half]!;
     }

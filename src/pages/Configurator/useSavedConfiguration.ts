@@ -13,7 +13,7 @@
  *  - any failure → `{ success: false, error: string, errors?: string[] }`
  *
  * `server/validators/configValidator.js` requires the posted `config` to be
- * shaped like `VamSelection` (`{ shape, glazing, mode, picks }`) — it does not
+ * shaped like `VamSelection` (`{ shape, glazing, picks }`) — it does not
  * know about this app's full `ConfigState` (`{ extras, vam }`). So this hook
  * flattens `extras` onto the `vam` object before sending (the validator
  * ignores unknown extra keys) and splits it back apart on load — callers of

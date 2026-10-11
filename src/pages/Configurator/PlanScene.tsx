@@ -9,9 +9,13 @@ import type { PlanView } from './usePlanViews';
 import type { SurfaceKind } from './planGeometry';
 import { Spinner } from './Spinner';
 import { useZoomPan } from './useZoomPan';
-import type { VamSceneHandle } from './VamScene';
-import styles from './VamScene.module.css';
+import styles from './Scene.module.css';
 import wizard from './Wizard.module.css';
+
+export interface PlanSceneHandle {
+  /** The current view flattened to a plain canvas (for screenshots/PDF export). */
+  captureCanvas: () => HTMLCanvasElement | null;
+}
 
 interface PlanSceneProps {
   /** The rendered view; null until the first picture arrives. */
@@ -55,7 +59,7 @@ const ICON: Readonly<Record<SurfaceKind, JSX.Element>> = {
  * A drawn view of the balcony room.
  * @returns The scene element.
  */
-export const PlanScene = forwardRef<VamSceneHandle, PlanSceneProps>(function PlanScene({ view, chosen, activeId, onSpot, title, viewLabel }, ref) {
+export const PlanScene = forwardRef<PlanSceneHandle, PlanSceneProps>(function PlanScene({ view, chosen, activeId, onSpot, title, viewLabel }, ref) {
   const suffix = viewLabel ? ` — ${viewLabel}` : '';
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const zoomPan = useZoomPan();

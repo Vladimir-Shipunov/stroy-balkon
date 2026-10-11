@@ -29,12 +29,16 @@ export interface RenderOutput {
 }
 
 /** Bare surfaces before a finish is chosen: grey plaster walls, concrete floor, white ceiling. */
+// Warm, lived-in defaults for a surface with no finish picked yet — plain plaster/
+// concrete tones rather than a cool construction-site grey, so the room still reads
+// as a real space (matching the warmth of the app's own pre-rendered photo scenes)
+// before the user has chosen anything.
 const BARE: Readonly<Record<string, readonly [number, number, number]>> = {
-  sill: [0.95, 0.95, 0.94],
-  plintus: [0.95, 0.95, 0.94],
-  wall: [0.6, 0.61, 0.62],
-  floor: [0.43, 0.44, 0.45],
-  ceiling: [0.8, 0.81, 0.81],
+  sill: [0.96, 0.95, 0.92],
+  plintus: [0.96, 0.95, 0.92],
+  wall: [0.72, 0.68, 0.62],
+  floor: [0.52, 0.48, 0.43],
+  ceiling: [0.86, 0.84, 0.79],
 };
 const WHITE: readonly [number, number, number] = [0.93, 0.93, 0.92];
 const DARK: readonly [number, number, number] = [0.2, 0.2, 0.21];

@@ -464,30 +464,3 @@
   display: block;
 }
 
-.modeSwitch {
-  display: inline-flex;
-  padding: 3px;
-  border-radius: var(--radius-pill);
-  background: var(--surface-2, #f1ede3);
-  border: 1px solid var(--border);
-}
-
-.modeBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  border: none;
-  background: transparent;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-soft);
-}
-
-.modeBtn.on {
-  background: #f5a01a;
-  color: #fff;
-}

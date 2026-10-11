@@ -1,14 +1,16 @@
 /**
- * @file The 2D configurator model, as in the Vam Balkon app: a balcony shape
- * picks an app balcony type; the type + glazing pick one of the app's screens
- * (`vamApp.generated.ts`) that shows the balcony from two sides. Every tap target
- * on a side owns one surface (wall, ceiling, floor, frames, light...) and the user
- * picks a material option and colour for it — those picks are the whole selection.
- * This module holds the selection model, its validation, the layer list of a view
- * and the human-readable summary sent with a lead.
+ * @file The configurator model: a balcony shape picks an app balcony type, and the
+ * type + glazing pick the real app's material/colour catalogue for each surface
+ * kind (`vamApp.generated.ts`). The balcony itself is drawn by the parametric room
+ * renderer (`render/`) from the shape's real geometry (`planShapes.ts`), textured
+ * with that same app catalogue — one geometry, one picture, one set of tap targets.
+ * Every tap target owns one surface (wall, ceiling, floor, frames, light...) and the
+ * user picks a material option and colour for it — those picks are the whole
+ * selection. This module holds the selection model, its validation, and the
+ * human-readable summary sent with a lead.
  */
 import { VAM_APP_SCREENS } from './vamApp.generated';
-import type { AppHotspot, AppOption, AppSlot, AppView, HotspotKind } from './vamApp.generated';
+import type { AppHotspot, AppOption, AppSlot, HotspotKind } from './vamApp.generated';
 import { VAM_SHAPES, VAM_TYPES, findVamShape, findVamType } from './vamShapes';
 import type { VamGlazingDef, VamShapeDef, VamTypeDef } from './vamShapes';
 import { planSurfaces } from './planGeometry';
@@ -17,7 +19,7 @@ import { LAYERS } from './render/types';
 import type { LayerId, RenderPaint, SurfacePaint } from './render/types';
 
 export { VAM_SHAPES, VAM_TYPES, findVamShape, findVamType };
-export type { AppHotspot, AppOption, AppSlot, AppView, HotspotKind, VamGlazingDef, VamShapeDef, VamTypeDef };
+export type { AppHotspot, AppOption, AppSlot, HotspotKind, VamGlazingDef, VamShapeDef, VamTypeDef };
 
 /** A material option + colour chosen for one slot of a tap target. */
 export interface VamPick {
@@ -30,21 +32,12 @@ export interface VamSelection {
   readonly shape: string;
   /** Glazing id of the shape's type (`parapet` / `floor`, or `left` / `right`). */
   readonly glazing: string;
-  /** `plan` = the room drawn from the plan's dimensions; `photo` = the app's rendered scenes. */
-  readonly mode: 'plan' | 'photo';
   /** Picks by `pickKey(hotspot, slot)`; absent = the bare surface. */
   readonly picks: Readonly<Record<string, VamPick>>;
 }
 
 export function pickKey(hotspotId: string, slotId: string): string {
   return `${hotspotId}|${slotId}`;
-}
-
-/** The two camera views of a screen and whether they are drawn flipped. */
-export interface VamScreen {
-  readonly id: string;
-  readonly mirror: boolean;
-  readonly views: readonly [AppView, AppView];
 }
 
 const DEFAULT_SHAPE = VAM_SHAPES[0]!;
@@ -58,15 +51,10 @@ export function vamShapeGlazings(shape: VamShapeDef): readonly VamGlazingDef[] {
   return vamShapeType(shape).glazings;
 }
 
-/** The app screen (with its two views) of a selection. */
-export function vamScreen(sel: VamSelection): VamScreen {
-  const shape = findVamShape(sel.shape) ?? DEFAULT_SHAPE;
-  const glazings = vamShapeGlazings(shape);
-  const glazing = glazings.find((g) => g.id === sel.glazing) ?? glazings[0]!;
-  return { id: glazing.screen, mirror: glazing.mirror === true, views: VAM_APP_SCREENS[glazing.screen]! };
-}
-
-/** Reference option lists for the plan view: the app's own materials and colours. */
+/** Reference option lists for the plan view: the app's own materials and colours
+ * (screens '2'/'8' are fixed lookup points into the app's own catalogue, not tied to
+ * any particular shape/glazing — every shape's plan hotspots draw from the same
+ * app-wide material/colour lists). */
 function refOptions(screen: string, view: number, hotspot: string): readonly AppOption[] {
   return VAM_APP_SCREENS[screen]?.[view]?.hotspots.find((h) => h.id === hotspot)?.slots[0]?.options ?? [];
 }
@@ -126,9 +114,9 @@ export function vamPlanHotspots(shapeId: string): AppHotspot[] {
   }));
 }
 
-/** Every tap target of the current mode (both views of the app screen, or the plan surfaces). */
+/** Every tap target of the selection's balcony (the plan surfaces). */
 export function vamHotspotList(sel: VamSelection): AppHotspot[] {
-  return sel.mode === 'plan' ? vamPlanHotspots(sel.shape) : vamScreen(sel).views.flatMap((v) => [...v.hotspots]);
+  return vamPlanHotspots(sel.shape);
 }
 
 function validPick(hotspots: readonly AppHotspot[], key: string, pick: VamPick): boolean {
@@ -146,22 +134,17 @@ export function normalizeVamSelection(raw: Partial<VamSelection> | null | undefi
   const shape = findVamShape(raw?.shape) ?? DEFAULT_SHAPE;
   const glazings = vamShapeGlazings(shape);
   const glazing = glazings.find((g) => g.id === raw?.glazing) ?? glazings[0]!;
-  const hotspots = [...(VAM_APP_SCREENS[glazing.screen] ?? []).flatMap((v) => v.hotspots), ...vamPlanHotspots(shape.id)];
+  const hotspots = vamPlanHotspots(shape.id);
   const picks: Record<string, VamPick> = {};
   for (const [key, pick] of Object.entries(raw?.picks ?? {})) {
     if (pick && typeof pick.o === 'string' && typeof pick.k === 'number' && validPick(hotspots, key, pick)) picks[key] = pick;
   }
-  // Photo mode (the app's real rendered scenes) is the default — it's the accurate,
-  // photorealistic look; "по чертежу" is an opt-in schematic view for exact geometry.
-  return { shape: shape.id, glazing: glazing.id, mode: raw?.mode === 'plan' ? 'plan' : 'photo', picks };
+  return { shape: shape.id, glazing: glazing.id, picks };
 }
 
 export const DEFAULT_VAM_SELECTION: VamSelection = normalizeVamSelection(null);
 
-export function vamBgUrl(name: string): string {
-  return `/vam/x/bg/${name}.webp`;
-}
-
+/** A balcony-type/glazing preview thumbnail (step 1's picker cards — the app's own UI art, not a rendered scene). */
 export function vamUiUrl(name: string): string {
   return `/vam/x/ui/${name}.webp`;
 }
@@ -169,30 +152,6 @@ export function vamUiUrl(name: string): string {
 /** The option a slot currently shows (its pick, else undefined). */
 export function pickedOption(slot: AppSlot, pick: VamPick | undefined): AppOption | undefined {
   return pick ? slot.options.find((o) => o.id === pick.o) : undefined;
-}
-
-/**
- * Layer URLs of one view in stacking order: the bare background images, then the
- * layers of every chosen option that belong to this view (a wall picked on one view
- * also colours its counterpart on the other), by draw order: floor, walls, frames,
- * sills, baseboard, furniture, light.
- */
-export function vamViewLayerUrls(screen: VamScreen, viewIndex: 0 | 1, picks: Readonly<Record<string, VamPick>>): string[] {
-  const layers: { url: string; z: number }[] = [];
-  for (const view of screen.views) {
-    for (const h of view.hotspots) {
-      for (const s of h.slots) {
-        const pick = picks[pickKey(h.id, s.id)];
-        const option = pickedOption(s, pick);
-        if (!pick || !option) continue;
-        for (const l of option.layers) {
-          if (l.v === viewIndex) layers.push({ url: `/vam/x/${l.p}${pick.k}.webp`, z: l.z });
-        }
-      }
-    }
-  }
-  layers.sort((a, b) => a.z - b.z);
-  return [...screen.views[viewIndex].bg.map(vamBgUrl), ...layers.map((l) => l.url)];
 }
 
 export const HOTSPOT_LABELS: Readonly<Record<HotspotKind, string>> = {

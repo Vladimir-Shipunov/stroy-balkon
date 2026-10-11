@@ -59,9 +59,10 @@ function reducer(state: ConfigState, action: Action): ConfigState {
   }
 }
 
-// v4: photo mode (the app's real scenes) is the default again — plan mode's canvas
-// render looked far less realistic, so a stale v3 save defaulted into it.
-const STORAGE_KEY = 'balkon-msk-config-v4';
+// v5: the "по чертежу" / "как в приложении" mode toggle and photo-mode rendering
+// are gone — the parametric room renderer is now the only view, so a stale v4 save
+// carrying a `mode` field is just dropped by `normalizeVamSelection`.
+const STORAGE_KEY = 'balkon-msk-config-v5';
 
 /** Load a saved configuration, merged defensively over the defaults (older saves carry extra fields — ignored). */
 function init(): ConfigState {
