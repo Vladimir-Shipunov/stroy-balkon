@@ -20,9 +20,14 @@
  *     shape: string,              // balcony model id, e.g. "sapozhok"
  *     glazing: string,            // glazing id of that model, e.g. "parapet"
  *     picks: {
- *       "<hotspotId>|<slotId>": { o: string, k: number }   // hotspotId always "P:..."
+ *       "<hotspotId>|<slotId>": { o: string, k: number }
  *     }
  *   }
+ * The active UI's hotspot ids are the app's own real-screen numeric ids (not
+ * transcribed into the server-side catalogue below — see the plan-renderer note
+ * further down), so most picks are only shape-checked here, not existence-checked
+ * against a hotspot list; only picks still carrying the old plan-renderer's "P:"
+ * prefix get the stricter catalogue check.
  */
 
 const fs = require('fs');
@@ -179,10 +184,11 @@ function validateConfig(config, options = {}) {
             const hotspotId = key.slice(0, sep);
             const slotId = key.slice(sep + 1);
 
-            // Every current hotspot id is prefixed "P:" (see vamPlanHotspots in
-            // vamCatalog.ts). A saved config from before the single-page merge may still
-            // carry leftover picks under the old "photo" mode's numeric app-screen ids —
-            // silently skip those rather than failing the save over stale data.
+            // Current hotspot ids are the app's own real-screen numeric ids, not
+            // transcribed into this server-side catalogue subset (see file header) — only
+            // shape-checked above, not existence-checked. A saved config from the brief
+            // parametric-plan-renderer experiment may still carry "P:"-prefixed picks;
+            // those ARE in the catalogue below, so check them strictly.
             if (!hotspotId.startsWith('P:')) continue;
 
             const hotspot = hotspotsById.get(hotspotId);

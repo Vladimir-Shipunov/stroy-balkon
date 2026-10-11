@@ -16,7 +16,7 @@ import { useConfiguratorState } from './ConfiguratorContext';
 import { ErrorBoundary } from './ErrorBoundary';
 import { FinishStep } from './FinishStep';
 import { SetupStep } from './SetupStep';
-import type { PlanSceneHandle } from './PlanScene';
+import type { VamSceneHandle } from './VamScene';
 import { disposeWorkers } from './render/client';
 import { loadConfigFromUrl } from './useSavedConfiguration';
 import type { ConfigState } from './useConfigurator';
@@ -42,8 +42,8 @@ export function Configurator(): JSX.Element {
   const [step, setStep] = useState<'setup' | 'finish'>(() =>
     new URLSearchParams(window.location.search).get('step') === 'finish' ? 'finish' : 'setup',
   );
-  const leftRef = useRef<PlanSceneHandle>(null);
-  const rightRef = useRef<PlanSceneHandle>(null);
+  const leftRef = useRef<VamSceneHandle>(null);
+  const rightRef = useRef<VamSceneHandle>(null);
   const didTryLoadSaved = useRef(false);
 
   // Restore a configuration from a saved-project link (`?cfgId=&cfgToken=`,

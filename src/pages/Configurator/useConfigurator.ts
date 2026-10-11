@@ -59,10 +59,12 @@ function reducer(state: ConfigState, action: Action): ConfigState {
   }
 }
 
-// v5: the "по чертежу" / "как в приложении" mode toggle and photo-mode rendering
-// are gone — the parametric room renderer is now the only view, so a stale v4 save
-// carrying a `mode` field is just dropped by `normalizeVamSelection`.
-const STORAGE_KEY = 'balkon-msk-config-v5';
+// v6: back to the app's own real pre-rendered photo scenes as the only view (the
+// brief parametric-plan-renderer experiment in v5 didn't look right to the owner —
+// see docs/superpowers/ session notes). A stale v5 save's picks keyed under the
+// plan renderer's "P:" hotspot ids just won't match anything real here and are
+// silently dropped by `normalizeVamSelection`.
+const STORAGE_KEY = 'balkon-msk-config-v6';
 
 /** Load a saved configuration, merged defensively over the defaults (older saves carry extra fields — ignored). */
 function init(): ConfigState {
