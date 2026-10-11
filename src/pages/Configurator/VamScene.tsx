@@ -7,6 +7,7 @@
  */
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { useZoomPan } from './useZoomPan';
 import styles from './VamScene.module.css';
 
 export interface VamSceneHandle {
@@ -18,6 +19,8 @@ interface VamSceneProps {
   readonly layers: readonly string[];
   readonly mirror: boolean;
   readonly children?: ReactNode;
+  /** Disambiguates this view's zoom-control labels when more than one view is on screen at once. */
+  readonly viewLabel?: string;
 }
 
 const BACKDROP = '#8a8f96';
@@ -41,10 +44,12 @@ function preload(urls: readonly string[]): Promise<void> {
  * One stacked 2D view.
  * @returns The scene element.
  */
-export const VamScene = forwardRef<VamSceneHandle, VamSceneProps>(function VamScene({ layers, mirror, children }, ref) {
+export const VamScene = forwardRef<VamSceneHandle, VamSceneProps>(function VamScene({ layers, mirror, children, viewLabel }, ref) {
+  const suffix = viewLabel ? ` — ${viewLabel}` : '';
   const signature = layers.join('|');
   const [shown, setShown] = useState<readonly string[]>(layers);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const zoomPan = useZoomPan();
 
   useEffect(() => {
     let cancelled = false;
@@ -86,13 +91,26 @@ export const VamScene = forwardRef<VamSceneHandle, VamSceneProps>(function VamSc
   );
 
   return (
-    <div className={styles.canvas}>
-      <div ref={canvasRef} className={`${styles.layers} ${mirror ? styles.mirror : ''}`}>
-        {shown.map((url, i) => (
-          <img key={`${i}-${url}`} src={url} alt="" className={styles.layer} draggable={false} />
-        ))}
+    <div ref={zoomPan.containerRef} className={styles.canvas} {...zoomPan.containerHandlers}>
+      <div className={styles.zoomWrap} style={zoomPan.style}>
+        <div ref={canvasRef} className={`${styles.layers} ${mirror ? styles.mirror : ''}`}>
+          {shown.map((url, i) => (
+            <img key={`${i}-${url}`} src={url} alt="" className={styles.layer} draggable={false} />
+          ))}
+        </div>
+        {children}
       </div>
-      {children}
+      <div className={styles.zoomControls}>
+        <button type="button" className={styles.zoomBtn} onClick={zoomPan.zoomIn} disabled={!zoomPan.canZoomIn} aria-label={`Увеличить${suffix}`}>
+          +
+        </button>
+        <button type="button" className={styles.zoomBtn} onClick={zoomPan.zoomOut} disabled={!zoomPan.canZoomOut} aria-label={`Уменьшить${suffix}`}>
+          –
+        </button>
+        <button type="button" className={styles.zoomBtn} onClick={zoomPan.reset} disabled={!zoomPan.isZoomed} aria-label={`Сбросить масштаб${suffix}`}>
+          ⟲
+        </button>
+      </div>
     </div>
   );
 });

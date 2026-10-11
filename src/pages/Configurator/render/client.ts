@@ -51,6 +51,26 @@ function spawn(slot: number): Worker | null {
 
 let workerBroken = false;
 
+/**
+ * Perf audit (docs/PERF_AUDIT_15-20.md #1): the two render workers are a module-level
+ * singleton that otherwise lives (and holds its baked room/texture/light-map caches,
+ * see renderer.ts) for the lifetime of the page — fine for this SPA's single
+ * configurator consumer, but there was no cleanup path at all. Call this when the
+ * configurator page itself unmounts (not on every inner step/mode toggle, which
+ * would just thrash workers needlessly — see the call site in Configurator.tsx for
+ * why it's placed there and not in usePlanViews.ts). Any renders still in flight are
+ * rejected rather than left to resolve into a promise nobody awaits anymore.
+ */
+export function disposeWorkers(): void {
+  for (const slot of [0, 1] as const) {
+    workers[slot]?.terminate();
+    workers[slot] = null;
+  }
+  const inFlight = [...pending.values()];
+  pending.clear();
+  inFlight.forEach((p) => p.reject(new Error('renderer disposed')));
+}
+
 export interface ViewRequest {
   readonly key: string;
   readonly geom: PlanGeom;

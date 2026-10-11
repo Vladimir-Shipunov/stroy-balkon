@@ -107,6 +107,9 @@ export class RoomRenderer {
       if (hidden.has(layer)) continue;
       for (const i of layers.get(layer)!) {
         const f = room.faces[i]!;
+        // A decor sprite with nothing picked for it yet stays unbuilt rather than
+        // showing a default item the user never chose (docs/FINAL_REPORT.md §7).
+        if (f.kind === 'sprite' && (!f.sprite || paint.furniture?.[f.sprite.img] === undefined)) continue;
         const light = lights[i]!;
         const lm = typeof light === 'number' ? null : light;
         const L = typeof light === 'number' ? light : 1;

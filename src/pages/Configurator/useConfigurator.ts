@@ -29,7 +29,8 @@ export type Action =
   | { type: 'extra'; key: keyof Extras }
   | { type: 'vam'; value: Partial<VamSelection> }
   | { type: 'pick'; key: string; pick: VamPick | null }
-  | { type: 'reset' };
+  | { type: 'reset' }
+  | { type: 'LOAD_CONFIG'; payload: Partial<ConfigState> };
 
 function reducer(state: ConfigState, action: Action): ConfigState {
   switch (action.type) {
@@ -45,6 +46,14 @@ function reducer(state: ConfigState, action: Action): ConfigState {
     }
     case 'reset':
       return DEFAULT_STATE;
+    // Restores a configuration loaded from a saved-project link (`?cfgId=&cfgToken=`,
+    // see useSavedConfiguration.ts) — merged defensively, same pattern as `init()`,
+    // since the saved blob may be from an older formatVersion.
+    case 'LOAD_CONFIG':
+      return {
+        extras: { ...state.extras, ...(action.payload.extras ?? {}) },
+        vam: normalizeVamSelection({ ...state.vam, ...(action.payload.vam ?? {}) }),
+      };
     default:
       return state;
   }

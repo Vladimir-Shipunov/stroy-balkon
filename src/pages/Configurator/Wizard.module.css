@@ -10,6 +10,7 @@
 
 .head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -31,7 +32,10 @@
 .nextBtn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 11px 22px;
   border-radius: var(--radius-pill);
   border: 1.5px solid #f6c66a;
@@ -239,6 +243,7 @@
 .finishHead {
   flex: none;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 14px;
   padding: 12px 24px;
@@ -247,8 +252,10 @@
 }
 
 .backBtn {
-  width: 42px;
-  height: 42px;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
   border-radius: 50%;
   border: 1.5px solid var(--border-strong);
   background: var(--surface);
@@ -419,7 +426,18 @@
   }
   .finishHead {
     padding: 10px 12px;
-    flex-wrap: wrap;
+  }
+}
+
+/* Very narrow phones (~360px and below): stack the setup header so the
+   "Далее" button never sits on the same crowded row as the title chip. */
+@media (max-width: 480px) {
+  .head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nextBtn {
+    width: 100%;
   }
 }
 
@@ -455,6 +473,11 @@
 }
 
 .modeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 6px 14px;
   border-radius: var(--radius-pill);
   border: none;

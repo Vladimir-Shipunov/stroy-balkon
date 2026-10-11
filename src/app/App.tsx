@@ -22,6 +22,7 @@ import { Layout } from '../components/Layout/Layout';
 import { PageLoader } from '../components/PageLoader';
 import { ScrollToTop } from '../components/ScrollToTop';
 import { ConfiguratorProvider } from '../pages/Configurator/ConfiguratorContext';
+import { ErrorBoundary } from '../pages/Configurator/ErrorBoundary';
 
 const Home = lazy(() => import('../pages/Home/Home').then((m) => ({ default: m.Home })));
 const Services = lazy(() =>
@@ -67,7 +68,9 @@ export function App(): JSX.Element {
             path="configurator"
             element={
               <Suspense fallback={<PageLoader />}>
-                <Configurator />
+                <ErrorBoundary>
+                  <Configurator />
+                </ErrorBoundary>
               </Suspense>
             }
           />

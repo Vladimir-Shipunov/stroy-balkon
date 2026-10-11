@@ -10,6 +10,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Logo } from '../../components/Header/Logo';
 import { usePageTitle } from '../../lib/usePageTitle';
 import { AdminTokenGate } from './AdminTokenGate';
+import { SavedConfigPreview } from './SavedConfigPreview';
 import { useAdminAuth } from './useAdminAuth';
 import styles from './OrdersAdmin.module.css';
 
@@ -29,6 +30,8 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
 interface OrderMetadata {
   /** Human-readable rows of the configuration, as the customer saw them. */
   readonly summary?: readonly { readonly label: string; readonly value: string }[];
+  /** The full `VamSelection` at submission time — enough to re-render the picture read-only. */
+  readonly scene2d?: unknown;
 }
 interface Order {
   readonly id: string;
@@ -415,6 +418,13 @@ function OrderDetail({ id, token, onUnauthorized }: { id: string; token: string;
             alt="Превью конфигурации балкона"
             onError={() => setScreenshotFailed(true)}
           />
+        </div>
+      ) : order.metadata?.scene2d ? (
+        // No captured screenshot (older order, or the capture failed) — fall back to
+        // re-rendering the saved configuration itself, read-only.
+        <div className={styles.card}>
+          <span className={styles.cardTitle}>Превью балкона (восстановлено из конфигурации)</span>
+          <SavedConfigPreview scene2d={order.metadata.scene2d} fallback={<p className={styles.comment}>Не удалось восстановить превью — неизвестная или устаревшая конфигурация.</p>} />
         </div>
       ) : null}
     </div>

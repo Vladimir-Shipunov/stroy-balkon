@@ -8,6 +8,7 @@
  */
 import { DOOR_TOP, HOUSE_WINDOW_BOTTOM, edgeOf } from '../planShapes';
 import type { PlanGeom, Pt } from '../planShapes';
+import { glazingUnitCuts, glazingUnitCount } from '../wallGeometry';
 import { PICK } from './types';
 import type { CameraSpec, Face, FaceKind, Vec3 } from './types';
 import { FURNITURE_KIND } from './furniture';
@@ -19,7 +20,6 @@ export const FOV = (78 * Math.PI) / 180;
 
 const GLASS_SET = 46; // glass behind the face of the frame
 const FRAME_B = 64; // width of a window's frame ring (twice that between two windows)
-const UNIT = 900; // ~one sash per 0.9 m of glazing
 export const PARAPET_D = 160; // parapet box: its face is this far into the room
 export const SILL_D = 250; // window sill depth from the frame (90 mm overhang)
 export const SILL_T = 32;
@@ -159,8 +159,8 @@ function unitFace(e: Edge, off: number, s0: number, s1: number, z0: number, z1: 
 /** Frames, handles and glass of one glazed edge: one window unit per ~0.9 m (two stacked when the windows go to the floor). */
 function glazingFaces(e: Edge, zb: number, zt: number, transom: number | null, out: Face[]): void {
   out.push(vface(e, -GLASS_SET, 0, e.len, zb, zt, 'glass', '', PICK.frame, false));
-  const units = Math.max(1, Math.round(e.len / UNIT));
-  const cuts = [0, ...Array.from({ length: units - 1 }, (_, k) => ((k + 1) * e.len) / units), e.len];
+  const units = glazingUnitCount(e.len);
+  const cuts = glazingUnitCuts(e.len);
   const rows: [number, number][] = transom === null ? [[zb, zt]] : [[zb, transom], [transom, zt]];
   for (let k = 0; k < units; k += 1) {
     const u0 = cuts[k]!;

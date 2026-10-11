@@ -213,6 +213,13 @@ export function hotspotTitle(h: AppHotspot): string {
     const n = h.id.match(/^P:w(\d+)/)?.[1] ?? h.id.match(/^\d+/)?.[0];
     return n ? `${HOTSPOT_LABELS.wall} ${n}` : HOTSPOT_LABELS.wall;
   }
+  // A single app view can have several frame hotspots (ids like "7_3", "7_5" — one per window),
+  // which otherwise all fall through to the same flat "Рамы окон" label below. The plan's own
+  // single frame surface uses the id "P:frame" instead, which has no number to show.
+  if (h.kind === 'frame') {
+    const n = h.id.match(/^\d+_\d+$/)?.[0];
+    return n ? `${HOTSPOT_LABELS.frame} ${n}` : HOTSPOT_LABELS.frame;
+  }
   // The plan's dryer / planter hotspots share the app's generic "decor" kind (there is no kind of
   // their own in the catalogue) but, unlike the app's combined decor popup, each is its own single-slot
   // hotspot — so its own slot's label ("Сушилка" / "Цветы") is the real title, not the generic "Декор".

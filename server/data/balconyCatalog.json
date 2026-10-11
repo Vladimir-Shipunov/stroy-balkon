@@ -1,0 +1,836 @@
+{
+  "$note": "Generated subset of the real client-side catalogue (src/pages/Configurator/vamShapes.ts, planShapes.ts, planGeometry.ts, vamCatalog.ts) for server-side validation. MUST be kept in sync by hand until a future refactor shares one catalogue between client and server (out of scope for this task — flagged, not attempted). Hotspot lists per shape+glazing were derived by re-running the real planSurfaces()/bestWallEdge()/glazedChains() logic (copied verbatim from planGeometry.ts / render/scene.ts) against the real PLAN_SHAPES geometry, not invented.",
+  "$todo": [
+    "Per-hotspot option ids and colour indices (k) are NOT transcribed: they live in src/pages/Configurator/vamApp.generated.ts, a ~20000-line generated file out of scope for this pass. validateConfig() therefore only checks hotspot existence + kind, plus known wall/floor finish families (FINISH_FAMILIES below); unknown option ids/colours are accepted permissively rather than invented or rejected. Tightening this requires either transcribing that generated file or a shared-catalogue refactor.",
+    "geometry widthMm/depthMm/ceilingHeightMm/parapetHeightMm are fixed (min === max) because the current catalogue has no adjustable sizing per model — only fixed shapes. If the product ever adds variable sizing this file and validateConfig must be revisited."
+  ],
+  "glazingLabels": {
+    "parapet": "Остекление с парапетом",
+    "floor": "Остекление до пола",
+    "left": "Левосторонний",
+    "right": "Правосторонний"
+  },
+  "typeLabels": {
+    "g": "Г-образный балкон до 5м",
+    "p": "П-образный балкон до 5м",
+    "l5": "Лоджия до 5м",
+    "l8": "Лоджия до 8м",
+    "u": "Серия П-44Т (Утюг)"
+  },
+  "hotspotKindLabels": {
+    "wall": "Стена",
+    "floor": "Пол",
+    "ceiling": "Потолок",
+    "frame": "Рамы окон",
+    "sill": "Подоконник",
+    "plintus": "Плинтус",
+    "light": "Освещение",
+    "cabinet": "Шкаф",
+    "dryer": "Сушилка",
+    "flowers": "Цветы"
+  },
+  "finishFamilies": {
+    "wall": [
+      "laminat",
+      "vagonka",
+      "parket",
+      "mdf",
+      "plitka"
+    ],
+    "floor": [
+      "laminat",
+      "vagonka",
+      "parket",
+      "mdf",
+      "plitka"
+    ]
+  },
+  "models": [
+    {
+      "id": "sapozhok",
+      "label": "Сапожок",
+      "typeId": "p",
+      "geometry": {
+        "widthMm": {
+          "min": 3130,
+          "max": 3130
+        },
+        "depthMm": {
+          "min": 2085,
+          "max": 2085
+        },
+        "ceilingHeightMm": {
+          "min": 2640,
+          "max": 2640
+        },
+        "parapetHeightMm": {
+          "min": 1070,
+          "max": 1070
+        }
+      },
+      "glazings": [
+        {
+          "id": "parapet",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w5",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w6",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        },
+        {
+          "id": "floor",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w6",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lodochka",
+      "label": "Лодочка",
+      "typeId": "g",
+      "geometry": {
+        "widthMm": {
+          "min": 3650,
+          "max": 3650
+        },
+        "depthMm": {
+          "min": 880,
+          "max": 880
+        },
+        "ceilingHeightMm": {
+          "min": 2660,
+          "max": 2660
+        },
+        "parapetHeightMm": {
+          "min": 1100,
+          "max": 1100
+        }
+      },
+      "glazings": [
+        {
+          "id": "parapet",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w5",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w6",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w7",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        },
+        {
+          "id": "floor",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w7",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utyuzhok",
+      "label": "Утюжок",
+      "typeId": "u",
+      "geometry": {
+        "widthMm": {
+          "min": 3000,
+          "max": 3000
+        },
+        "depthMm": {
+          "min": 2000,
+          "max": 2000
+        },
+        "ceilingHeightMm": {
+          "min": 2640,
+          "max": 2640
+        },
+        "parapetHeightMm": {
+          "min": 1050,
+          "max": 1050
+        }
+      },
+      "glazings": [
+        {
+          "id": "left",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w5",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        },
+        {
+          "id": "right",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w5",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loggia",
+      "label": "Обычная лоджия",
+      "typeId": "l5",
+      "geometry": {
+        "widthMm": {
+          "min": 3000,
+          "max": 3000
+        },
+        "depthMm": {
+          "min": 1200,
+          "max": 1200
+        },
+        "ceilingHeightMm": {
+          "min": 2640,
+          "max": 2640
+        },
+        "parapetHeightMm": {
+          "min": 1050,
+          "max": 1050
+        }
+      },
+      "glazings": [
+        {
+          "id": "parapet",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        },
+        {
+          "id": "floor",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "long-loggia",
+      "label": "Удлинённая лоджия",
+      "typeId": "l8",
+      "geometry": {
+        "widthMm": {
+          "min": 6000,
+          "max": 6000
+        },
+        "depthMm": {
+          "min": 1200,
+          "max": 1200
+        },
+        "ceilingHeightMm": {
+          "min": 2600,
+          "max": 2600
+        },
+        "parapetHeightMm": {
+          "min": 1100,
+          "max": 1100
+        }
+      },
+      "glazings": [
+        {
+          "id": "parapet",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        },
+        {
+          "id": "floor",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:cabinet",
+              "kind": "cabinet"
+            },
+            {
+              "id": "P:dryer",
+              "kind": "dryer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "khrushchevka",
+      "label": "Хрущёвка",
+      "typeId": "p",
+      "geometry": {
+        "widthMm": {
+          "min": 2700,
+          "max": 2700
+        },
+        "depthMm": {
+          "min": 800,
+          "max": 800
+        },
+        "ceilingHeightMm": {
+          "min": 2500,
+          "max": 2500
+        },
+        "parapetHeightMm": {
+          "min": 1000,
+          "max": 1000
+        }
+      },
+      "glazings": [
+        {
+          "id": "parapet",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w2",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w3",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
+            }
+          ]
+        },
+        {
+          "id": "floor",
+          "hotspots": [
+            {
+              "id": "P:w1",
+              "kind": "wall"
+            },
+            {
+              "id": "P:floor",
+              "kind": "floor"
+            },
+            {
+              "id": "P:ceiling",
+              "kind": "ceiling"
+            },
+            {
+              "id": "P:frame",
+              "kind": "frame"
+            },
+            {
+              "id": "P:light",
+              "kind": "light"
+            },
+            {
+              "id": "P:plintus",
+              "kind": "plintus"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

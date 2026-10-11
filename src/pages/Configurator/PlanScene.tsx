@@ -7,6 +7,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { PlanView } from './usePlanViews';
 import type { SurfaceKind } from './planGeometry';
+import { Spinner } from './Spinner';
+import { useZoomPan } from './useZoomPan';
 import type { VamSceneHandle } from './VamScene';
 import styles from './VamScene.module.css';
 import wizard from './Wizard.module.css';
@@ -18,6 +20,8 @@ interface PlanSceneProps {
   readonly activeId: string | null;
   readonly onSpot: (id: string) => void;
   readonly title: (id: string) => string;
+  /** Disambiguates this view's zoom-control labels when more than one view is on screen at once. */
+  readonly viewLabel?: string;
 }
 
 const DROP = <path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3z" />;
@@ -51,8 +55,10 @@ const ICON: Readonly<Record<SurfaceKind, JSX.Element>> = {
  * A drawn view of the balcony room.
  * @returns The scene element.
  */
-export const PlanScene = forwardRef<VamSceneHandle, PlanSceneProps>(function PlanScene({ view, chosen, activeId, onSpot, title }, ref) {
+export const PlanScene = forwardRef<VamSceneHandle, PlanSceneProps>(function PlanScene({ view, chosen, activeId, onSpot, title, viewLabel }, ref) {
+  const suffix = viewLabel ? ` — ${viewLabel}` : '';
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const zoomPan = useZoomPan();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -81,24 +87,42 @@ export const PlanScene = forwardRef<VamSceneHandle, PlanSceneProps>(function Pla
   );
 
   return (
-    <div className={styles.canvas}>
-      <canvas ref={canvasRef} width={800} height={800} className={styles.layer} />
-      {view?.spots.map(({ surface, x, y }) => (
-        <button
-          key={surface.id}
-          type="button"
-          className={`${wizard.hotspot} ${chosen.has(surface.id) ? wizard.hotspotDone : ''} ${activeId === surface.id ? wizard.hotspotActive : ''}`}
-          style={{ left: `${x}%`, top: `${y}%` }}
-          onClick={() => onSpot(surface.id)}
-          aria-label={title(surface.id)}
-          title={title(surface.id)}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            {ICON[surface.kind]}
-          </svg>
-          {surface.kind === 'wall' ? <span className={wizard.badge}>{surface.id.replace('P:w', '')}</span> : null}
+    <div ref={zoomPan.containerRef} className={styles.canvas} {...zoomPan.containerHandlers}>
+      {!view ? (
+        <div className={styles.loading}>
+          <Spinner size={32} label="Рисуем планировку…" />
+        </div>
+      ) : null}
+      <div className={styles.zoomWrap} style={zoomPan.style}>
+        <canvas ref={canvasRef} width={800} height={800} className={styles.layer} />
+        {view?.spots.map(({ surface, x, y }) => (
+          <button
+            key={surface.id}
+            type="button"
+            className={`${wizard.hotspot} ${chosen.has(surface.id) ? wizard.hotspotDone : ''} ${activeId === surface.id ? wizard.hotspotActive : ''}`}
+            style={{ left: `${x}%`, top: `${y}%` }}
+            onClick={() => onSpot(surface.id)}
+            aria-label={title(surface.id)}
+            title={title(surface.id)}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              {ICON[surface.kind]}
+            </svg>
+            {surface.kind === 'wall' ? <span className={wizard.badge}>{surface.id.replace('P:w', '')}</span> : null}
+          </button>
+        ))}
+      </div>
+      <div className={styles.zoomControls}>
+        <button type="button" className={styles.zoomBtn} onClick={zoomPan.zoomIn} disabled={!zoomPan.canZoomIn} aria-label={`Увеличить${suffix}`}>
+          +
         </button>
-      ))}
+        <button type="button" className={styles.zoomBtn} onClick={zoomPan.zoomOut} disabled={!zoomPan.canZoomOut} aria-label={`Уменьшить${suffix}`}>
+          –
+        </button>
+        <button type="button" className={styles.zoomBtn} onClick={zoomPan.reset} disabled={!zoomPan.isZoomed} aria-label={`Сбросить масштаб${suffix}`}>
+          ⟲
+        </button>
+      </div>
     </div>
   );
 });

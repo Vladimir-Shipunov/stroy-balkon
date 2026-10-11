@@ -5,7 +5,7 @@
  * a sticky bottom bar with the measurement CTA. Renders on its own route without
  * the marketing shell.
  */
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCallModal } from '../../components/CallModal/CallModalProvider';
 import { ArrowRight, DownloadIcon, PhoneIcon } from '../../components/icons';
@@ -13,8 +13,12 @@ import { Logo } from '../../components/Header/Logo';
 import { COMPANY } from '../../data/site';
 import { usePageTitle } from '../../lib/usePageTitle';
 import { useConfiguratorState } from './ConfiguratorContext';
+import { ErrorBoundary } from './ErrorBoundary';
 import { FinishStep } from './FinishStep';
 import { SetupStep } from './SetupStep';
+import { disposeWorkers } from './render/client';
+import { loadConfigFromUrl } from './useSavedConfiguration';
+import type { ConfigState } from './useConfigurator';
 import type { VamSceneHandle } from './VamScene';
 import { vamGlazingLabel, vamMaterialLabel, vamShapeLabel, vamSummary } from './vamCatalog';
 import styles from './Configurator.module.css';
@@ -40,6 +44,27 @@ export function Configurator(): JSX.Element {
   );
   const leftRef = useRef<VamSceneHandle>(null);
   const rightRef = useRef<VamSceneHandle>(null);
+  const didTryLoadSaved = useRef(false);
+
+  // Restore a configuration from a saved-project link (`?cfgId=&cfgToken=`,
+  // see SaveProjectButton.tsx in FinishStep) once, on first mount.
+  useEffect(() => {
+    if (didTryLoadSaved.current) return;
+    didTryLoadSaved.current = true;
+    loadConfigFromUrl().then((loaded) => {
+      if (!loaded) return;
+      // `loaded.config` is a server-round-tripped blob (opaque to useSavedConfiguration) —
+      // same trust level as the localStorage blob `init()` merges defensively in
+      // useConfigurator.ts's reducer, which is what actually validates/normalizes it.
+      dispatch({ type: 'LOAD_CONFIG', payload: loaded.config as Partial<ConfigState> });
+    });
+  }, [dispatch]);
+
+  // Perf audit (docs/PERF_AUDIT_15-20.md #1): release the render workers (and the
+  // room/texture/light caches they hold) when leaving the configurator page
+  // entirely — not on every setup/finish step toggle, which would thrash them for
+  // no reason (usePlanViews.ts mounts/unmounts with FinishStep, not with this page).
+  useEffect(() => disposeWorkers, []);
 
   /** Both views side by side as one PNG data URL (null before they have drawn). */
   function captureImage(): string | null {
@@ -120,6 +145,7 @@ export function Configurator(): JSX.Element {
         </a>
       </header>
 
+      <ErrorBoundary>
       {step === 'setup' ? (
         <div className={wizard.scroll}>
           <SetupStep state={state} dispatch={dispatch} onNext={() => setStep('finish')} />
@@ -170,6 +196,7 @@ export function Configurator(): JSX.Element {
           </footer>
         </>
       )}
+      </ErrorBoundary>
     </div>
   );
 }

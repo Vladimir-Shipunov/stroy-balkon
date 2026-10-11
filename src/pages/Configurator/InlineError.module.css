@@ -1,0 +1,53 @@
+/* Reusable inline error banner — see InlineError.tsx. */
+.wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #f3c6c2;
+  background: #fdf1ef;
+  color: #9a2f22;
+}
+
+.icon {
+  flex: none;
+  margin-top: 1px;
+  color: #c6392a;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.message {
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.retry {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 6px 13px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid #e2a39b;
+  background: #fff;
+  color: #9a2f22;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: all var(--dur-fast);
+}
+
+.retry:hover {
+  background: #f3c6c2;
+}
+
+.retry:focus-visible,
+.icon:focus-visible {
+  outline: 2px solid #9a2f22;
+  outline-offset: 2px;
+}

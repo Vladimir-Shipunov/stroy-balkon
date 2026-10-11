@@ -141,5 +141,10 @@ export interface CameraSpec {
   readonly fov: number;
 }
 
-/** Ids written to the id buffer for the non-wall surfaces (walls use their 1-based edge number). */
+/**
+ * Ids written to the id buffer for the non-wall surfaces (walls use their 1-based edge number).
+ * `floor` (40) is the floor of this reserved range: a shape's edge count must stay below it, or a
+ * wall's `edgeIndex + 1` pick id would collide with a surface/furniture id here. `planSurfaces` in
+ * planGeometry.ts asserts that invariant at runtime.
+ */
 export const PICK = { floor: 40, ceiling: 41, frame: 42, light: 43, sill: 44, plinth: 45, cabinet: 46, dryer: 47, flowers: 48 } as const;

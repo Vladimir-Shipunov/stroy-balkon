@@ -105,12 +105,79 @@ class BalconyDatabase {
             )
         `);
 
-        // �������
+        // Admin-editable price list (so prices can change without a code deploy).
+        // scope: 'material' | 'profile' | 'base' | 'option'; ref_key identifies the
+        // priced thing within that scope (a model id, a finish family id, etc).
+        // is_estimate flags rows that are placeholder/test prices, not real company
+        // pricing — see server/pricing/priceCalculator.js and the seed below.
+        this.db.exec(`
+            CREATE TABLE IF NOT EXISTS pricing_rules (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                scope TEXT NOT NULL,
+                ref_key TEXT NOT NULL,
+                unit_price_cents INTEGER NOT NULL,
+                currency TEXT NOT NULL DEFAULT 'RUB',
+                is_estimate INTEGER NOT NULL DEFAULT 0,
+                updated_at TEXT NOT NULL
+            )
+        `);
+
+        // Which options are compatible with which balcony model/sections.
+        // payload is a JSON blob (shape documented in server/validators/configValidator.js).
+        this.db.exec(`
+            CREATE TABLE IF NOT EXISTS compatibility_rules (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                balcony_model_id TEXT NOT NULL,
+                rule_type TEXT NOT NULL,
+                payload TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        `);
+
+        // A saved configurator draft — NOT an order (see orders table above). No login
+        // system exists, so ownership is proven by two opaque secrets handed back to
+        // the client on create: `share_token` (read-only — safe to put in a shareable
+        // URL) and `edit_token` (required for PUT; kept private client-side, e.g.
+        // localStorage, sent via header rather than query string). Earlier revisions
+        // of this file also had a near-duplicate `configurations` table with a single
+        // token doing both jobs (the same "share link grants edit rights" flaw a
+        // security review caught here) — removed rather than kept as a second,
+        // divergent source of truth for the same concept (план.txt §4).
+        this.db.exec(`
+            CREATE TABLE IF NOT EXISTS projects (
+                id TEXT PRIMARY KEY,
+                config_json TEXT NOT NULL,
+                config_version INTEGER NOT NULL DEFAULT 1,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                access_token TEXT UNIQUE NOT NULL,
+                edit_token TEXT UNIQUE
+            )
+        `);
+        // `CREATE TABLE IF NOT EXISTS` is a no-op against a DB file that already has
+        // a `projects` table from before `edit_token` existed — it does NOT add the
+        // new column. Add it explicitly first, then backfill, so this doesn't crash
+        // on boot against an already-deployed database.
+        const hasEditToken = this.db
+            .prepare("SELECT 1 FROM pragma_table_info('projects') WHERE name = 'edit_token'")
+            .get();
+        if (!hasEditToken) {
+            this.db.exec('ALTER TABLE projects ADD COLUMN edit_token TEXT');
+        }
+        // Backfill rows created before `edit_token` existed: fall back to
+        // `access_token` as the edit token (both-in-one, the old behaviour) rather
+        // than leaving the column NULL and locking old drafts out of editing.
+        this.db.exec(`UPDATE projects SET edit_token = access_token WHERE edit_token IS NULL`);
+
         this.db.exec(`
             CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
             CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(createdAt);
             CREATE INDEX IF NOT EXISTS idx_orders_phone ON orders(clientPhone);
             CREATE INDEX IF NOT EXISTS idx_materials_category ON materials(category);
+            CREATE INDEX IF NOT EXISTS idx_pricing_rules_scope_ref ON pricing_rules(scope, ref_key);
+            CREATE INDEX IF NOT EXISTS idx_compatibility_rules_model ON compatibility_rules(balcony_model_id);
+            CREATE INDEX IF NOT EXISTS idx_projects_access_token ON projects(access_token);
+            CREATE INDEX IF NOT EXISTS idx_projects_edit_token ON projects(edit_token);
         `);
     }
 
@@ -119,524 +186,96 @@ class BalconyDatabase {
      * @private
      */
     _seedInitialData() {
-        const count = this.db.prepare('SELECT COUNT(*) as count FROM materials').get();
-        const brokenTextPattern = '%�%';
-        const corrupted = this.db.prepare(`
-            SELECT COUNT(*) as count
-            FROM materials
-            WHERE name LIKE ? OR unit LIKE ? OR description LIKE ?
-        `).get(brokenTextPattern, brokenTextPattern, brokenTextPattern);
-        const materials = this._getInitialMaterials();
-        
-        if (corrupted.count > 0) {
-            this.db.prepare(`
+        // The old seed path here inserted a hardcoded catalog with mojibake
+        // (broken Cyrillic encoding) in name/unit/description, and a now-removed
+        // `_loadFrontendMaterialCatalog()` fallback pointed at a `public/js/materials.js`
+        // file that doesn't exist in this repo. That seed is gone — see
+        // `_pruneCorruptedMaterials()` below, which only cleans up any such rows left
+        // over from a previous run. The `materials` table itself stays: it's still
+        // read by `server/routes/catalog.js` (GET /api/materials) and used as a
+        // pricing fallback in `server/pricing/priceCalculator.js`. Real catalog data
+        // should be added through `addMaterial()` (admin tooling) going forward.
+        this._pruneCorruptedMaterials();
+        this._seedPricingRules();
+    }
+
+    /**
+     * One-time cleanup: delete any previously-seeded mojibake rows from the
+     * `materials` table. No-op once they're gone. Does NOT reseed anything.
+     * @private
+     */
+    _pruneCorruptedMaterials() {
+        try {
+            const brokenTextPattern = '%�%';
+            const result = this.db.prepare(`
                 DELETE FROM materials
                 WHERE name LIKE ? OR unit LIKE ? OR description LIKE ?
             `).run(brokenTextPattern, brokenTextPattern, brokenTextPattern);
-        }
-
-        if (count.count === 0 || corrupted.count > 0) {
-            const upsert = this.db.prepare(`
-                INSERT INTO materials (id, category, name, price, unit, description, color, texture, popular, createdAt, updatedAt)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(id) DO UPDATE SET
-                    category = excluded.category,
-                    name = excluded.name,
-                    price = excluded.price,
-                    unit = excluded.unit,
-                    description = excluded.description,
-                    color = excluded.color,
-                    texture = excluded.texture,
-                    popular = excluded.popular,
-                    updatedAt = excluded.updatedAt
-            `);
-
-            const upsertMany = this.db.transaction((items) => {
-                for (const item of items) {
-                    upsert.run(...item);
-                }
-            });
-
-            upsertMany(materials);
-            logger.info('Materials catalog seeded', { count: materials.length });
-        }
-    }
-
-    _loadFrontendMaterialCatalog(now) {
-        const catalogPath = path.join(process.cwd(), 'public', 'js', 'materials.js');
-        if (!fs.existsSync(catalogPath)) return [];
-
-        const previousWindow = global.window;
-        try {
-            global.window = {};
-            delete require.cache[require.resolve(catalogPath)];
-            const catalog = require(catalogPath);
-            const materialsDatabase = catalog.MaterialsDatabase || global.window.MaterialsDatabase;
-            if (!materialsDatabase || typeof materialsDatabase !== 'object') return [];
-
-            return Object.values(materialsDatabase)
-                .flat()
-                .filter((material) => material && material.id && material.category)
-                .map((material) => [
-                    material.id,
-                    material.category,
-                    material.name || material.id,
-                    Number(material.price) || 0,
-                    material.unit || 'шт',
-                    material.description || '',
-                    material.color || '#FFFFFF',
-                    material.texture || '',
-                    material.popular ? 1 : 0,
-                    now,
-                    now
-                ]);
-        } catch (error) {
-            logger.warn('Frontend material catalog load failed', { error: error.message });
-            return [];
-        } finally {
-            if (previousWindow === undefined) {
-                delete global.window;
-            } else {
-                global.window = previousWindow;
+            if (result.changes > 0) {
+                logger.info('Removed corrupted legacy materials rows', { count: result.changes });
             }
+        } catch (error) {
+            logger.error('Prune corrupted materials error', error);
         }
     }
 
     /**
-     * �������� ��������� ���������
+     * Minimal placeholder price list so POST /api/pricing/calculate returns something
+     * testable out of the box. These are TEST/PLACEHOLDER prices (is_estimate = 1) —
+     * NOT real company pricing. An admin replaces them later via the pricing_rules
+     * table without a code deploy; nothing in this codebase should present these
+     * numbers to a customer as final.
      * @private
-     * @returns {Array} ������ ���������� � �������:
-     * [id, category, name, price, unit, description, color, texture, popular, createdAt, updatedAt]
      */
-    _getInitialMaterials() {
+    _seedPricingRules() {
+        const count = this.db.prepare('SELECT COUNT(*) as count FROM pricing_rules').get();
+        if (count.count > 0) return;
+
         const now = new Date().toISOString();
-        const frontendMaterials = this._loadFrontendMaterialCatalog(now);
-        if (frontendMaterials.length > 0) {
-            return frontendMaterials;
-        }
+        // Balcony model base shells (scope 'base') — round placeholder figures, RUB.
+        const baseModels = [
+            ['sapozhok', 180000],
+            ['lodochka', 150000],
+            ['utyuzhok', 160000],
+            ['loggia', 120000],
+            ['long-loggia', 220000],
+            ['khrushchevka', 100000]
+        ];
+        // Wall/floor finish families (scope 'material') the plan-mode picks actually use
+        // (src/pages/Configurator/vamCatalog.ts TEXTURED set), priced per "unit" (one
+        // hotspot) until real area-based pricing is modeled — see priceCalculator.js.
+        const finishFamilies = [
+            ['laminat', 25000],
+            ['vagonka', 18000],
+            ['parket', 32000],
+            ['mdf', 20000],
+            ['plitka', 28000]
+        ];
 
-        const materials = [];
+        const insert = this.db.prepare(`
+            INSERT INTO pricing_rules (scope, ref_key, unit_price_cents, currency, is_estimate, updated_at)
+            VALUES (?, ?, ?, ?, 1, ?)
+        `);
 
-        // ============================================
-        // �������� ���������
-        // ============================================
-        materials.push([
-            'vagonka-premium',
-            'walls',
-            '������� �������',
-            850,
-            '�?',
-            '����������� ���������� ������� ������� �����',
-            '#D4A574',
-            'wood-light',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'vagonka-standard',
-            'walls',
-            '������� ��������',
-            550,
-            '�?',
-            '���������� ������� ������������ ��������',
-            '#C4956A',
-            'wood-medium',
-            0,
-            now,
-            now
-        ]);
-        materials.push([
-            'laminat-wall',
-            'walls',
-            '�������� �������',
-            950,
-            '�?',
-            '������������ ������� ��� ����',
-            '#8B7355',
-            'laminat',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'pvh-panels',
-            'walls',
-            '��� ������',
-            450,
-            '�?',
-            '����������� ������, ������������',
-            '#F5F5F5',
-            'pvh',
-            0,
-            now,
-            now
-        ]);
-        materials.push([
-            'mdf-panels',
-            'walls',
-            '��� ������',
-            750,
-            '�?',
-            '��� ������ � �������� ���������',
-            '#A0826D',
-            'mdf',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'parquet-wall',
-            'walls',
-            '�������� ������',
-            1450,
-            '�?',
-            '����������� ������ ��� ����',
-            '#8B6F47',
-            'parquet',
-            0,
-            now,
-            now
-        ]);
-        materials.push([
-            'brick-decor',
-            'walls',
-            '������������ ������',
-            1200,
-            '�?',
-            '�������� ��������� ������',
-            '#A05244',
-            'brick',
-            1,
-            now,
-            now
+        const insertMany = this.db.transaction((rows) => {
+            for (const row of rows) insert.run(...row);
+        });
+
+        insertMany([
+            ...baseModels.map(([refKey, rub]) => ['base', refKey, rub * 100, 'RUB', now]),
+            ...finishFamilies.map(([refKey, rub]) => ['material', refKey, rub * 100, 'RUB', now])
         ]);
 
-        // ============================================
-        // ���������� ���������
-        // ============================================
-        materials.push([
-            'stretch-ceiling-glossy',
-            'ceiling',
-            '�������� ���������',
-            1200,
-            '�?',
-            '��������� �������� �������',
-            '#FFFFFF',
-            'stretch-glossy',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'stretch-ceiling-matte',
-            'ceiling',
-            '�������� �������',
-            1100,
-            '�?',
-            '������� �������� �������',
-            '#F5F5F5',
-            'stretch-matte',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'pvh-ceiling',
-            'ceiling',
-            '��� �������',
-            550,
-            '�?',
-            '����������� ��������� �������',
-            '#FFFFFF',
-            'pvh-ceiling',
-            0,
-            now,
-            now
-        ]);
-        materials.push([
-            'vagonka-ceiling',
-            'ceiling',
-            '������� �������',
-            650,
-            '�?',
-            '���������� ������� ��� �������',
-            '#D4A574',
-            'wood-light',
-            1,
-            now,
-            now
-        ]);
-
-        // ============================================
-        // ��������� ���������
-        // ============================================
-        materials.push([
-            'laminate-floor-33',
-            'floor',
-            '������� 33 �����',
-            1200,
-            '�?',
-            '������������� ������� 33 ������',
-            '#8B7355',
-            'laminat',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'laminate-floor-32',
-            'floor',
-            '������� 32 �����',
-            950,
-            '�?',
-            '������� 32 ������ ��� ����',
-            '#9C846B',
-            'laminat',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'linoleum-commercial',
-            'floor',
-            '�������� ������������',
-            650,
-            '�?',
-            '������������� ������������ ��������',
-            '#A0A0A0',
-            'linoleum',
-            0,
-            now,
-            now
-        ]);
-        materials.push([
-            'tile-ceramic',
-            'floor',
-            '������ ������������',
-            1400,
-            '�?',
-            '������������ ��������� ������',
-            '#C0C0C0',
-            'tile',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'parquet-floor',
-            'floor',
-            '��������� �����',
-            2200,
-            '�?',
-            '����������� ��������� �����',
-            '#8B6F47',
-            'parquet',
-            1,
-            now,
-            now
-        ]);
-
-        // ============================================
-        // ����
-        // ============================================
-        materials.push([
-            'window-standard-2chamber',
-            'windows',
-            '���� �������� (2-���)',
-            11500,
-            '��',
-            '������������ �����������, ������� 60��',
-            '#FFFFFF',
-            'window',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'window-premium-2chamber',
-            'windows',
-            '���� ������� (2-���)',
-            16500,
-            '��',
-            '������������, ������� 70��, �����������������',
-            '#F5F5F5',
-            'window-premium',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'window-panoramic',
-            'windows',
-            '���������� ����������',
-            35000,
-            '�.�.',
-            '���������� ���������� �� ���� �� �������',
-            '#E8E8E8',
-            'panoramic',
-            1,
-            now,
-            now
-        ]);
-
-        // ============================================
-        // ����������� � ������
-        // ============================================
-        materials.push([
-            'windowsill-pvc-standard',
-            'windowsill',
-            '���������� ��� ��������',
-            1500,
-            '�.�.',
-            '��� ���������� 400��',
-            '#FFFFFF',
-            'pvc',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'sill-external',
-            'windowsill',
-            '����� �������',
-            900,
-            '�.�.',
-            '������������� ������� �����',
-            '#C0C0C0',
-            'metal',
-            1,
-            now,
-            now
-        ]);
-
-        // ============================================
-        // ���������
-        // ============================================
-        materials.push([
-            'led-spot-5w',
-            'lighting',
-            'LED �������� 5W',
-            450,
-            '��',
-            '������������ �������� ���������� 5W',
-            '#FFFFFF',
-            'led-spot',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'led-spot-7w',
-            'lighting',
-            'LED �������� 7W',
-            550,
-            '��',
-            '������������ �������� ���������� 7W',
-            '#FFFFFF',
-            'led-spot',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'led-panel-36w',
-            'lighting',
-            'LED ������ 36W',
-            1800,
-            '��',
-            '������������ ������ 600x600��',
-            '#FFFFFF',
-            'led-panel',
-            0,
-            now,
-            now
-        ]);
-        materials.push([
-            'chandelier-modern',
-            'lighting',
-            '������ �����������',
-            4500,
-            '��',
-            '���������� ������ � ����������� �����',
-            '#F0F0F0',
-            'chandelier',
-            1,
-            now,
-            now
-        ]);
-
-        // ============================================
-        // ������
-        // ============================================
-        materials.push([
-            'cabinet-2door-low',
-            'furniture',
-            '���� 2 ����� ������',
-            8500,
-            '��',
-            '��������� ���� 2 �����, ������ 100��',
-            '#8B7355',
-            'wood',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'cabinet-2door-tall',
-            'furniture',
-            '���� 2 ����� �������',
-            14500,
-            '��',
-            '��������� ���� 2 �����, ������ 200��',
-            '#8B7355',
-            'wood',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'cabinet-corner',
-            'furniture',
-            '���� �������',
-            16500,
-            '��',
-            '������� ���� ��� �������',
-            '#8B7355',
-            'wood',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'table-folding',
-            'furniture',
-            '���� ��������',
-            4500,
-            '��',
-            '�������� ���� ��� �������',
-            '#C4A574',
-            'wood',
-            1,
-            now,
-            now
-        ]);
-        materials.push([
-            'chair-balcony',
-            'furniture',
-            '���� ���������',
-            2500,
-            '��',
-            '���� ��� �������, ��������',
-            '#A0A0A0',
-            'metal',
-            1,
-            now,
-            now
-        ]);
-
-        return materials;
+        logger.info('Pricing rules seeded (placeholder/estimate prices)', {
+            count: baseModels.length + finishFamilies.length
+        });
     }
+
+    // _loadFrontendMaterialCatalog() and _getInitialMaterials() used to live here:
+    // a hardcoded seed list with mojibake (broken Cyrillic encoding) strings and a
+    // fallback that `require()`d a `public/js/materials.js` file that doesn't exist
+    // in this repo. Neither is referenced anymore (see `_seedInitialData()` above) —
+    // removed as dead code rather than left to silently no-op.
 
     // ============================================
     // ������ ��� �������
@@ -931,6 +570,197 @@ class BalconyDatabase {
 
         } catch (error) {
             logger.error('Delete material error', error);
+            return false;
+        }
+    }
+
+    // ============================================
+    // Pricing rules (admin-editable price list)
+    // ============================================
+
+    /**
+     * All pricing rules, optionally filtered by scope.
+     * @param {string} [scope]
+     * @returns {Array}
+     */
+    getPricingRules(scope) {
+        try {
+            if (scope) {
+                return this.db.prepare('SELECT * FROM pricing_rules WHERE scope = ? ORDER BY ref_key').all(scope);
+            }
+            return this.db.prepare('SELECT * FROM pricing_rules ORDER BY scope, ref_key').all();
+        } catch (error) {
+            logger.error('Get pricing rules error', error);
+            return [];
+        }
+    }
+
+    /**
+     * Latest pricing rule for one (scope, ref_key) pair.
+     * @param {string} scope
+     * @param {string} refKey
+     * @returns {Object|null}
+     */
+    getPricingRule(scope, refKey) {
+        try {
+            return this.db.prepare(
+                'SELECT * FROM pricing_rules WHERE scope = ? AND ref_key = ? ORDER BY updated_at DESC LIMIT 1'
+            ).get(scope, refKey) || null;
+        } catch (error) {
+            logger.error('Get pricing rule error', error);
+            return null;
+        }
+    }
+
+    /**
+     * Create or update (by scope + ref_key) a pricing rule. Admin-only in practice.
+     * @param {Object} rule - { scope, refKey, unitPriceCents, currency, isEstimate }
+     * @returns {Object|null}
+     */
+    upsertPricingRule(rule) {
+        try {
+            const now = new Date().toISOString();
+            const existing = this.db.prepare(
+                'SELECT id FROM pricing_rules WHERE scope = ? AND ref_key = ?'
+            ).get(rule.scope, rule.refKey);
+
+            if (existing) {
+                this.db.prepare(`
+                    UPDATE pricing_rules
+                    SET unit_price_cents = ?, currency = ?, is_estimate = ?, updated_at = ?
+                    WHERE id = ?
+                `).run(
+                    Math.round(rule.unitPriceCents),
+                    rule.currency || 'RUB',
+                    rule.isEstimate ? 1 : 0,
+                    now,
+                    existing.id
+                );
+                return this.getPricingRule(rule.scope, rule.refKey);
+            }
+
+            this.db.prepare(`
+                INSERT INTO pricing_rules (scope, ref_key, unit_price_cents, currency, is_estimate, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `).run(
+                rule.scope,
+                rule.refKey,
+                Math.round(rule.unitPriceCents),
+                rule.currency || 'RUB',
+                rule.isEstimate ? 1 : 0,
+                now
+            );
+            return this.getPricingRule(rule.scope, rule.refKey);
+        } catch (error) {
+            logger.error('Upsert pricing rule error', error);
+            return null;
+        }
+    }
+
+    // ============================================
+    // Compatibility rules (which options fit which model)
+    // ============================================
+
+    /**
+     * @param {string} balconyModelId
+     * @returns {Array}
+     */
+    getCompatibilityRules(balconyModelId) {
+        try {
+            return this.db.prepare(
+                'SELECT * FROM compatibility_rules WHERE balcony_model_id = ? ORDER BY updated_at DESC'
+            ).all(balconyModelId);
+        } catch (error) {
+            logger.error('Get compatibility rules error', error);
+            return [];
+        }
+    }
+
+    /**
+     * @param {Object} rule - { balconyModelId, ruleType, payload }
+     * @returns {Object|null}
+     */
+    addCompatibilityRule(rule) {
+        try {
+            const now = new Date().toISOString();
+            const insert = this.db.prepare(`
+                INSERT INTO compatibility_rules (balcony_model_id, rule_type, payload, updated_at)
+                VALUES (?, ?, ?, ?)
+            `);
+            const result = insert.run(
+                rule.balconyModelId,
+                rule.ruleType,
+                JSON.stringify(rule.payload ?? {}),
+                now
+            );
+            return { id: result.lastInsertRowid, ...rule, updatedAt: now };
+        } catch (error) {
+            logger.error('Add compatibility rule error', error);
+            return null;
+        }
+    }
+
+    // ============================================
+    // Projects (saved configurator drafts — not orders)
+    // ============================================
+
+    /**
+     * @param {Object} project - { id, configJson, configVersion, accessToken, editToken }
+     * @returns {Object|null}
+     */
+    saveProject(project) {
+        try {
+            const now = new Date().toISOString();
+            const insert = this.db.prepare(`
+                INSERT INTO projects (id, config_json, config_version, created_at, updated_at, access_token, edit_token)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `);
+            insert.run(
+                project.id,
+                project.configJson,
+                project.configVersion || 1,
+                now,
+                now,
+                project.accessToken,
+                project.editToken
+            );
+            return { id: project.id, createdAt: now, updatedAt: now };
+        } catch (error) {
+            logger.error('Save project error', error);
+            return null;
+        }
+    }
+
+    /**
+     * @param {string} id
+     * @returns {Object|null} raw row (config_json still a string)
+     */
+    getProjectById(id) {
+        try {
+            return this.db.prepare('SELECT * FROM projects WHERE id = ?').get(id) || null;
+        } catch (error) {
+            logger.error('Get project error', error);
+            return null;
+        }
+    }
+
+    /**
+     * @param {string} id
+     * @param {string} configJson
+     * @returns {boolean}
+     */
+    updateProject(id, configJson) {
+        try {
+            const row = this.db.prepare('SELECT config_version FROM projects WHERE id = ?').get(id);
+            if (!row) return false;
+            const result = this.db.prepare(`
+                UPDATE projects
+                SET config_json = ?, config_version = ?, updated_at = ?
+                WHERE id = ?
+            `).run(configJson, (row.config_version || 1) + 1, new Date().toISOString(), id);
+            return result.changes > 0;
+        } catch (error) {
+            logger.error('Update project error', error);
             return false;
         }
     }

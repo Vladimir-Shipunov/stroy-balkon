@@ -67,7 +67,8 @@ export function Home(): JSX.Element {
                 width={800}
                 height={800}
                 alt="Угловой балкон, отделанный вагонкой, с подвесными светильниками"
-                fetchPriority="high"
+                // @ts-expect-error fetchpriority is valid HTML but missing from the installed @types/react@18.3.31 JSX typings
+                fetchpriority="high"
                 decoding="async"
               />
             </div>

@@ -34,6 +34,28 @@ const MIN_AREA = 0.004;
 /** A surface seen in only a sliver still gets its target in the view that shows it best. */
 const MIN_BEST = 0.0004;
 
+/**
+ * Perf audit (docs/PERF_AUDIT_15-20.md #8): the raster target is `size*ss` square
+ * regardless of how wide the canvas is actually displayed — on a narrow phone the
+ * two views are squeezed to well under half of `renderView`'s 800px default, so the
+ * full 1600×1600 (800 × ss=2) supersampled raster is wasted work. Scale both down on
+ * narrow viewports; still oversampled relative to the smaller CSS size, just not by
+ * as much. Read at call time (not reactively) so a resize is picked up on the next
+ * render without needing an extra listener/effect.
+ */
+function pickRenderSize(): { size: number; ss: number } {
+  if (typeof window === 'undefined') return { size: 800, ss: 2 };
+  const w = window.innerWidth;
+  // `ss` must stay an integer — render/raster.ts's `resolve()` indexes the supersampled
+  // buffer with `y * ss`/`x * ss` (and `ss >> 1`) without flooring; a fractional ss (e.g.
+  // 1.5) produces non-integer typed-array indices, which read back as `undefined`/NaN and
+  // render as a corrupted/noisy image. Confirmed live on a 390px viewport. Only `size` is
+  // varied here; `ss` stays one of the values already exercised everywhere else (2).
+  if (w <= 480) return { size: 420, ss: 2 };
+  if (w <= 768) return { size: 560, ss: 2 };
+  return { size: 800, ss: 2 };
+}
+
 /** Decide which view shows which surface's target and where. */
 function layoutSpots(geom: PlanGeom, outs: readonly [{ ids: Uint8Array; w: number; h: number; lamp: readonly [number, number] | null }, { ids: Uint8Array; w: number; h: number; lamp: readonly [number, number] | null }]): [PlanSpot[], PlanSpot[]] {
   const surfaces = planSurfaces(geom).filter((s) => s.kind !== 'light');
@@ -104,9 +126,10 @@ export function usePlanViews(key: string, geom: PlanGeom, paint: RenderPaint, en
     setBusy(true);
     const snap = latest.current;
     const cams = roomCameras(snap.geom);
+    const { size, ss } = pickRenderSize();
     Promise.all([
-      renderView({ key: snap.key, geom: snap.geom, cam: cams[0], paint: snap.paint }, 0),
-      renderView({ key: snap.key, geom: snap.geom, cam: cams[1], paint: snap.paint }, 1),
+      renderView({ key: snap.key, geom: snap.geom, cam: cams[0], paint: snap.paint, size, ss }, 0),
+      renderView({ key: snap.key, geom: snap.geom, cam: cams[1], paint: snap.paint, size, ss }, 1),
     ])
       .then(([a, b]) => {
         if (!mounted.current) return;

@@ -5,10 +5,11 @@
  * block in the house wall and CAD dimension lines with arrows. The detailed
  * version (side panel) also numbers the walls like the tap targets ("Стена 3").
  */
-import { useId } from 'react';
+import { forwardRef, useId } from 'react';
 import { PLAN_SHAPES, edgeOf, planFor } from './planShapes';
 import type { EdgeKind, PlanDim, PlanGeom, Pt } from './planShapes';
 import type { VamShapeDef } from './vamShapes';
+import { glazingUnitCuts } from './wallGeometry';
 
 interface ShapePlanProps {
   readonly shape: VamShapeDef;
@@ -183,7 +184,10 @@ function placeNumbers(g: PlanGeom, r: number): V[] {
  * The plan drawing of a shape.
  * @returns The SVG element.
  */
-export function ShapePlan({ shape, glazing, className, detailed = false }: ShapePlanProps): JSX.Element | null {
+export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function ShapePlan(
+  { shape, glazing, className, detailed = false },
+  ref,
+): JSX.Element | null {
   const hatchId = `hatch-${useId().replace(/:/g, '')}`;
   const g = (glazing ? planFor(shape.id, glazing) : undefined) ?? PLAN_SHAPES[shape.id];
   if (!g) return null;
@@ -243,6 +247,7 @@ export function ShapePlan({ shape, glazing, className, detailed = false }: Shape
 
   return (
     <svg
+      ref={ref}
       className={className}
       viewBox={`${(minX - pad).toFixed(0)} ${(-maxY - pad).toFixed(0)} ${(maxX - minX + pad * 2).toFixed(0)} ${(maxY - minY + pad * 2).toFixed(0)}`}
       preserveAspectRatio="xMidYMid meet"
@@ -258,14 +263,26 @@ export function ShapePlan({ shape, glazing, className, detailed = false }: Shape
       {bands.map(({ kind, i, a, b, a2, b2 }) => {
         const quad = pts([a, b, b2, a2]);
         if (kind === 'glazing') {
-          const m1 = mul(add(a, a2), 0.5);
-          const m2 = mul(add(b, b2), 0.5);
+          // Mullion ticks at the same cut points as the interior render's window units
+          // (render/scene.ts's glazingFaces), so the drawing shows the same sash count
+          // instead of a single decorative centre line — see docs/GEOMETRY_AUDIT.md §3.
+          const edgeLen = len(sub(b, a));
+          const mullions = detailed
+            ? glazingUnitCuts(edgeLen)
+                .slice(1, -1)
+                .map((t) => {
+                  const k = t / edgeLen;
+                  return [add(a, mul(sub(b, a), k)), add(a2, mul(sub(b2, a2), k))] as const;
+                })
+            : [];
           return (
             <g key={i}>
               <polygon points={quad} fill={GLASS_FILL} />
               <polyline points={pts([a, b])} stroke={GLASS} strokeWidth={stroke * 1.6} fill="none" />
               <polyline points={pts([a2, b2])} stroke={GLASS} strokeWidth={stroke * 1.6} fill="none" />
-              {detailed ? <polyline points={pts([m1, m2])} stroke={GLASS} strokeWidth={stroke * 0.6} fill="none" opacity={0.7} /> : null}
+              {mullions.map(([p0, p1], mi) => (
+                <polyline key={mi} points={pts([p0, p1])} stroke={GLASS} strokeWidth={stroke * 0.6} fill="none" opacity={0.7} />
+              ))}
             </g>
           );
         }
@@ -311,6 +328,15 @@ export function ShapePlan({ shape, glazing, className, detailed = false }: Shape
       })}
       <polygon points={pts(g.poly)} fill="none" stroke={INK} strokeWidth={stroke} strokeLinejoin="round" />
       {detailed ? g.dims.map((d, k) => <Dimension key={`d${k}`} line={dimLine(d, g)} font={font} />) : null}
+      {detailed ? (
+        // The dimension texts are the owner's drawing values; the outline itself is a
+        // least-squares fit reconciling them (see planShapes.ts's file comment — some
+        // non-scale source drawings state sub-dimensions that can't all hold exactly).
+        // This note keeps that honest instead of implying the outline is drawn to the labels.
+        <text x={minX - pad + font * 0.3} y={-minY + pad - font * 0.3} fontSize={font * 0.55} fill="#a39d90" fontFamily="Manrope, Arial, sans-serif">
+          схема, не в масштабе
+        </text>
+      ) : null}
       {numbers.map((c, i) => (
         <g key={`n${i}`}>
           <circle cx={c[0]} cy={-c[1]} r={badgeR} fill="#fff" stroke="#e0a52c" strokeWidth={font * 0.1} />
@@ -321,4 +347,4 @@ export function ShapePlan({ shape, glazing, className, detailed = false }: Shape
       ))}
     </svg>
   );
-}
+});

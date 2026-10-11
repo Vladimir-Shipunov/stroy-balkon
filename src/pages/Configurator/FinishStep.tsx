@@ -4,17 +4,20 @@
  * floor, windows, light, furniture). A tap opens that surface's materials and
  * colours in the side panel; nothing is drawn on a surface until it is chosen.
  */
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Dispatch, RefObject } from 'react';
-import { Check } from '../../components/icons';
+import { Check, DownloadIcon } from '../../components/icons';
 import { PlanScene } from './PlanScene';
 import { ShapePlan } from './ShapePlan';
 import { VamScene } from './VamScene';
 import type { VamSceneHandle } from './VamScene';
+import { downloadSpecPdf, SpecPdfError } from './exportPdf';
+import { SaveProjectButton } from './SaveProjectButton';
 import type { Action, ConfigState } from './useConfigurator';
 import { findVamShape, hotspotTitle, pickKey, pickedOption, vamPlanHotspots, vamRenderPaint, vamScreen, vamViewLayerUrls } from './vamCatalog';
 import { PLAN_SHAPES, planFor } from './planShapes';
 import { usePlanViews } from './usePlanViews';
+import { downloadSvgElement, svgFilename } from './exportSvg';
 import type { AppHotspot, AppSlot, HotspotKind } from './vamCatalog';
 import styles from './Wizard.module.css';
 import panel from './Configurator.module.css';
@@ -181,6 +184,9 @@ function SurfacePanel({
 export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX.Element {
   const screen = useMemo(() => vamScreen(state.vam), [state.vam]);
   const [active, setActive] = useState<ActiveSpot | null>(null);
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+  const planSvgRef = useRef<SVGSVGElement>(null);
   const plan = state.vam.mode === 'plan';
   const shape = findVamShape(state.vam.shape);
   const planHotspots = useMemo(() => vamPlanHotspots(state.vam.shape), [state.vam.shape]);
@@ -188,11 +194,31 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
   const planGeom = useMemo(() => planFor(state.vam.shape, state.vam.glazing), [state.vam.shape, state.vam.glazing]);
   const { views: planViews } = usePlanViews(`${state.vam.shape}|${state.vam.glazing}`, planGeom ?? PLAN_SHAPES.loggia!, planPaint, plan);
   const chosenPlan = useMemo(() => new Set(planHotspots.filter((h) => h.slots.some((s) => state.vam.picks[pickKey(h.id, s.id)])).map((h) => h.id)), [planHotspots, state.vam.picks]);
+  // Perf audit (docs/PERF_AUDIT_15-20.md #5): avoid rebuilding both views' layer-URL
+  // arrays on every render of this component (e.g. toggling an unrelated `extras`
+  // checkbox) — only recompute when the screen or the picks actually change.
+  const screenLayerUrls = useMemo(
+    () => screen.views.map((_view, i) => vamViewLayerUrls(screen, i as 0 | 1, state.vam.picks)),
+    [screen, state.vam.picks],
+  );
   const activeHotspot = plan
     ? planHotspots.find((h) => h.id === active?.id)
     : active
       ? screen.views[active.view]?.hotspots.find((h) => h.id === active.id)
       : undefined;
+
+  /** Downloads the materials/options spec sheet as a PDF (brief §17, no price — see exportPdf.ts). */
+  async function handleDownloadSpecPdf(): Promise<void> {
+    setPdfBusy(true);
+    setPdfError(null);
+    try {
+      await downloadSpecPdf({ selection: state.vam, extras: state.extras });
+    } catch (err) {
+      setPdfError(err instanceof SpecPdfError ? err.message : 'Не удалось сформировать спецификацию. Попробуйте ещё раз.');
+    } finally {
+      setPdfBusy(false);
+    }
+  }
 
   return (
     <div className={styles.finish}>
@@ -207,12 +233,13 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
                   activeId={active?.id ?? null}
                   onSpot={(id) => setActive({ view: i, id })}
                   title={(id) => hotspotTitle(planHotspots.find((h) => h.id === id) ?? planHotspots[0]!)}
+                  viewLabel={`кадр ${i + 1}`}
                 />
               </div>
             ))
           : screen.views.map((view, i) => (
           <div key={i} className={styles.viewCard}>
-            <VamScene ref={sceneRefs[i]!} layers={vamViewLayerUrls(screen, i as 0 | 1, state.vam.picks)} mirror={screen.mirror}>
+            <VamScene ref={sceneRefs[i]!} layers={screenLayerUrls[i]!} mirror={screen.mirror} viewLabel={`кадр ${i + 1}`}>
               {view.hotspots.map((h) => {
                 const chosen = h.slots.some((s) => state.vam.picks[pickKey(h.id, s.id)]);
                 const isActive = active?.view === i && active.id === h.id;
@@ -246,9 +273,32 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
           {plan && shape ? (
             <div className={styles.planCard}>
               <span className={styles.planCardTitle}>Чертёж, мм</span>
-              <ShapePlan shape={shape} glazing={state.vam.glazing} className={styles.planCardSvg} detailed />
+              <ShapePlan ref={planSvgRef} shape={shape} glazing={state.vam.glazing} className={styles.planCardSvg} detailed />
+              <button
+                type="button"
+                className={panel.downloadBtn}
+                onClick={() => {
+                  const svgEl = planSvgRef.current;
+                  if (svgEl) downloadSvgElement(svgEl, svgFilename(shape.label));
+                }}
+              >
+                <DownloadIcon size={16} /> Скачать чертёж (SVG)
+              </button>
             </div>
           ) : null}
+          <div className={styles.planCard}>
+            <button type="button" className="btn btn--ghost" disabled={pdfBusy} onClick={handleDownloadSpecPdf}>
+              {pdfBusy ? 'Формируем спецификацию…' : 'Скачать спецификацию (PDF)'}
+            </button>
+            {pdfError ? (
+              <p className={styles.sideEmpty} style={{ color: '#c0392b' }} role="alert">
+                {pdfError}
+              </p>
+            ) : null}
+          </div>
+          <div className={styles.planCard}>
+            <SaveProjectButton config={{ extras: state.extras, vam: state.vam }} />
+          </div>
         </div>
       </div>
     </div>

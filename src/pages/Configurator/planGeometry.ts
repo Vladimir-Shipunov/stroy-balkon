@@ -21,6 +21,16 @@ export interface PlanSurface {
 
 /** The finishable surfaces of a plan, in the order the panel lists them. */
 export function planSurfaces(g: PlanGeom): PlanSurface[] {
+  // Wall pick ids are the 1-based edge index (i + 1); PICK.floor (and everything after it in
+  // render/types.ts) starts at 40, so a shape with 40+ edges would collide a wall id with the
+  // reserved surface/furniture range. No shape in planShapes.ts is anywhere near that, but assert
+  // it explicitly so a future shape addition can't silently collide instead of failing loudly.
+  if (g.kinds.length >= PICK.floor) {
+    throw new Error(
+      `planSurfaces: shape has ${g.kinds.length} edges, which reaches PICK.floor (${PICK.floor}); ` +
+        'wall pick ids (edge index + 1) would collide with the reserved surface/furniture pick range.'
+    );
+  }
   const out: PlanSurface[] = [];
   g.kinds.forEach((kind, i) => {
     // Windows to the floor leave no wall under the glazing to finish.

@@ -50,8 +50,7 @@ const apiLimiter = rateLimit({
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
     message: { success: false, error: 'Слишком много запросов. Попробуйте позже.' },
     standardHeaders: true,
-    legacyHeaders: false,
-    skip: (req) => !req.path.startsWith('/api')
+    legacyHeaders: false
 });
 
 const callRequestLimiter = rateLimit({
@@ -63,10 +62,31 @@ const callRequestLimiter = rateLimit({
     keyGenerator: (req) => req.ip
 });
 
+// Projects are writes — gets its own throttle, mirroring callRequestLimiter.
+const projectsWriteLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 20,
+    message: { success: false, error: 'Слишком много запросов сохранения проекта. Попробуйте позже.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => req.ip
+});
+
 const aiChatLimiter = rateLimit({
     windowMs: 5 * 60 * 1000,
     max: 40,
     message: { success: false, error: 'Слишком много сообщений. Немного подождите.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => req.ip
+});
+
+// Uploads are a public write endpoint (screenshot capture) — throttle like the
+// other public write/compute endpoints above, mirroring callRequestLimiter.
+const uploadLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 30,
+    message: { success: false, error: 'Слишком много загрузок. Попробуйте позже.' },
     standardHeaders: true,
     legacyHeaders: false,
     keyGenerator: (req) => req.ip
@@ -101,6 +121,14 @@ const allowedOrigins = new Set(
 // In development the Vite dev server runs on a different origin (5173/5174 + LAN
 // IPs) and proxies /api here — allow local origins so the SPA can reach the API.
 const devOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|172\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/;
+// CSRF posture: this API has no cookie-based/session auth anywhere (grepped —
+// no express-session/cookie-parser, no Set-Cookie on login). Admin routes are
+// guarded by an explicit `Authorization: Bearer <token>` / `X-Admin-Token` header
+// (see middleware/admin-auth.js) which a browser never attaches automatically to
+// a cross-site request, and every route sits behind the origin allowlist below.
+// With no ambient credential for a forged cross-site request to ride on, the
+// classic CSRF token dance would add complexity (and break the SPA's simple
+// fetch() calls) without closing a real gap — so it's intentionally omitted.
 app.use(cors({
     origin: (origin, callback) => {
         if (
@@ -184,8 +212,18 @@ const { createAdminGuard } = require('./middleware/admin-auth');
 const adminGuard = createAdminGuard();
 
 const ordersRouter = require('./routes/orders');
+const catalogRouter = require('./routes/catalog');
+const projectsRouter = require('./routes/projects');
 
 app.use('/api/orders', ordersRouter({ db, emailService, telegramBot, adminGuard }));
+app.use('/api/catalog', catalogRouter({ db }));
+// `/api/price/quote` and `/api/pricing/calculate` are intentionally NOT mounted.
+// Owner decision (docs/vam-2d-mapping.md, confirmed again 2026-10-10): this site
+// is a 2D configurator without price calculation or a materials/price admin —
+// pricing was removed once already and stays out of scope. The route files
+// (server/routes/price.js, server/pricing/*, server/routes/pricing.js) are left
+// on disk, unmounted, in case the owner reverses this decision later.
+app.use('/api/projects', projectsRouter({ db, projectsWriteLimiter }));
 
 app.get('/api/hero-slides', (req, res) => {
     try {
@@ -290,7 +328,7 @@ const upload = multer({
     }
 });
 
-app.post('/api/upload', upload.single('screenshot'), (req, res) => {
+app.post('/api/upload', uploadLimiter, upload.single('screenshot'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
