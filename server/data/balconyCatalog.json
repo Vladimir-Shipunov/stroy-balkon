@@ -52,12 +52,12 @@
       "typeId": "p",
       "geometry": {
         "widthMm": {
-          "min": 3130,
-          "max": 3130
+          "min": 3202,
+          "max": 3202
         },
         "depthMm": {
-          "min": 2085,
-          "max": 2085
+          "min": 2068,
+          "max": 2068
         },
         "ceilingHeightMm": {
           "min": 2640,

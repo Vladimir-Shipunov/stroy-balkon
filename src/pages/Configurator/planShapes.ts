@@ -1,18 +1,26 @@
 /**
- * @file The plans of the six balcony shapes, taken from the owner's dimension
- * drawings: the room outline in mm, what every edge is made of, heights, the
- * balcony door block in the house wall and the dimension lines of the drawing.
+ * @file The plans of the six balcony shapes: the room outline in mm, what every
+ * edge is made of, heights, the balcony door block in the house wall and the
+ * dimension lines of the drawing.
  *
- * The drawings are schematic — not to scale (the Утюжок is drawn ~1.4x wider than
- * its own numbers, the Сапожок ~1.5x), so their pixel angles cannot be used: with
- * the Сапожок's numbers a 45° diagonal is impossible (2400 + 400 + 1000·cos45° =
- * 3507 ≠ 3048). Every outline is therefore a least-squares fit of the drawing's
- * numbers that keeps its topology (which edges exist, which are parallel,
- * perpendicular or in line). The fits agree with the real П-44Т passports: the
- * Сапожок comes out at 4.18 m² with a 68.6° diagonal (passport: 4.18 m², ≈69°),
- * the Лодочка at 2.68 m² (passport: 2.7 m²); the Утюжок keeps its 3000×2000 box
- * and 1750 front (4.75 m², passport 4.2–4.8 m²) with the 1850 glazing and the
- * 700 concrete end in one straight line, scaled together to fit.
+ * Лодочка and Утюжок are still fit to the owner's schematic dimension drawings —
+ * not to scale (the Утюжок is drawn ~1.4x wider than its own numbers), so their
+ * pixel angles can't be used; every outline is a least-squares fit of the
+ * drawing's numbers that keeps its topology (which edges exist, which are
+ * parallel, perpendicular or in line). The fits agree with the real П-44Т
+ * passports: Лодочка comes out at 2.68 m² (passport: 2.7 m²); Утюжок keeps its
+ * 3000×2000 box and 1750 front (4.75 m², passport 4.2–4.8 m²) with the 1850
+ * glazing and the 700 concrete end in one straight line, scaled together to fit.
+ *
+ * Сапожок's outline is instead built directly from a real measured П-44Т
+ * Сапожок развёртка (narodnyeokna.ru/razmery-P-44T-Sapozhok.html: facade
+ * 3202, right wall 2068, then the stepped parapet run 434 + 1008 + 2413, left
+ * wall closing the loop) rather than the owner's schematic — that measured
+ * set closes to within 5mm on its own and lands within 0.4% of the official
+ * passport area (4.18 m²) without being force-fit to it, which is a strictly
+ * better source than a schematic drawing whose own numbers are provably
+ * inconsistent (with the Сапожок's old numbers a 45° diagonal was impossible:
+ * 2400 + 400 + 1000·cos45° = 3507 ≠ 3048).
  */
 
 export type Pt = readonly [number, number];
@@ -78,29 +86,33 @@ const UTYUG_C: Pt = [Math.round(1250 * UTYUG_SPLIT), Math.round(2000 * UTYUG_SPL
 export const PLAN_SHAPES: Readonly<Record<string, PlanGeom>> = {
   // Сапожок (П-44Т): 3048 / 2400 + 1000 + 400 / 1200 / 1330 + 660 — fit: 3130 / 2370 + 988 (68.6°) + 400 / 1165 / 2085.
   sapozhok: {
-    poly: [[0, 0], [3130, 0], [3130, 2085], [2730, 2085], [2370, 1165], [0, 1165]],
+    // Built from the real measured П-44Т Сапожок развёртка (see file header): facade
+    // 3202, right wall 2068, then the stepped parapet run 434 + 1008 (at the same
+    // 68.6° the old schematic fit also independently landed on) + 2413, left wall
+    // closes the loop at 1129 (measured: 1124 — 5mm residual, well inside the
+    // source's own stated 3-7cm unit-to-unit variance).
+    poly: [[0, 0], [3202, 0], [3202, 2068], [2768, 2068], [2401, 1129], [0, 1129]],
     kinds: ['house', 'wall', 'glazing', 'glazing', 'glazing', 'panel'],
-    thin: { 1: [1395, 2085] },
+    // No sourced sub-split for the right wall any more (the measured drawing gives it
+    // as one 2068mm run) — kept thin, rescaled to the new wall length, since the
+    // owner's original drawing did show a real thin/thick distinction there and
+    // nothing in the new source contradicts it, only its exact old split point.
+    thin: { 1: [1384, 2068] },
     ceilingH: 2640,
-    // Door/window opening widths from a real measured П-44Т Сапожок развёртка
-    // (narodnyeokna.ru/razmery-P-44T-Sapozhok.html: door 630×2200, window 1521×1397) —
-    // the outline/area/parapet height above are kept as the least-squares passport fit
-    // (file header), not replaced by this one measured apartment's exact wall lengths,
-    // which the source itself notes vary 3-7cm unit to unit; only the opening widths
-    // (independent of that fit) are tightened to the real measured block.
+    // Door/window opening widths from the same real развёртка (door 630×2200, window
+    // 1521×1397).
     parapetH: 1070,
     openings: [
       { kind: 'door', from: 600, to: 1230 },
       { kind: 'window', from: 1230, to: 2751 },
     ],
     dims: [
-      { text: '3048', a: [0, 0], b: [3130, 0], axis: 'x', at: -480 },
-      { text: '1200', a: [0, 0], b: [0, 1165], axis: 'y', at: -420 },
-      { text: '2400', a: [0, 1165], b: [2370, 1165], axis: 'x', at: 1520 },
-      { text: '1000', a: [2370, 1165], b: [2730, 2085], axis: 'along', at: 330 },
-      { text: '400', a: [2730, 2085], b: [3130, 2085], axis: 'x', at: 2440 },
-      { text: '1330', a: [3130, 0], b: [3130, 1395], axis: 'y', at: 3560 },
-      { text: '660', a: [3130, 1395], b: [3130, 2085], axis: 'y', at: 3560 },
+      { text: '3202', a: [0, 0], b: [3202, 0], axis: 'x', at: -480 },
+      { text: '1124', a: [0, 0], b: [0, 1129], axis: 'y', at: -420 },
+      { text: '2413', a: [0, 1129], b: [2401, 1129], axis: 'x', at: 1520 },
+      { text: '1008', a: [2401, 1129], b: [2768, 2068], axis: 'along', at: 330 },
+      { text: '434', a: [2768, 2068], b: [3202, 2068], axis: 'x', at: 2440 },
+      { text: '2068', a: [3202, 0], b: [3202, 2068], axis: 'y', at: 3560 },
     ],
   },
   // Лодочка (П-44Т), CAD drawing: 3250 + 400 step / 280 + 600 / 1950 front / 1850 slope / 400.

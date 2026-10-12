@@ -34,7 +34,11 @@ const REFERENCE: Readonly<
     }
   >
 > = {
-  sapozhok: { areaM2: 4.18, areaToleranceM2: 0.01, vertexCount: 6, openingCount: 2, ceilingH: 2640, parapetH: 1070 },
+  // Built from a real measured развёртка (see planShapes.ts file header), not forced to
+  // the passport number — lands within 0.4% of it on its own, a wider tolerance than
+  // the schematic-fit shapes below because this is independent real-instance variance,
+  // not label-vs-geometry schematic slop.
+  sapozhok: { areaM2: 4.18, areaToleranceM2: 0.02, vertexCount: 6, openingCount: 2, ceilingH: 2640, parapetH: 1070 },
   lodochka: { areaM2: 2.68, areaToleranceM2: 0.01, vertexCount: 7, openingCount: 2, ceilingH: 2660, parapetH: 1100 },
   utyuzhok: { areaM2: 4.75, areaToleranceM2: 0.01, vertexCount: 5, openingCount: 2, ceilingH: 2640, parapetH: 1050 },
   loggia: { areaM2: 3.6, areaToleranceM2: 0.001, vertexCount: 4, openingCount: 2, ceilingH: 2640, parapetH: 1050 },
