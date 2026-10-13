@@ -4,8 +4,9 @@
  * round tap target on every surface (walls, ceiling, floor, windows, light,
  * furniture). A tap opens that surface's materials and colours in the side panel;
  * nothing is drawn on a surface until it is chosen. The "Чертёж, мм" card alongside
- * shows the real, passport-matched geometry (`ShapePlan.tsx`) as a reference/export,
- * independent of the photo scene above it.
+ * shows the real, passport-matched geometry (`ShapePlan.tsx`) and is tied to the photos
+ * (`photoPlanLink.ts`): it marks where each frame is shot from, the wall numbers on the
+ * photos are the drawing's own, and the wall being finished lights up on the plan.
  */
 import { useMemo, useRef, useState } from 'react';
 import type { Dispatch, RefObject } from 'react';
@@ -17,6 +18,8 @@ import { downloadSpecPdf, SpecPdfError } from './exportPdf';
 import { SaveProjectButton } from './SaveProjectButton';
 import type { Action, ConfigState } from './useConfigurator';
 import { findVamShape, hotspotTitle, pickKey, pickedOption, vamScreen, vamViewLayerUrls } from './vamCatalog';
+import { PLAN_SHAPES, planFor } from './planShapes';
+import { planCameras, wallNumbersText, wallTitle, wallsAtPhotoX } from './photoPlanLink';
 import { downloadSvgElement, svgFilename } from './exportSvg';
 import type { AppHotspot, AppSlot, HotspotKind } from './vamCatalog';
 import styles from './Wizard.module.css';
@@ -81,10 +84,13 @@ interface ActiveSpot {
 /** Materials + colours of the tapped surface. */
 function SurfacePanel({
   hotspot,
+  title,
   state,
   dispatch,
 }: {
   readonly hotspot: AppHotspot;
+  /** Heading override: a wall is named by its number on the plan, not the app's own id. */
+  readonly title?: string | undefined;
   readonly state: ConfigState;
   readonly dispatch: Dispatch<Action>;
 }): JSX.Element {
@@ -98,7 +104,7 @@ function SurfacePanel({
   return (
     <>
       <div className={styles.panelHead}>
-        <span className={styles.panelTitle}>{hotspotTitle(hotspot)}</span>
+        <span className={styles.panelTitle}>{title ?? hotspotTitle(hotspot)}</span>
         {pick ? (
           <button type="button" className={styles.panelReset} onClick={() => dispatch({ type: 'pick', key, pick: null })}>
             Убрать
@@ -197,6 +203,31 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
   );
   const activeHotspot = active ? screen.views[active.view]?.hotspots.find((h) => h.id === active.id) : undefined;
 
+  // Photo <-> plan: the plan this selection draws, and which of its walls each wall tap
+  // target on the photos sits on (the number is the one printed on the drawing).
+  const geom = useMemo(() => planFor(state.vam.shape, state.vam.glazing) ?? PLAN_SHAPES[state.vam.shape], [state.vam.shape, state.vam.glazing]);
+  const cameras = useMemo(() => (geom ? planCameras(geom, screen.mirror) : undefined), [geom, screen.mirror]);
+  const wallEdges = useMemo(() => {
+    const edges = new Map<string, number[]>();
+    if (!geom) return edges;
+    screen.views.forEach((view, i) => {
+      for (const h of view.hotspots) {
+        if (h.kind !== 'wall') continue;
+        const found = wallsAtPhotoX(geom, i as 0 | 1, screen.mirror, screen.mirror ? 100 - h.x : h.x);
+        if (found.length > 0) edges.set(`${i}:${h.id}`, found);
+      }
+    });
+    return edges;
+  }, [geom, screen]);
+  const activeEdges = active ? wallEdges.get(`${active.view}:${active.id}`) : undefined;
+  // The walls of a tapped wall surface light up on the plan; sill and frames sit on every glazed run.
+  const highlight = useMemo(() => {
+    if (!geom || !activeHotspot) return undefined;
+    if (activeHotspot.kind === 'wall') return activeEdges;
+    if (activeHotspot.kind === 'sill' || activeHotspot.kind === 'frame') return geom.kinds.flatMap((kind, i) => (kind === 'glazing' ? [i] : []));
+    return undefined;
+  }, [geom, activeHotspot, activeEdges]);
+
   /** Downloads the materials/options spec sheet as a PDF (brief §17, no price — see exportPdf.ts). */
   async function handleDownloadSpecPdf(): Promise<void> {
     setPdfBusy(true);
@@ -219,7 +250,8 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
               {view.hotspots.map((h) => {
                 const chosen = h.slots.some((s) => state.vam.picks[pickKey(h.id, s.id)]);
                 const isActive = active?.view === i && active.id === h.id;
-                const wallNo = h.kind === 'wall' ? h.id.match(/^\d+/)?.[0] : undefined;
+                const edges = h.kind === 'wall' ? wallEdges.get(`${i}:${h.id}`) : undefined;
+                const wallNo = edges ? wallNumbersText(edges) : h.kind === 'wall' ? h.id.match(/^\d+/)?.[0] : undefined;
                 return (
                   <button
                     key={h.id}
@@ -227,8 +259,8 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
                     className={`${styles.hotspot} ${chosen ? styles.hotspotDone : ''} ${isActive ? styles.hotspotActive : ''}`}
                     style={{ left: `${screen.mirror ? 100 - h.x : h.x}%`, top: `${h.y}%` }}
                     onClick={() => setActive({ view: i, id: h.id })}
-                    aria-label={hotspotTitle(h)}
-                    title={hotspotTitle(h)}
+                    aria-label={edges ? wallTitle(edges) : hotspotTitle(h)}
+                    title={edges ? wallTitle(edges) : hotspotTitle(h)}
                   >
                     <HotspotIcon kind={h.kind} />
                     {wallNo ? <span className={styles.badge}>{wallNo}</span> : null}
@@ -242,14 +274,21 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
       <div className={styles.side}>
         <div className={styles.sideBody}>
           {activeHotspot ? (
-            <SurfacePanel key={`${active?.view}-${activeHotspot.id}`} hotspot={activeHotspot} state={state} dispatch={dispatch} />
+            <SurfacePanel
+              key={`${active?.view}-${activeHotspot.id}`}
+              hotspot={activeHotspot}
+              title={activeHotspot.kind === 'wall' && activeEdges ? wallTitle(activeEdges) : undefined}
+              state={state}
+              dispatch={dispatch}
+            />
           ) : (
             <p className={styles.sideEmpty}>Нажмите на значок на балконе, чтобы выбрать отделку этой поверхности.</p>
           )}
           {shape ? (
             <div className={styles.planCard}>
               <span className={styles.planCardTitle}>Чертёж, мм</span>
-              <ShapePlan ref={planSvgRef} shape={shape} glazing={state.vam.glazing} className={styles.planCardSvg} detailed />
+              <ShapePlan ref={planSvgRef} shape={shape} glazing={state.vam.glazing} className={styles.planCardSvg} detailed cameras={cameras} highlight={highlight} />
+              <p className={styles.planCardNote}>Оранжевые точки 1 и 2 — откуда сняты кадры. Стена, которую вы выбираете на фото, подсвечивается на чертеже.</p>
               <button
                 type="button"
                 className={panel.downloadBtn}

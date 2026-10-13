@@ -10,6 +10,8 @@ import { PLAN_SHAPES, edgeOf, planFor } from './planShapes';
 import type { EdgeKind, PlanDim, PlanGeom, Pt } from './planShapes';
 import type { VamShapeDef } from './vamShapes';
 import { glazingUnitCuts } from './wallGeometry';
+import { PHOTO_FOV } from './photoPlanLink';
+import type { PlanCamera } from './photoPlanLink';
 
 interface ShapePlanProps {
   readonly shape: VamShapeDef;
@@ -18,6 +20,10 @@ interface ShapePlanProps {
   readonly className?: string | undefined;
   /** Dimension lines and wall numbers (the side panel); the setup badges draw the outline only. */
   readonly detailed?: boolean;
+  /** Where the photo frames are shot from (detailed card only): a dot and a view cone each. */
+  readonly cameras?: readonly PlanCamera[] | undefined;
+  /** Wall edges (0-based) lit up on the plan — the surface tapped on a photo. */
+  readonly highlight?: readonly number[] | undefined;
 }
 
 /** Thickness drawn outside the room for every edge kind, mm. */
@@ -148,7 +154,7 @@ function Dimension({ line, font }: { readonly line: DimLine; readonly font: numb
 }
 
 /** Wall number badges inside the room, pushed apart from each other and from the walls. */
-function placeNumbers(g: PlanGeom, r: number): V[] {
+function placeNumbers(g: PlanGeom, r: number, avoid: readonly V[] = []): V[] {
   const placed: V[] = [];
   const n = g.poly.length;
   for (let i = 0; i < n; i += 1) {
@@ -167,6 +173,7 @@ function placeNumbers(g: PlanGeom, r: number): V[] {
           clear = Math.min(clear, segDist(c, p, q) - r * 1.25);
         }
         for (const o of placed) clear = Math.min(clear, len(sub(c, o)) - r * 2.3);
+        for (const o of avoid) clear = Math.min(clear, len(sub(c, o)) - r * 2.4);
         // Prefer the middle of the edge and close to it, but never overlapping.
         const score = Math.min(clear, 0) * 10 - Math.abs(t - 0.5) * r - k * r * 0.2;
         if (score > bestScore) {
@@ -185,10 +192,12 @@ function placeNumbers(g: PlanGeom, r: number): V[] {
  * @returns The SVG element.
  */
 export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function ShapePlan(
-  { shape, glazing, className, detailed = false },
+  { shape, glazing, className, detailed = false, cameras, highlight },
   ref,
 ): JSX.Element | null {
-  const hatchId = `hatch-${useId().replace(/:/g, '')}`;
+  const uid = useId().replace(/:/g, '');
+  const hatchId = `hatch-${uid}`;
+  const clipId = `room-${uid}`;
   const g = (glazing ? planFor(shape.id, glazing) : undefined) ?? PLAN_SHAPES[shape.id];
   if (!g) return null;
   const n = g.poly.length;
@@ -242,7 +251,7 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
   const hn = outward(h0, h1);
   const along = (s: number, out: number): V => add(add(h0, mul(hd, s)), mul(hn, out));
   const badgeR = font * 0.62;
-  const numbers = detailed ? placeNumbers(g, badgeR) : [];
+  const numbers = detailed ? placeNumbers(g, badgeR, (cameras ?? []).map((c): V => [c.x, c.y])) : [];
   const hatch = size * 0.035;
 
   return (
@@ -258,8 +267,28 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
         <pattern id={hatchId} patternUnits="userSpaceOnUse" width={hatch} height={hatch} patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2={hatch} stroke={HATCH} strokeWidth={size * 0.0045} />
         </pattern>
+        <clipPath id={clipId}>
+          <polygon points={pts(g.poly)} />
+        </clipPath>
       </defs>
       <polygon points={pts(g.poly)} fill={ROOM} />
+      {detailed
+        ? cameras?.map((c) => {
+            // The view cone of the photo frame, clipped to the room.
+            const reach = size * 1.4;
+            const k = Math.tan(PHOTO_FOV / 2);
+            const rx = c.fy;
+            const ry = -c.fx;
+            const p1: V = [c.x + (c.fx + rx * k) * reach, c.y + (c.fy + ry * k) * reach];
+            const p2: V = [c.x + (c.fx - rx * k) * reach, c.y + (c.fy - ry * k) * reach];
+            return (
+              <g key={`cone-${c.label}`} clipPath={`url(#${clipId})`}>
+                <polygon points={pts([[c.x, c.y], p1, p2])} fill={GLASS} opacity={0.11} />
+                <polyline points={pts([p1, [c.x, c.y], p2])} stroke={GLASS} strokeWidth={font * 0.05} fill="none" opacity={0.5} />
+              </g>
+            );
+          })
+        : null}
       {bands.map(({ kind, i, a, b, a2, b2 }) => {
         const quad = pts([a, b, b2, a2]);
         if (kind === 'glazing') {
@@ -327,6 +356,25 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
         );
       })}
       <polygon points={pts(g.poly)} fill="none" stroke={INK} strokeWidth={stroke} strokeLinejoin="round" />
+      {detailed
+        ? (highlight ?? []).map((i) => {
+            const [a, b] = edgeOf(g, i);
+            return <polyline key={`hl${i}`} points={pts([a, b])} stroke="#e0701c" strokeWidth={font * 0.34} strokeLinecap="round" fill="none" opacity={0.9} />;
+          })
+        : null}
+      {detailed
+        ? cameras?.map((c) => {
+            // The camera dot sits where the photo is shot from; the digit is the frame.
+            return (
+              <g key={`cam-${c.label}`}>
+                <circle cx={c.x} cy={-c.y} r={font * 0.5} fill="#e0701c" stroke="#fff" strokeWidth={font * 0.1} />
+                <text x={c.x} y={-c.y + font * 0.22} fontSize={font * 0.66} textAnchor="middle" fill="#fff" fontWeight={700} fontFamily="Manrope, Arial, sans-serif">
+                  {c.label.slice(-1)}
+                </text>
+              </g>
+            );
+          })
+        : null}
       {detailed ? g.dims.map((d, k) => <Dimension key={`d${k}`} line={dimLine(d, g)} font={font} />) : null}
       {detailed ? (
         // The dimension texts are the owner's drawing values; the outline itself is a

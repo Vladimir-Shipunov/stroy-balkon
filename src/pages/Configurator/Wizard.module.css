@@ -464,3 +464,10 @@
   display: block;
 }
 
+.planCardNote {
+  margin: 6px 0 10px;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
