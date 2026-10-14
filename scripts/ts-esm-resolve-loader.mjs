@@ -9,8 +9,9 @@
  * flag, no package needed) this lets plain `node --test` run the geometry validator's
  * tests directly against the real TS source — see package.json's `test:geometry`.
  *
- * Deliberately narrow: only touches relative specifiers (`./`/`../`) with no
- * extension, and only tries `.ts`. Anything else falls through to Node's default
+ * Deliberately narrow: only touches relative specifiers (`./`/`../`) that name no
+ * existing file (an extensionless one, or a dotted name like `vamApp.generated`), and
+ * only tries `.ts`. Anything else falls through to Node's default
  * resolution unchanged.
  */
 import { existsSync } from 'node:fs';
@@ -18,11 +19,10 @@ import { fileURLToPath } from 'node:url';
 
 export async function resolve(specifier, context, nextResolve) {
   const isRelative = specifier.startsWith('./') || specifier.startsWith('../');
-  const hasExtension = /\.[a-zA-Z0-9]+$/.test(specifier);
 
-  if (isRelative && !hasExtension && context.parentURL) {
+  if (isRelative && context.parentURL) {
     const basePath = fileURLToPath(new URL(specifier, context.parentURL));
-    if (existsSync(`${basePath}.ts`)) {
+    if (!existsSync(basePath) && existsSync(`${basePath}.ts`)) {
       return nextResolve(`${specifier}.ts`, context);
     }
   }
