@@ -134,8 +134,19 @@ export function vamPlanHotspots(shapeId: string): AppHotspot[] {
   }));
 }
 
-/** Every tap target of the selection's balcony: both views of the app's real screen. */
+/**
+ * Shapes the app has no photo scenes for (its pre-rendered frames show only Г, П, Л5, Л8 and the
+ * П-44Т Утюг): they are drawn by the room renderer (render/) from their exact plan instead.
+ */
+const PLAN_RENDERED_SHAPES: ReadonlySet<string> = new Set(['lodochka']);
+
+export function usesPlanRender(shapeId: string): boolean {
+  return PLAN_RENDERED_SHAPES.has(shapeId);
+}
+
+/** Every tap target of the selection's balcony: both views of the app's real screen, or the plan view's surfaces. */
 export function vamHotspotList(sel: VamSelection): AppHotspot[] {
+  if (usesPlanRender(sel.shape)) return vamPlanHotspots(sel.shape);
   return vamScreen(sel).views.flatMap((v) => [...v.hotspots]);
 }
 

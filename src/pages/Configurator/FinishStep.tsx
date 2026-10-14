@@ -14,10 +14,12 @@ import { Check, DownloadIcon } from '../../components/icons';
 import { ShapePlan } from './ShapePlan';
 import { VamScene } from './VamScene';
 import type { VamSceneHandle } from './VamScene';
+import { PlanScene } from './PlanScene';
+import { usePlanViews } from './usePlanViews';
 import { downloadSpecPdf, SpecPdfError } from './exportPdf';
 import { SaveProjectButton } from './SaveProjectButton';
 import type { Action, ConfigState } from './useConfigurator';
-import { findVamShape, hotspotTitle, pickKey, pickedOption, vamScreen, vamViewLayerUrls } from './vamCatalog';
+import { findVamShape, hotspotTitle, pickKey, pickedOption, usesPlanRender, vamPlanHotspots, vamRenderPaint, vamScreen, vamViewLayerUrls } from './vamCatalog';
 import { PLAN_SHAPES, planFor } from './planShapes';
 import { planCameras, wallNumbersText, wallTitle, wallsAtPhotoX } from './photoPlanLink';
 import { downloadSvgElement, svgFilename } from './exportSvg';
@@ -201,15 +203,27 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
     () => screen.views.map((_view, i) => vamViewLayerUrls(screen, i as 0 | 1, state.vam.picks)),
     [screen, state.vam.picks],
   );
-  const activeHotspot = active ? screen.views[active.view]?.hotspots.find((h) => h.id === active.id) : undefined;
+  // Shapes the app has no photos for (Лодочка) are drawn from their exact plan by the room renderer.
+  const planMode = usesPlanRender(state.vam.shape);
+  const planHotspots = useMemo(() => (planMode ? vamPlanHotspots(state.vam.shape) : []), [planMode, state.vam.shape]);
+  const activeHotspot = planMode ? planHotspots.find((h) => h.id === active?.id) : active ? screen.views[active.view]?.hotspots.find((h) => h.id === active.id) : undefined;
 
   // Photo <-> plan: the plan this selection draws, and which of its walls each wall tap
   // target on the photos sits on (the number is the one printed on the drawing).
   const geom = useMemo(() => planFor(state.vam.shape, state.vam.glazing) ?? PLAN_SHAPES[state.vam.shape], [state.vam.shape, state.vam.glazing]);
-  const cameras = useMemo(() => (geom ? planCameras(geom, screen.mirror) : undefined), [geom, screen.mirror]);
+  const cameras = useMemo(() => (geom ? planCameras(geom, planMode ? false : screen.mirror) : undefined), [geom, planMode, screen.mirror]);
+  const planPaint = useMemo(() => vamRenderPaint(state.vam), [state.vam]);
+  // Nothing is rendered unless this shape is drawn by the renderer; the plan itself is already mirrored for right-handed ones.
+  const { views: planViews } = usePlanViews(`${state.vam.shape}|${state.vam.glazing}`, geom ?? PLAN_SHAPES.loggia!, planPaint, planMode);
+  const chosenPlan = useMemo(() => new Set(planHotspots.filter((h) => h.slots.some((s) => state.vam.picks[pickKey(h.id, s.id)])).map((h) => h.id)), [planHotspots, state.vam.picks]);
+  /** Plan edge (0-based) of a plan wall tap target "P:w<N>". */
+  const planWallEdge = (id: string): number | undefined => {
+    const n = Number(id.replace('P:w', ''));
+    return Number.isInteger(n) && n >= 1 ? n - 1 : undefined;
+  };
   const wallEdges = useMemo(() => {
     const edges = new Map<string, number[]>();
-    if (!geom) return edges;
+    if (!geom || planMode) return edges;
     screen.views.forEach((view, i) => {
       for (const h of view.hotspots) {
         if (h.kind !== 'wall') continue;
@@ -218,8 +232,9 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
       }
     });
     return edges;
-  }, [geom, screen]);
-  const activeEdges = active ? wallEdges.get(`${active.view}:${active.id}`) : undefined;
+  }, [geom, planMode, screen]);
+  const planEdge = planMode && activeHotspot?.kind === 'wall' ? planWallEdge(activeHotspot.id) : undefined;
+  const activeEdges = planEdge !== undefined ? [planEdge] : active ? wallEdges.get(`${active.view}:${active.id}`) : undefined;
   // The walls of a tapped wall surface light up on the plan; sill and frames sit on every glazed run.
   const highlight = useMemo(() => {
     if (!geom || !activeHotspot) return undefined;
@@ -244,7 +259,25 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
   return (
     <div className={styles.finish}>
       <div className={styles.views}>
-        {screen.views.map((view, i) => (
+        {planMode
+          ? ([0, 1] as const).map((i) => (
+              <div key={i} className={styles.viewCard}>
+                <PlanScene
+                  ref={sceneRefs[i]!}
+                  view={planViews[i]}
+                  chosen={chosenPlan}
+                  activeId={active?.id ?? null}
+                  onSpot={(id) => setActive({ view: i, id })}
+                  title={(id) => {
+                    const h = planHotspots.find((p) => p.id === id);
+                    const edge = h?.kind === 'wall' ? planWallEdge(id) : undefined;
+                    return edge !== undefined ? wallTitle([edge]) : h ? hotspotTitle(h) : '';
+                  }}
+                  viewLabel={`кадр ${i + 1}`}
+                />
+              </div>
+            ))
+          : screen.views.map((view, i) => (
           <div key={i} className={styles.viewCard}>
             <VamScene ref={sceneRefs[i]!} layers={screenLayerUrls[i]!} mirror={screen.mirror} viewLabel={`кадр ${i + 1}`}>
               {view.hotspots.map((h) => {
