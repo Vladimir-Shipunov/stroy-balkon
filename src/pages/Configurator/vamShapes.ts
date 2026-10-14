@@ -87,7 +87,7 @@ export interface VamShapeDef {
 
 export const VAM_SHAPES: readonly VamShapeDef[] = [
   { id: 'sapozhok', label: 'Сапожок', hint: 'ступенчатый выступ', type: 'p' },
-  { id: 'lodochka', label: 'Лодочка', hint: 'скос и уступ у стены', type: 'g' },
+  { id: 'lodochka', label: 'Лодочка', hint: 'скос и уступ у стены', type: 'u' },
   { id: 'utyuzhok', label: 'Утюжок', hint: 'скошенный угол', type: 'u' },
   { id: 'loggia', label: 'Обычная лоджия', hint: 'прямоугольная', type: 'l5' },
   { id: 'long-loggia', label: 'Удлинённая лоджия', hint: 'длина до 6 м', type: 'l8' },

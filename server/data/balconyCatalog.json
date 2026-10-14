@@ -184,7 +184,7 @@
     {
       "id": "lodochka",
       "label": "Лодочка",
-      "typeId": "g",
+      "typeId": "u",
       "geometry": {
         "widthMm": {
           "min": 3650,
@@ -205,7 +205,7 @@
       },
       "glazings": [
         {
-          "id": "parapet",
+          "id": "left",
           "hotspots": [
             {
               "id": "P:w1",
@@ -274,7 +274,7 @@
           ]
         },
         {
-          "id": "floor",
+          "id": "right",
           "hotspots": [
             {
               "id": "P:w1",
@@ -290,6 +290,14 @@
             },
             {
               "id": "P:w4",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w5",
+              "kind": "wall"
+            },
+            {
+              "id": "P:w6",
               "kind": "wall"
             },
             {
@@ -313,6 +321,10 @@
               "kind": "light"
             },
             {
+              "id": "P:sill",
+              "kind": "sill"
+            },
+            {
               "id": "P:plintus",
               "kind": "plintus"
             },
@@ -323,6 +335,10 @@
             {
               "id": "P:dryer",
               "kind": "dryer"
+            },
+            {
+              "id": "P:flowers",
+              "kind": "flowers"
             }
           ]
         }
