@@ -868,7 +868,31 @@ app.get('/uploads/chat/:filename', (req, res) => {
     if (!filePath.startsWith(chatRoot + path.sep) || !fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
         return res.status(404).send('Файл не найден');
     }
+    const extension = path.extname(filename).toLowerCase();
+    const mimeTypes = {
+        '.pdf': 'application/pdf',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.tif': 'image/tiff',
+        '.tiff': 'image/tiff',
+        '.svg': 'image/svg+xml',
+        '.webp': 'image/webp',
+        '.xml': 'application/xml',
+        '.txt': 'text/plain; charset=utf-8',
+        '.csv': 'text/csv; charset=utf-8',
+        '.rtf': 'application/rtf',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        '.odt': 'application/vnd.oasis.opendocument.text',
+        '.epub': 'application/epub+zip',
+        '.mobi': 'application/x-mobipocket-ebook',
+        '.djvu': 'image/vnd.djvu',
+        '.fb2': 'application/xml'
+    };
+    res.setHeader('Content-Type', mimeTypes[extension] || 'application/octet-stream');
     res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Cache-Control', NODE_ENV === 'production' ? 'public, max-age=604800' : 'no-cache');
     return res.sendFile(filePath);
 });

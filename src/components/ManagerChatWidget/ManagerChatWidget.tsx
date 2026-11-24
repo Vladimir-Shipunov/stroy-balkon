@@ -192,7 +192,7 @@ export function ManagerChatWidget(): JSX.Element | null {
                       }}
                     />
                   ) : (
-                    <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noreferrer">
+                    <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noopener noreferrer">
                       <span>📎</span>
                       <span className={styles.fileName}>{attachment.name}</span>
                     </a>

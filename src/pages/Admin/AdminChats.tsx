@@ -64,7 +64,7 @@ function ChatDetail({id,token,onLogout,sessions}:{id:string;token:string;onLogou
       {m.content?<p>{m.content}</p>:null}
       {m.attachments?.map(a=>a.mimeType.startsWith('image/')?
         <img key={a.url} className={styles.adminAttachmentImage} src={a.url} alt={a.name} loading="lazy"/>:
-        <a key={a.url} href={a.url} target="_blank" rel="noreferrer">📎 {a.name}</a>)}
+        <a key={a.url} href={a.url} target="_blank" rel="noopener noreferrer">📎 {a.name}</a>)}
     </div>)}</div><div className={styles.reply}>
       <input ref={fileInputRef} className={styles.fileInput} type="file" accept={CHAT_FILE_ACCEPT} multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>{
         const dot=f.name.lastIndexOf('.');const ext=dot>=0?f.name.slice(dot).toLowerCase():'';return f.size<=10*1024*1024&&CHAT_EXTENSIONS.has(ext);
