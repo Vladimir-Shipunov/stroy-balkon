@@ -19,7 +19,8 @@
   height: var(--header-h);
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 18px;
+  white-space: nowrap;
 }
 
 .brand {
@@ -29,17 +30,22 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-left: 12px;
+  gap: 0;
+  margin-left: 4px;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
 }
 
 .navLink {
   position: relative;
-  padding: 8px 14px;
+  padding: 8px 10px;
   border-radius: var(--radius-sm);
-  font-size: 0.94rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--text-soft);
+  white-space: nowrap;
+  flex: none;
   transition: color var(--dur-fast), background var(--dur-fast);
 }
 
@@ -66,8 +72,9 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   margin-left: auto;
+  flex: none;
 }
 
 .phone {
@@ -223,23 +230,25 @@
 }
 
 /* ---- Responsive ---- */
-@media (max-width: 1080px) {
+@media (max-width: 1320px) {
   .configBtn {
     display: none;
   }
 }
 
 /* The drawer is a mobile-only affordance; keep it out of the desktop DOM box. */
-@media (min-width: 921px) {
+@media (min-width: 1181px) {
   .drawer,
   .scrim {
     display: none;
   }
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1180px) {
   .nav,
-  .phone {
+  .phone,
+  .callBtn,
+  .configBtn {
     display: none;
   }
   .burger {
