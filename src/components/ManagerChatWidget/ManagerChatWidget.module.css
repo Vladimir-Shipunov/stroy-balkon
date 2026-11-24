@@ -103,12 +103,19 @@
 
 .form {
   display: flex;
+  flex-direction: column;
   gap: 8px;
   padding: 10px;
   border-top: 1px solid var(--border);
 }
 
-.form input {
+.formRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.formRow input:not(.fileInput) {
   flex: 1;
   min-width: 0;
   border: 1.5px solid var(--border-strong);
@@ -117,11 +124,71 @@
   background: var(--bg);
 }
 
-.form button {
+.formRow button[type='submit'] {
   width: 42px;
   height: 42px;
   border-radius: 50%;
   background: var(--gold);
   color: #fff;
   font-size: 20px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.attachBtn {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.selectedFiles {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.selectedFiles span {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: var(--gold-light);
+  color: var(--gold-deep);
+  font-size: 0.72rem;
+}
+
+.attachmentImage {
+  max-width: 220px;
+  max-height: 180px;
+  border-radius: 8px;
+  margin-top: 6px;
+  object-fit: cover;
+}
+
+.fileLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  text-decoration: underline;
+}
+
+.fileName {
+  display: block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.76rem;
 }

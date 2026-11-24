@@ -7,6 +7,14 @@ interface Message {
   readonly id: string;
   readonly role: 'user' | 'manager';
   readonly content: string;
+  readonly attachments?: readonly ChatAttachment[];
+}
+
+interface ChatAttachment {
+  readonly name: string;
+  readonly url: string;
+  readonly size: number;
+  readonly mimeType: string;
 }
 
 const SESSION_KEY = 'stroy-balkon-manager-chat';
@@ -18,6 +26,8 @@ export function ManagerChatWidget(): JSX.Element | null {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,7 +79,7 @@ export function ManagerChatWidget(): JSX.Element | null {
   async function send(event: FormEvent): Promise<void> {
     event.preventDefault();
     const content = input.trim();
-    if (!content || sending) return;
+    if ((!content && selectedFiles.length === 0) || sending) return;
     setSending(true);
     try {
       let activeSession = sessionId;
@@ -86,17 +96,23 @@ export function ManagerChatWidget(): JSX.Element | null {
         localStorage.setItem(SESSION_KEY, activeSession);
         setSessionId(activeSession);
       }
+      const body = new FormData();
+      body.set('content', content);
+      selectedFiles.slice(0, 5).forEach((file) => body.append('files', file));
       const res = await fetch(`/api/chat/sessions/${activeSession}/messages`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
+        body,
       });
       if (!res.ok) throw new Error('message');
+      const data = await res.json().catch(() => null);
       setInput('');
+      setSelectedFiles([]);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       setMessages((current) => [...current, {
         id: `local-${Date.now()}`,
         role: 'user',
         content,
+        attachments: data?.message?.attachments ?? [],
       }]);
     } catch {
       setMessages((current) => [...current, {
@@ -126,23 +142,68 @@ export function ManagerChatWidget(): JSX.Element | null {
             {messages.length === 0 ? (
               <p className={styles.empty}>Здравствуйте! Напишите ваш вопрос — менеджер ответит в чате.</p>
             ) : messages.map((message) => (
-              <p
+              <div
                 key={message.id}
                 className={`${styles.message} ${message.role === 'manager' ? styles.manager : styles.user}`}
               >
-                {message.content}
-              </p>
+                {message.content ? <p>{message.content}</p> : null}
+                {message.attachments?.map((attachment) => (
+                  attachment.mimeType.startsWith('image/') ? (
+                    <a key={attachment.url} href={attachment.url} target="_blank" rel="noreferrer">
+                      <img className={styles.attachmentImage} src={attachment.url} alt={attachment.name} />
+                      <span className={styles.fileName}>{attachment.name}</span>
+                    </a>
+                  ) : (
+                    <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noreferrer">
+                      <span>📎</span>
+                      <span className={styles.fileName}>{attachment.name}</span>
+                    </a>
+                  )
+                ))}
+              </div>
             ))}
           </div>
           <form className={styles.form} onSubmit={send}>
-            <input
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              placeholder="Сообщение менеджеру…"
-              aria-label="Сообщение менеджеру"
-              maxLength={2000}
-            />
-            <button type="submit" disabled={!input.trim() || sending} aria-label="Отправить">→</button>
+            {selectedFiles.length > 0 ? (
+              <div className={styles.selectedFiles}>
+                {selectedFiles.map((file) => (
+                  <span key={`${file.name}-${file.size}-${file.lastModified}`} title={file.name}>
+                    {file.name}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <div className={styles.formRow}>
+              <input
+                ref={fileInputRef}
+                className={styles.fileInput}
+                type="file"
+                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+                multiple
+                onChange={(event) => {
+                  const files = Array.from(event.target.files ?? []).slice(0, 5);
+                  setSelectedFiles(files.filter((file) => file.size <= 10 * 1024 * 1024));
+                }}
+              />
+              <button
+                className={styles.attachBtn}
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                aria-label="Прикрепить фотографию или файл"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21.44 11.05l-8.49 8.49a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.19 9.19a2 2 0 01-2.83-2.83l8.49-8.49" />
+                </svg>
+              </button>
+              <input
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="Сообщение менеджеру…"
+                aria-label="Сообщение менеджеру"
+                maxLength={2000}
+              />
+              <button type="submit" disabled={(!input.trim() && selectedFiles.length === 0) || sending} aria-label="Отправить">→</button>
+            </div>
           </form>
         </section>
       ) : null}

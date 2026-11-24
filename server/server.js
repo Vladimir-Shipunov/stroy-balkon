@@ -329,6 +329,38 @@ const upload = multer({
     }
 });
 
+const chatUploadDirectory = './public/uploads/chat';
+if (!fs.existsSync(chatUploadDirectory)) {
+    fs.mkdirSync(chatUploadDirectory, { recursive: true });
+}
+
+const chatStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, chatUploadDirectory),
+    filename: (req, file, cb) => {
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        cb(null, `${uniqueSuffix}-${sanitizeUploadFilename(file.originalname)}`);
+    }
+});
+
+const chatUpload = multer({
+    storage: chatStorage,
+    limits: {
+        fileSize: parseInt(process.env.CHAT_MAX_FILE_SIZE, 10) || 10 * 1024 * 1024,
+        files: 5
+    },
+    fileFilter: (req, file, cb) => {
+        const blockedExtensions = new Set(['.exe', '.bat', '.cmd', '.msi', '.com', '.scr', '.js', '.php']);
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (blockedExtensions.has(ext)) {
+            const error = new Error('Этот тип файла запрещён');
+            error.status = 400;
+            cb(error);
+            return;
+        }
+        cb(null, true);
+    }
+});
+
 app.post('/api/upload', uploadLimiter, upload.single('screenshot'), (req, res) => {
     try {
         if (!req.file) {
@@ -484,12 +516,13 @@ app.get('/api/chat/session', (req, res) => {
     });
 });
 
-app.post('/api/chat/sessions/:id/messages', aiChatLimiter, async (req, res) => {
+app.post('/api/chat/sessions/:id/messages', aiChatLimiter, chatUpload.array('files', 5), async (req, res) => {
     try {
         const crypto = require('crypto');
         const sessionId = cleanString(req.params.id, { max: 80 });
         const content = cleanString(req.body?.content, { max: 2000 });
-        if (!sessionId || !content) {
+        const files = Array.isArray(req.files) ? req.files : [];
+        if (!sessionId || (!content && files.length === 0)) {
             return res.status(400).json({ success: false, error: 'Укажите сообщение' });
         }
         const session = db.getChatSession(sessionId);
@@ -502,6 +535,12 @@ app.post('/api/chat/sessions/:id/messages', aiChatLimiter, async (req, res) => {
             sessionId,
             role: 'user',
             content,
+            attachments: files.map((file) => ({
+                name: file.originalname,
+                url: `/uploads/chat/${encodeURIComponent(file.filename)}`,
+                size: file.size,
+                mimeType: file.mimetype
+            })),
             createdAt: new Date().toISOString()
         };
         if (!db.saveChatMessage(message)) {
@@ -551,18 +590,25 @@ app.post('/api/admin/chat-sessions/:id/status', adminGuard, (req, res) => {
     return res.json({ success: true });
 });
 
-app.post('/api/admin/chat-sessions/:id/messages', adminGuard, (req, res) => {
+app.post('/api/admin/chat-sessions/:id/messages', adminGuard, chatUpload.array('files', 5), (req, res) => {
     const crypto = require('crypto');
     const id = cleanString(req.params.id, { max: 80 });
     const content = cleanString(req.body?.content, { max: 2000 });
-    if (!db.getChatSession(id) || !content) {
-        return res.status(content ? 404 : 400).json({ success: false, error: content ? 'Чат не найден' : 'Укажите сообщение' });
+    const files = Array.isArray(req.files) ? req.files : [];
+    if (!db.getChatSession(id) || (!content && files.length === 0)) {
+        return res.status(content || files.length ? 404 : 400).json({ success: false, error: content || files.length ? 'Чат не найден' : 'Укажите сообщение' });
     }
     const message = {
         id: `msg_${crypto.randomBytes(12).toString('hex')}`,
         sessionId: id,
         role: 'manager',
         content,
+        attachments: files.map((file) => ({
+            name: file.originalname,
+            url: `/uploads/chat/${encodeURIComponent(file.filename)}`,
+            size: file.size,
+            mimeType: file.mimetype
+        })),
         createdAt: new Date().toISOString()
     };
     db.saveChatMessage(message);

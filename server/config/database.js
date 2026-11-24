@@ -121,6 +121,7 @@ class BalconyDatabase {
                 sessionId TEXT NOT NULL,
                 role TEXT NOT NULL,
                 content TEXT NOT NULL,
+                attachments TEXT,
                 createdAt TEXT NOT NULL,
                 FOREIGN KEY (sessionId) REFERENCES chat_sessions(id) ON DELETE CASCADE
             );
@@ -135,6 +136,12 @@ class BalconyDatabase {
             this.db.exec('ALTER TABLE chat_sessions ADD COLUMN visitorId TEXT');
         }
         this.db.exec('CREATE INDEX IF NOT EXISTS idx_chat_sessions_visitor ON chat_sessions(visitorId)');
+        const hasChatAttachments = this.db
+            .prepare("SELECT 1 FROM pragma_table_info('chat_messages') WHERE name = 'attachments'")
+            .get();
+        if (!hasChatAttachments) {
+            this.db.exec('ALTER TABLE chat_messages ADD COLUMN attachments TEXT');
+        }
 
         // Admin-editable price list (so prices can change without a code deploy).
         // scope: 'material' | 'profile' | 'base' | 'option'; ref_key identifies the
@@ -912,9 +919,16 @@ class BalconyDatabase {
     saveChatMessage(message) {
         try {
             this.db.prepare(`
-                INSERT INTO chat_messages (id, sessionId, role, content, createdAt)
-                VALUES (?, ?, ?, ?, ?)
-            `).run(message.id, message.sessionId, message.role, message.content, message.createdAt);
+                INSERT INTO chat_messages (id, sessionId, role, content, attachments, createdAt)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `).run(
+                message.id,
+                message.sessionId,
+                message.role,
+                message.content,
+                JSON.stringify(message.attachments ?? []),
+                message.createdAt
+            );
             this.touchChatSession(message.sessionId);
             return message;
         } catch (error) {
@@ -926,11 +940,19 @@ class BalconyDatabase {
     getChatMessages(sessionId) {
         try {
             return this.db.prepare(`
-                SELECT id, sessionId, role, content, createdAt
+                SELECT id, sessionId, role, content, attachments, createdAt
                 FROM chat_messages
                 WHERE sessionId = ?
                 ORDER BY createdAt ASC
-            `).all(sessionId);
+            `).all(sessionId).map((message) => {
+                let attachments = [];
+                try {
+                    attachments = JSON.parse(message.attachments || '[]');
+                } catch {
+                    attachments = [];
+                }
+                return { ...message, attachments };
+            });
         } catch (error) {
             logger.error('Get chat messages error', error);
             return [];

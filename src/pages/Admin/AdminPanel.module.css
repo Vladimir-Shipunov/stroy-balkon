@@ -25,6 +25,8 @@
 .reply { display:flex; gap:8px; margin-top:12px; }
 .reply input { flex:1; border:1.5px solid var(--border-strong); border-radius:var(--radius-sm); padding:10px 12px; }
 .reply button,.status button { padding:9px 12px; border-radius:var(--radius-sm); background:var(--gold); color:#fff; font-weight:700; }
+.reply .fileInput { display:none; }
+.adminAttachmentImage { max-width:220px; max-height:180px; object-fit:cover; border-radius:8px; display:block; margin:6px 0 4px; }
 .status { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
 .status button { background:var(--surface); color:var(--text); border:1px solid var(--border); }
 @media(max-width:760px){ .bar{height:auto;min-height:64px;padding:10px 12px;flex-wrap:wrap}.nav{order:3;width:100%;margin:0}.detail{grid-template-columns:1fr}.body{padding:16px}.row{grid-template-columns:1fr 1fr}.rowHead{display:none}.row span:nth-child(n+3){text-align:right}}

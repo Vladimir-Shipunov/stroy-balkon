@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { usePageTitle } from '../../lib/usePageTitle';
 import { AdminTokenGate } from './AdminTokenGate';
@@ -6,7 +6,8 @@ import { AdminNav } from './AdminNav';
 import { useAdminAuth } from './useAdminAuth';
 import styles from './AdminPanel.module.css';
 
-interface ChatMessage { id:string; role:'user'|'manager'; content:string; createdAt:string }
+interface ChatAttachment { name:string; url:string; size:number; mimeType:string }
+interface ChatMessage { id:string; role:'user'|'manager'; content:string; attachments?:ChatAttachment[]; createdAt:string }
 interface ChatSession { id:string; visitorName:string|null; visitorPhone:string|null; page:string; status:'new'|'processing'|'answered'|'closed'; updatedAt:string; messages:ChatMessage[] }
 
 export function AdminChats(): JSX.Element {
@@ -39,11 +40,34 @@ function ChatsPanel({token,onLogout}:{token:string;onLogout:()=>void}):JSX.Eleme
 function ChatDetail({id,token,onLogout,sessions}:{id:string;token:string;onLogout:()=>void;sessions:ChatSession[]}):JSX.Element{
   const [session,setSession]=useState<ChatSession|null>(sessions.find(s=>s.id===id)??null);
   const [input,setInput]=useState('');
+  const [selectedFiles,setSelectedFiles]=useState<File[]>([]);
+  const fileInputRef=useRef<HTMLInputElement>(null);
   useEffect(()=>{if(session)return;fetch(`/api/admin/chat-sessions?limit=100`,{headers:{Authorization:`Bearer ${token}`}}).then(r=>r.json()).then(d=>setSession((d.sessions??[]).find((s:ChatSession)=>s.id===id)??null));},[id,token,session]);
-  async function send(){if(!input.trim())return;await fetch(`/api/admin/chat-sessions/${id}/messages`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({content:input.trim()})});setSession(current=>current?{...current,status:'answered',messages:[...current.messages,{id:`manager-${Date.now()}`,role:'manager',content:input.trim(),createdAt:new Date().toISOString()}]}:current);setInput('');}
+  async function send(){
+    if(!input.trim()&&!selectedFiles.length)return;
+    const body=new FormData();
+    body.set('content',input.trim());
+    selectedFiles.slice(0,5).forEach(file=>body.append('files',file));
+    const res=await fetch(`/api/admin/chat-sessions/${id}/messages`,{method:'POST',headers:{Authorization:`Bearer ${token}`},body});
+    const data=await res.json().catch(()=>null);
+    if(res.ok&&data?.message)setSession(current=>current?{...current,status:'answered',messages:[...current.messages,data.message]}:current);
+    setInput('');
+    setSelectedFiles([]);
+    if(fileInputRef.current)fileInputRef.current.value='';
+  }
   async function setChatStatus(status:string){await fetch(`/api/admin/chat-sessions/${id}/status`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({status})});setSession(current=>current?{...current,status:status as ChatSession['status']}:current);}
   return <div className={styles.wrap}><AdminNav title="Чат" onLogout={onLogout}/><main className={styles.body}>{session?<div className={styles.detail}>
     <aside className={styles.card}><strong>{session.visitorName||'Посетитель'}</strong><p>{session.visitorPhone||'Телефон не указан'}</p><p>Страница: {session.page}</p><div className={styles.status}>{(['new','processing','answered','closed'] as const).map(s=><button type="button" key={s} onClick={()=>setChatStatus(s)}>{s}</button>)}</div></aside>
-    <section className={styles.card}><div className={styles.messages}>{session.messages.map(m=><p key={m.id} className={`${styles.message} ${m.role==='manager'?styles.manager:''}`}>{m.content}</p>)}</div><div className={styles.reply}><input value={input} onChange={e=>setInput(e.target.value)} placeholder="Ответ посетителю…" /><button type="button" onClick={send}>Ответить</button></div></section>
+    <section className={styles.card}><div className={styles.messages}>{session.messages.map(m=><div key={m.id} className={`${styles.message} ${m.role==='manager'?styles.manager:''}`}>
+      {m.content?<p>{m.content}</p>:null}
+      {m.attachments?.map(a=>a.mimeType.startsWith('image/')?
+        <a key={a.url} href={a.url} target="_blank" rel="noreferrer"><img className={styles.adminAttachmentImage} src={a.url} alt={a.name}/><span>{a.name}</span></a>:
+        <a key={a.url} href={a.url} target="_blank" rel="noreferrer">📎 {a.name}</a>)}
+    </div>)}</div><div className={styles.reply}>
+      <input ref={fileInputRef} className={styles.fileInput} type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar" multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>f.size<=10*1024*1024))}/>
+      <button type="button" onClick={()=>fileInputRef.current?.click()} title="Прикрепить файл">📎</button>
+      <input value={input} onChange={e=>setInput(e.target.value)} placeholder={selectedFiles.length?'Файлы выбраны':'Ответ посетителю…'} />
+      <button type="button" onClick={send}>Ответить</button>
+    </div></section>
   </div>:<div className={styles.empty}>Чат не найден.</div>}</main></div>;
 }
