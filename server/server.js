@@ -399,6 +399,138 @@ app.post('/api/request-call', callRequestLimiter, async (req, res) => {
     }
 });
 
+// Live manager chat (separate from the AI consultant).
+app.post('/api/chat/sessions', aiChatLimiter, async (req, res) => {
+    try {
+        const crypto = require('crypto');
+        const now = new Date().toISOString();
+        const session = {
+            id: `chat_${crypto.randomBytes(12).toString('hex')}`,
+            visitorName: cleanString(req.body?.name, { max: 120 }) || null,
+            visitorPhone: cleanPhone(req.body?.phone),
+            page: cleanString(req.body?.page, { max: 80 }) || 'Главная',
+            createdAt: now,
+            updatedAt: now
+        };
+        if (!db.createChatSession(session)) {
+            return res.status(500).json({ success: false, error: 'Не удалось создать чат' });
+        }
+        await telegramBot.sendMessage(
+            `<b>Новый чат на сайте</b>\n\nСтраница: ${session.page}\nИмя: ${session.visitorName || 'не указано'}\nТелефон: ${session.visitorPhone || 'не указан'}\nСсылка: ${siteUrl}/admin/chats/${session.id}`
+        );
+        return res.status(201).json({ success: true, sessionId: session.id });
+    } catch (error) {
+        logger.error('Create chat session error', error);
+        return res.status(500).json({ success: false, error: 'Не удалось создать чат' });
+    }
+});
+
+app.post('/api/chat/sessions/:id/messages', aiChatLimiter, async (req, res) => {
+    try {
+        const crypto = require('crypto');
+        const sessionId = cleanString(req.params.id, { max: 80 });
+        const content = cleanString(req.body?.content, { max: 2000 });
+        if (!sessionId || !content) {
+            return res.status(400).json({ success: false, error: 'Укажите сообщение' });
+        }
+        if (!db.getChatSession(sessionId)) {
+            return res.status(404).json({ success: false, error: 'Чат не найден' });
+        }
+        const message = {
+            id: `msg_${crypto.randomBytes(12).toString('hex')}`,
+            sessionId,
+            role: 'user',
+            content,
+            createdAt: new Date().toISOString()
+        };
+        if (!db.saveChatMessage(message)) {
+            return res.status(500).json({ success: false, error: 'Не удалось отправить сообщение' });
+        }
+        await telegramBot.sendMessage(
+            `<b>Новое сообщение в чате</b>\n\nЧат: ${sessionId}\nСтраница: ${db.getChatSession(sessionId)?.page || 'сайт'}\nСообщение: ${content.replace(/[<>&]/g, (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[ch]))}\nСсылка: ${siteUrl}/admin/chats/${sessionId}`
+        );
+        return res.status(201).json({ success: true, message });
+    } catch (error) {
+        logger.error('Save chat message error', error);
+        return res.status(500).json({ success: false, error: 'Не удалось отправить сообщение' });
+    }
+});
+
+app.get('/api/chat/sessions/:id/messages', (req, res) => {
+    const sessionId = cleanString(req.params.id, { max: 80 });
+    if (!db.getChatSession(sessionId)) {
+        return res.status(404).json({ success: false, error: 'Чат не найден' });
+    }
+    return res.json({ success: true, messages: db.getChatMessages(sessionId) });
+});
+
+app.get('/api/admin/chat-sessions', adminGuard, (req, res) => {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
+    const status = ['new', 'processing', 'answered', 'closed'].includes(req.query.status) ? req.query.status : null;
+    const sessions = db.getChatSessions({ page, limit, status });
+    return res.json({
+        success: true,
+        sessions: sessions.data,
+        pagination: { page: sessions.page, limit: sessions.limit, total: sessions.total, pages: Math.ceil(sessions.total / sessions.limit) }
+    });
+});
+
+app.post('/api/admin/chat-sessions/:id/status', adminGuard, (req, res) => {
+    const id = cleanString(req.params.id, { max: 80 });
+    const status = cleanString(req.body?.status, { max: 40 });
+    if (!['new', 'processing', 'answered', 'closed'].includes(status)) {
+        return res.status(400).json({ success: false, error: 'Некорректный статус' });
+    }
+    if (!db.updateChatSessionStatus(id, status)) {
+        return res.status(404).json({ success: false, error: 'Чат не найден' });
+    }
+    return res.json({ success: true });
+});
+
+app.post('/api/admin/chat-sessions/:id/messages', adminGuard, (req, res) => {
+    const crypto = require('crypto');
+    const id = cleanString(req.params.id, { max: 80 });
+    const content = cleanString(req.body?.content, { max: 2000 });
+    if (!db.getChatSession(id) || !content) {
+        return res.status(content ? 404 : 400).json({ success: false, error: content ? 'Чат не найден' : 'Укажите сообщение' });
+    }
+    const message = {
+        id: `msg_${crypto.randomBytes(12).toString('hex')}`,
+        sessionId: id,
+        role: 'manager',
+        content,
+        createdAt: new Date().toISOString()
+    };
+    db.saveChatMessage(message);
+    db.updateChatSessionStatus(id, 'answered');
+    return res.json({ success: true, message });
+});
+
+app.get('/api/admin/call-requests', adminGuard, (req, res) => {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
+    const status = ['pending', 'processed', 'cancelled'].includes(req.query.status) ? req.query.status : null;
+    const calls = db.getCallRequests({ page, limit, status });
+    return res.json({
+        success: true,
+        calls: calls.data,
+        pagination: { page: calls.page, limit: calls.limit, total: calls.total, pages: Math.ceil(calls.total / calls.limit) }
+    });
+});
+
+app.post('/api/admin/call-requests/:id/status', adminGuard, (req, res) => {
+    const id = cleanString(req.params.id, { max: 80 });
+    const status = cleanString(req.body?.status, { max: 40 });
+    if (!['pending', 'processed', 'cancelled'].includes(status)) {
+        return res.status(400).json({ success: false, error: 'Некорректный статус' });
+    }
+    if (!db.updateCallRequestStatus(id, status)) {
+        return res.status(404).json({ success: false, error: 'Заявка не найдена' });
+    }
+    return res.json({ success: true });
+});
+
 /* ------------------------------------------------------------------ *
  * AI renovation advisor (Claude)
  * ------------------------------------------------------------------ */
@@ -516,6 +648,10 @@ app.post('/api/ai-chat', aiChatLimiter, async (req, res) => {
             .join('')
             .trim();
         const parsed = parseAiResponse(text);
+        const lastUserMessage = messages[messages.length - 1]?.content || '';
+        await telegramBot.sendMessage(
+            `<b>${parsed.lead ? 'Готовность оставить заявку через ИИ' : 'Новое сообщение ИИ-консультанта'}</b>\n\nСтраница: ${page}\nСообщение: ${String(lastUserMessage).replace(/[<>&]/g, (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[ch]))}`
+        );
         return res.json({
             success: true,
             message: parsed.message,

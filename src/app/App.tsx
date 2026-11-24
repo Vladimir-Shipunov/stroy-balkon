@@ -15,9 +15,10 @@
  * served at every top-level route, not just under `/app/`.
  */
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CallModalProvider } from '../components/CallModal/CallModalProvider';
 import { ChatWidget } from '../components/ChatWidget/ChatWidget';
+import { ManagerChatWidget } from '../components/ManagerChatWidget/ManagerChatWidget';
 import { Layout } from '../components/Layout/Layout';
 import { PageLoader } from '../components/PageLoader';
 import { ScrollToTop } from '../components/ScrollToTop';
@@ -40,6 +41,12 @@ const Configurator = lazy(() =>
 );
 const OrdersAdmin = lazy(() =>
   import('../pages/Admin/OrdersAdmin').then((m) => ({ default: m.OrdersAdmin })),
+);
+const AdminCalls = lazy(() =>
+  import('../pages/Admin/AdminCalls').then((m) => ({ default: m.AdminCalls })),
+);
+const AdminChats = lazy(() =>
+  import('../pages/Admin/AdminChats').then((m) => ({ default: m.AdminChats })),
 );
 const NotFound = lazy(() =>
   import('../pages/NotFound/NotFound').then((m) => ({ default: m.NotFound })),
@@ -74,6 +81,7 @@ export function App(): JSX.Element {
               </Suspense>
             }
           />
+          <Route path="admin" element={<Navigate to="/admin/orders" replace />} />
           <Route
             path="admin/orders"
             element={
@@ -90,8 +98,12 @@ export function App(): JSX.Element {
               </Suspense>
             }
           />
+          <Route path="admin/calls" element={<Suspense fallback={<PageLoader />}><AdminCalls /></Suspense>} />
+          <Route path="admin/chats" element={<Suspense fallback={<PageLoader />}><AdminChats /></Suspense>} />
+          <Route path="admin/chats/:id" element={<Suspense fallback={<PageLoader />}><AdminChats /></Suspense>} />
           </Routes>
           <ChatWidget />
+          <ManagerChatWidget />
         </CallModalProvider>
       </ConfiguratorProvider>
     </BrowserRouter>

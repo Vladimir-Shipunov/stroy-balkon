@@ -7,11 +7,11 @@
  */
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Logo } from '../../components/Header/Logo';
 import { usePageTitle } from '../../lib/usePageTitle';
 import { AdminTokenGate } from './AdminTokenGate';
 import { SavedConfigPreview } from './SavedConfigPreview';
 import { useAdminAuth } from './useAdminAuth';
+import { AdminNav } from './AdminNav';
 import styles from './OrdersAdmin.module.css';
 
 type OrderStatus = 'new' | 'processing' | 'confirmed' | 'in_work' | 'completed' | 'cancelled';
@@ -87,19 +87,7 @@ function Panel({ token, onLogout }: { token: string; onLogout: () => void }): JS
   const { id } = useParams<{ id: string }>();
   return (
     <div className={styles.wrap}>
-      <header className={styles.bar}>
-        <Link to="/" aria-label="На главную">
-          <Logo />
-        </Link>
-        <span className={styles.barTitle}>Заказы</span>
-        <span style={{ flex: 1 }} />
-        <Link to="/configurator" className={styles.barLink}>
-          Открыть конфигуратор
-        </Link>
-        <button className={styles.barLink} onClick={onLogout} type="button">
-          Выйти
-        </button>
-      </header>
+      <AdminNav title="Заказы" onLogout={onLogout} />
       {id ? <OrderDetail id={id} token={token} onUnauthorized={onLogout} /> : <OrderList token={token} onUnauthorized={onLogout} />}
     </div>
   );

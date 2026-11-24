@@ -112,3 +112,12 @@ src/
 - `POST /api/ai-chat` — AI-консультант `{ page, config, messages }`
 - `GET /api/health` — статус сервера
 
+## Админ-панель и Telegram
+
+- Админ-панель: `/admin`
+- Разделы: `/admin/orders`, `/admin/calls`, `/admin/chats`
+- Для входа задайте `ADMIN_API_TOKEN` в `.env`.
+- Для уведомлений задайте `TELEGRAM_ENABLED=true`, `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`.
+- Уведомления отправляются при заявке звонка/замера, новом заказе, новом чате и новом сообщении
+  ИИ-консультанта.
+

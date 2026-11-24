@@ -105,6 +105,29 @@ class BalconyDatabase {
             )
         `);
 
+        this.db.exec(`
+            CREATE TABLE IF NOT EXISTS chat_sessions (
+                id TEXT PRIMARY KEY,
+                visitorName TEXT,
+                visitorPhone TEXT,
+                page TEXT,
+                status TEXT DEFAULT 'new',
+                createdAt TEXT NOT NULL,
+                updatedAt TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS chat_messages (
+                id TEXT PRIMARY KEY,
+                sessionId TEXT NOT NULL,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                createdAt TEXT NOT NULL,
+                FOREIGN KEY (sessionId) REFERENCES chat_sessions(id) ON DELETE CASCADE
+            );
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_status ON chat_sessions(status);
+            CREATE INDEX IF NOT EXISTS idx_chat_sessions_updated ON chat_sessions(updatedAt);
+            CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(sessionId);
+        `);
+
         // Admin-editable price list (so prices can change without a code deploy).
         // scope: 'material' | 'profile' | 'base' | 'option'; ref_key identifies the
         // priced thing within that scope (a model id, a finish family id, etc).
@@ -794,6 +817,131 @@ class BalconyDatabase {
         } catch (error) {
             logger.error('Save call request error', error);
             return null;
+        }
+    }
+
+    getCallRequests({ page = 1, limit = 20, status = null } = {}) {
+        try {
+            const offset = (page - 1) * limit;
+            const base = status
+                ? 'FROM call_requests WHERE status = ?'
+                : 'FROM call_requests';
+            const where = status ? [status] : [];
+            const total = this.db.prepare(`SELECT COUNT(*) as total ${base}`).get(...where).total;
+            const rows = status
+                ? this.db.prepare(`SELECT * ${base} ORDER BY createdAt DESC LIMIT ? OFFSET ?`).all(...where, limit, offset)
+                : this.db.prepare(`SELECT * ${base} ORDER BY createdAt DESC LIMIT ? OFFSET ?`).all(limit, offset);
+            return { data: rows, page, limit, total };
+        } catch (error) {
+            logger.error('Get call requests error', error);
+            return { data: [], page, limit, total: 0 };
+        }
+    }
+
+    updateCallRequestStatus(id, status) {
+        try {
+            const now = new Date().toISOString();
+            const result = this.db.prepare(`
+                UPDATE call_requests
+                SET status = ?, processedAt = ?
+                WHERE id = ?
+            `).run(status, status === 'pending' ? null : now, id);
+            return result.changes > 0;
+        } catch (error) {
+            logger.error('Update call request status error', error);
+            return false;
+        }
+    }
+
+    createChatSession(session) {
+        try {
+            this.db.prepare(`
+                INSERT INTO chat_sessions (id, visitorName, visitorPhone, page, status, createdAt, updatedAt)
+                VALUES (?, ?, ?, ?, 'new', ?, ?)
+            `).run(session.id, session.visitorName, session.visitorPhone, session.page, session.createdAt, session.updatedAt);
+            return session;
+        } catch (error) {
+            logger.error('Create chat session error', error);
+            return null;
+        }
+    }
+
+    getChatSession(id) {
+        try {
+            return this.db.prepare('SELECT * FROM chat_sessions WHERE id = ?').get(id) || null;
+        } catch (error) {
+            logger.error('Get chat session error', error);
+            return null;
+        }
+    }
+
+    touchChatSession(id) {
+        try {
+            this.db.prepare(`
+                UPDATE chat_sessions SET updatedAt = ?, status = CASE WHEN status = 'closed' THEN 'new' ELSE status END
+                WHERE id = ?
+            `).run(new Date().toISOString(), id);
+        } catch (error) {
+            logger.error('Touch chat session error', error);
+        }
+    }
+
+    saveChatMessage(message) {
+        try {
+            this.db.prepare(`
+                INSERT INTO chat_messages (id, sessionId, role, content, createdAt)
+                VALUES (?, ?, ?, ?, ?)
+            `).run(message.id, message.sessionId, message.role, message.content, message.createdAt);
+            this.touchChatSession(message.sessionId);
+            return message;
+        } catch (error) {
+            logger.error('Save chat message error', error);
+            return null;
+        }
+    }
+
+    getChatMessages(sessionId) {
+        try {
+            return this.db.prepare(`
+                SELECT id, sessionId, role, content, createdAt
+                FROM chat_messages
+                WHERE sessionId = ?
+                ORDER BY createdAt ASC
+            `).all(sessionId);
+        } catch (error) {
+            logger.error('Get chat messages error', error);
+            return [];
+        }
+    }
+
+    getChatSessions({ page = 1, limit = 20, status = null } = {}) {
+        try {
+            const offset = (page - 1) * limit;
+            const base = status ? 'FROM chat_sessions WHERE status = ?' : 'FROM chat_sessions';
+            const where = status ? [status] : [];
+            const total = this.db.prepare(`SELECT COUNT(*) as total ${base}`).get(...where).total;
+            const sessions = status
+                ? this.db.prepare(`SELECT * ${base} ORDER BY updatedAt DESC LIMIT ? OFFSET ?`).all(...where, limit, offset)
+                : this.db.prepare(`SELECT * ${base} ORDER BY updatedAt DESC LIMIT ? OFFSET ?`).all(limit, offset);
+            return { data: sessions.map((session) => ({
+                ...session,
+                messages: this.getChatMessages(session.id)
+            })), page, limit, total };
+        } catch (error) {
+            logger.error('Get chat sessions error', error);
+            return { data: [], page, limit, total: 0 };
+        }
+    }
+
+    updateChatSessionStatus(id, status) {
+        try {
+            const result = this.db.prepare(`
+                UPDATE chat_sessions SET status = ?, updatedAt = ? WHERE id = ?
+            `).run(status, new Date().toISOString(), id);
+            return result.changes > 0;
+        } catch (error) {
+            logger.error('Update chat session status error', error);
+            return false;
         }
     }
 
