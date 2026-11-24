@@ -2,13 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "balcony-server",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["server/server.js"],
-      "port": 3000
-    },
-    {
-      "name": "configurator-app",
+      "name": "dev:app",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev:app"],
       "port": 5173

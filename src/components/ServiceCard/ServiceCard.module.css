@@ -70,33 +70,6 @@
   color: var(--tone);
 }
 
-.price {
-  text-align: right;
-  line-height: 1.1;
-}
-
-.priceFrom {
-  display: block;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-faint);
-}
-
-.priceValue {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.priceUnit {
-  display: block;
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
 .title {
   font-size: 1.35rem;
   margin-bottom: 8px;

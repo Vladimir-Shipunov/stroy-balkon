@@ -34,7 +34,7 @@ export function Footer(): JSX.Element {
           <Logo onDark />
           <p className={styles.brandText}>
             Остекление, утепление и отделка балконов и лоджий под ключ в Москве и области.
-            Свои бригады, фиксированная смета, гарантия 5 лет.
+            Свои бригады, понятный план работ, гарантия 5 лет.
           </p>
           <div className={styles.socials}>
             <a href={COMPANY.social.instagram} aria-label="Instagram" target="_blank" rel="noopener noreferrer">
@@ -94,8 +94,8 @@ export function Footer(): JSX.Element {
         </div>
 
         <div className={styles.ctaCol}>
-          <h3 className={styles.colTitle}>Бесплатный замер</h3>
-          <p className={styles.ctaText}>Приедем в удобное время, замерим и рассчитаем смету.</p>
+          <h3 className={styles.colTitle}>Заказать замер</h3>
+          <p className={styles.ctaText}>Приедем в удобное время, сделаем замер и обсудим ваши задачи.</p>
           <button className="btn btn--primary" onClick={() => open()} type="button">
             Заказать звонок
           </button>

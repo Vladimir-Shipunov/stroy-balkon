@@ -18301,12 +18301,12 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "label": "Светильник",
          "layers": [
           {
-           "p": "lamp11_",
+           "p": "lampp11_",
            "z": 90,
            "v": 1
           },
           {
-           "p": "lamp1_",
+           "p": "lampp1_",
            "z": 90,
            "v": 0
           }
@@ -19574,12 +19574,12 @@ export const VAM_APP_SCREENS: Readonly<Record<string, readonly [AppView, AppView
          "label": "Светильник",
          "layers": [
           {
-           "p": "lamp11_",
+           "p": "lampp11_",
            "z": 90,
            "v": 1
           },
           {
-           "p": "lamp1_",
+           "p": "lampp1_",
            "z": 90,
            "v": 0
           }

@@ -41,7 +41,7 @@ export function Header(): JSX.Element {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={`container container--wide ${styles.inner}`}>
-        <Link to="/" className={styles.brand} aria-label="БАЛКОН-МСК, на главную">
+        <Link to="/" className={styles.brand} aria-label="STROY-BALKON, на главную">
           <Logo />
         </Link>
 
@@ -69,7 +69,7 @@ export function Header(): JSX.Element {
             Конфигуратор <ArrowUpRight size={16} />
           </Link>
           <button className={`btn btn--primary ${styles.callBtn}`} onClick={() => open()} type="button">
-            Замер бесплатно
+            Заказать замер
           </button>
           <button
             className={styles.burger}

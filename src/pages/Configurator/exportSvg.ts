@@ -6,7 +6,19 @@
  * file render correctly outside the app (no external stylesheet to carry over).
  */
 
-/** Pulls the numeric width/height a viewBox implies, for the exported file's intrinsic size. */
+/** The width of the downloaded drawing, px: a size to look at and to print, whatever unit the viewBox is in. */
+export const EXPORT_WIDTH_PX = 1200;
+
+/**
+ * The intrinsic size (the `width` / `height` attributes) of the exported file for a viewBox of `box`: `EXPORT_WIDTH_PX`
+ * wide, the viewBox's proportions kept. The plan's viewBox is in millimetres (a 5.6 m drawing is 5633 units wide), so
+ * taking it as pixels would open the file several thousand pixels across.
+ */
+export function exportSize(box: { readonly width: number; readonly height: number }): { width: number; height: number } {
+  return { width: EXPORT_WIDTH_PX, height: Math.max(1, Math.round((EXPORT_WIDTH_PX * box.height) / box.width)) };
+}
+
+/** The viewBox's size, when the drawing has a usable one. */
 function viewBoxSize(svgEl: SVGSVGElement): { width: number; height: number } | undefined {
   const vb = svgEl.viewBox?.baseVal;
   if (vb && vb.width > 0 && vb.height > 0) return { width: vb.width, height: vb.height };
@@ -26,7 +38,9 @@ export function downloadSvgElement(svgEl: SVGSVGElement, filename: string): void
   if (!clone.getAttribute('xmlns:xlink')) clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
   if (!clone.getAttribute('width') || !clone.getAttribute('height')) {
-    const size = viewBoxSize(svgEl) ?? { width: svgEl.clientWidth || 800, height: svgEl.clientHeight || 600 };
+    const box = viewBoxSize(svgEl);
+    // Without a viewBox the content is in pixels already: keep the on-page size.
+    const size = box ? exportSize(box) : { width: svgEl.clientWidth || 800, height: svgEl.clientHeight || 600 };
     clone.setAttribute('width', String(Math.round(size.width)));
     clone.setAttribute('height', String(Math.round(size.height)));
   }

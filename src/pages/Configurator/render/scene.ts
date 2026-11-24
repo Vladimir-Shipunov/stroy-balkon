@@ -183,10 +183,18 @@ function glazingFaces(e: Edge, zb: number, zt: number, transom: number | null, o
       out.push(hface(e, s0, s1, 0, -GLASS_SET, p0, true, 'frame', 'P:frame', PICK.frame, false, 0.9));
       out.push(hface(e, s0, s1, 0, -GLASS_SET, p1, false, 'frame', 'P:frame', PICK.frame, false, 0.72));
       // A handle on every other window, on its side next to the mullion (the main, upper row).
+      // Lying almost flush with the frame (22 mm proud of it), it foreshortens to a thin
+      // streak at any view that runs near-parallel to the glazing — every two-view camera
+      // here does exactly that down one end of its own run — and a brighter tint there reads
+      // as a stray mark floating off the sash rather than a handle, since the mullion either
+      // side foreshortens the same way and all but disappears while the handle doesn't. Kept
+      // at the frame's own brightness (no boost) and a size that still survives that
+      // foreshortening without calling attention to itself the way the brighter, bigger
+      // version did.
       if (ri === rows.length - 1 && k % 2 === 0 && units > 1 && s1 - s0 > 150) {
         const hs = k === units - 1 ? s0 + 24 : s1 - 24;
         const hz = Math.min(p1 - 250, p0 + (p1 - p0) * 0.45);
-        out.push({ ...vface(e, 22, hs - 11, hs + 11, hz - 60, hz + 70, 'frame', 'P:frame', PICK.frame, false, 1.05), layer: 'handles' });
+        out.push({ ...vface(e, 22, hs - 9, hs + 9, hz - 45, hz + 45, 'frame', 'P:frame', PICK.frame, false, 0.85), layer: 'handles' });
       }
     });
   }
@@ -450,30 +458,60 @@ export function buildRoom(g: PlanGeom): RoomModel {
   return { faces, windows, lamps: lampRowAt(g) };
 }
 
+/** A camera needs enough width ahead of it, along its own line of sight, to clear the
+ * Лодочка's tapered "bow" (the house wall and the slanted glazing closing in to 500-700 mm
+ * there): planted right at that pinch, looking down the taper, a camera grazes the glazing
+ * edge-on — mostly wall in frame, the window reduced to a sliver — instead of looking
+ * squarely down it the way every other shape's two views do. 795 mm clears it without
+ * excluding the Хрущёвка's own constant 800 mm width (also measured against this). */
+const MIN_CAM_ROOM_WIDTH = 795;
+
 /**
  * The two views, as in the app: from each end of the balcony along its length, at
  * eye height, a little way in from the end wall and in the middle of the room
  * there. View 0 looks towards -x from the +x end, view 1 towards +x from the -x end.
+ *
+ * Only the low-x end is trimmed to clear `MIN_CAM_ROOM_WIDTH` first: it is the Лодочка's
+ * bow (see above) — the one end narrow enough, and tapering in the camera's own line of
+ * sight, to be a real framing problem. The high-x end (where the Лодочка's stepped recess
+ * sits, narrower still at 500-600 mm) is never trimmed: a camera standing there looks back
+ * *into* the open cabin, away from the recess, so its own narrowness never ends up in
+ * frame — and a view from inside it is the one place either camera actually shows the
+ * recess that makes a Лодочка a Лодочка rather than a generic loggia. Trimming that end too
+ * (as an earlier version of this function did) fixed nothing there and only pushed the
+ * camera out of the recess, losing the shape's own signature.
  */
 export function roomCameras(g: PlanGeom): readonly [CameraSpec, CameraSpec] {
   const xs = g.poly.map((p) => p[0]);
   const x0 = Math.min(...xs);
   const x1 = Math.max(...xs);
-  const inset = Math.max(320, Math.min(520, (x1 - x0) * 0.1));
-  // Median of the section midlines along the room.
+  let camX0 = x0;
+  for (let k = 0; k <= 120; k += 1) {
+    const x = x0 + ((x1 - x0) * k) / 120;
+    const [lo, hi] = section(g.poly, x);
+    if (hi - lo < MIN_CAM_ROOM_WIDTH) continue;
+    camX0 = x;
+    break;
+  }
+  const span = x1 - camX0;
+  // The bow needs real clearance past where it stops tapering (camX0 alone still lands
+  // right at the 795 mm mark, a near-tangential view) — the recess end doesn't, so it
+  // keeps the smaller inset that already framed it well.
+  const loInset = Math.max(480, Math.min(520, span * 0.1));
+  const hiInset = Math.max(320, Math.min(520, span * 0.1));
+  // Median of the section midlines along the room's camera-worthy span.
   const mids: number[] = [];
   for (let k = 0; k <= 40; k += 1) {
-    const [lo, hi] = section(g.poly, x0 + 1 + ((x1 - x0 - 2) * k) / 40);
+    const [lo, hi] = section(g.poly, camX0 + 1 + (span - 2) * (k / 40));
     mids.push((lo + hi) / 2);
   }
   mids.sort((a, b) => a - b);
   const axisY = mids[Math.floor(mids.length / 2)]!;
-  const place = (dir: 1 | -1): CameraSpec => {
-    const x = dir === 1 ? x0 + inset : x1 - inset;
+  const place = (dir: 1 | -1, x: number): CameraSpec => {
     const [lo, hi] = section(g.poly, x);
     // The room's main axis (a bay at one end must not pull the eye into it), kept clear of the walls.
     const y = Math.max(lo + 300, Math.min(hi - 300, axisY));
     return { x, y, z: EYE, fx: dir, fy: 0, fov: FOV };
   };
-  return [place(-1), place(1)];
+  return [place(-1, x1 - hiInset), place(1, camX0 + loInset)];
 }

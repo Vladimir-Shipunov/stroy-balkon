@@ -227,8 +227,8 @@ app.use('/api/projects', projectsRouter({ db, projectsWriteLimiter }));
 
 app.get('/api/hero-slides', (req, res) => {
     try {
-        const heroSlidesDir = path.join(__dirname, '../public/assets/images/hero-slider');
-        const supportedExtensions = new Set(['.jpg', '.jpeg', '.webp', '.png', '.svg']);
+        const heroSlidesDir = path.join(__dirname, '../public/assets/images/projects');
+        const supportedExtensions = new Set(['.jpg', '.jpeg', '.webp', '.png', '.avif']);
 
         if (!fs.existsSync(heroSlidesDir)) {
             return res.json({ success: true, slides: [] });
@@ -238,12 +238,13 @@ app.get('/api/hero-slides', (req, res) => {
         const slides = fs.readdirSync(heroSlidesDir, { withFileTypes: true })
             .filter((entry) => {
                 if (!entry.isFile() || entry.name.startsWith('.')) return false;
+                if (entry.name === 'hero-balcony.webp') return false;
                 return supportedExtensions.has(path.extname(entry.name).toLowerCase());
             })
             .map((entry) => entry.name)
             .sort((a, b) => collator.compare(a, b))
             .slice(0, 5)
-            .map((filename) => `/assets/images/hero-slider/${encodeURIComponent(filename)}`);
+            .map((filename) => `/assets/images/projects/${encodeURIComponent(filename)}`);
 
         return res.json({ success: true, slides });
     } catch (error) {
@@ -421,7 +422,7 @@ const AI_OBJECT_TYPES = [
 ];
 
 function buildAiSystemPrompt(page, config) {
-    return `Ты — эксперт-консультант компании «БАЛКОН-МСК» по ремонту и остеклению балконов в Москве. Отвечай по-русски, дружелюбно и профессионально. Помогай клиенту выбрать остекление, утепление, отделку, мебель и освещение; объясняй различия и сроки. Стоимость в конфигураторе не считается — на вопрос о цене мягко предложи бесплатный замер и точную смету от специалиста. Ответы краткие: 2–4 предложения, если не просят подробнее.
+    return `Ты — эксперт-консультант компании «БАЛКОН-МСК» по ремонту и остеклению балконов в Москве. Отвечай по-русски, дружелюбно и профессионально. Помогай клиенту выбрать остекление, утепление, отделку, мебель и освещение; объясняй различия и сроки. Не указывай цены и суммы — помоги разобраться в вариантах и предложи бесплатный замер для обсуждения деталей. Ответы краткие: 2–4 предложения, если не просят подробнее.
 
 Текущая страница пользователя: ${page}.
 Текущая конфигурация балкона: ${JSON.stringify(config)}.

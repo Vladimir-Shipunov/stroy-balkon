@@ -16,14 +16,14 @@
  */
 import { VAM_APP_SCREENS } from './vamApp.generated';
 import type { AppHotspot, AppOption, AppSlot, AppView, HotspotKind } from './vamApp.generated';
-import { VAM_SHAPES, VAM_TYPES, findVamShape, findVamType } from './vamShapes';
+import { VAM_AVAILABLE_SHAPES, VAM_SHAPES, VAM_TYPES, findVamShape, findVamType } from './vamShapes';
 import type { VamGlazingDef, VamShapeDef, VamTypeDef } from './vamShapes';
 import { planSurfaces } from './planGeometry';
 import { PLAN_SHAPES } from './planShapes';
 import { LAYERS } from './render/types';
 import type { LayerId, RenderPaint, SurfacePaint } from './render/types';
 
-export { VAM_SHAPES, VAM_TYPES, findVamShape, findVamType };
+export { VAM_AVAILABLE_SHAPES, VAM_SHAPES, VAM_TYPES, findVamShape, findVamType };
 export type { AppHotspot, AppOption, AppSlot, AppView, HotspotKind, VamGlazingDef, VamShapeDef, VamTypeDef };
 
 /** A material option + colour chosen for one slot of a tap target. */
@@ -41,8 +41,16 @@ export interface VamSelection {
   readonly picks: Readonly<Record<string, VamPick>>;
 }
 
+/** A cabinet choice applies to every cabinet hotspot in both photo views. */
+export const CABINET_PICK_KEY = 'cabinet|main';
+
 export function pickKey(hotspotId: string, slotId: string): string {
   return `${hotspotId}|${slotId}`;
+}
+
+/** Shared key for cabinet selections; all other surfaces keep their own view/plan key. */
+export function surfacePickKey(hotspot: AppHotspot, slotId: string): string {
+  return hotspot.kind === 'cabinet' ? CABINET_PICK_KEY : pickKey(hotspot.id, slotId);
 }
 
 /** The two camera views of a screen and whether they are drawn flipped. */
@@ -52,7 +60,7 @@ export interface VamScreen {
   readonly views: readonly [AppView, AppView];
 }
 
-const DEFAULT_SHAPE = VAM_SHAPES[0]!;
+const DEFAULT_SHAPE = VAM_AVAILABLE_SHAPES[0]!;
 
 export function vamShapeType(shape: VamShapeDef): VamTypeDef {
   return findVamType(shape.type) ?? VAM_TYPES[0]!;
@@ -135,10 +143,20 @@ export function vamPlanHotspots(shapeId: string): AppHotspot[] {
 }
 
 /**
- * Shapes the app has no photo scenes for (its pre-rendered frames show only Г, П, Л5, Л8 and the
- * П-44Т Утюг): they are drawn by the room renderer (render/) from their exact plan instead.
+ * Shapes the app's own pre-rendered photos don't actually match (its frames show only four
+ * generic footprints — Г, П, Л5/Л8 and the П-44Т Утюг): Лодочка has no app photo at all;
+ * Сапожок's own real footprint is a stepped, asymmetric П-44Т (see planShapes.ts), not the
+ * straight rectangle the generic "П" type's photo shows.
+ *
+ * The room renderer (render/) can draw either from its exact plan instead — the one option
+ * where a wall-length edit in planShapes.ts shows up in the picture itself, not just the
+ * `ShapePlan` "Чертёж, мм" card (which always carries the exact geometry regardless of this
+ * flag) — but it is a procedural picture, not a photo. Tried both ways repeatedly on
+ * 2026-10-14; the owner's final call was the real photo: `usesPlanRender` is false. Wall-
+ * length edits (planShapes.ts) stay fully meaningful either way since the blueprint always
+ * reflects them — only whether the *picture* does too depends on this flag.
  */
-const PLAN_RENDERED_SHAPES: ReadonlySet<string> = new Set(['lodochka']);
+const PLAN_RENDERED_SHAPES: ReadonlySet<string> = new Set<string>([]);
 
 export function usesPlanRender(shapeId: string): boolean {
   return PLAN_RENDERED_SHAPES.has(shapeId);
@@ -146,8 +164,10 @@ export function usesPlanRender(shapeId: string): boolean {
 
 /** Every tap target of the selection's balcony: both views of the app's real screen, or the plan view's surfaces. */
 export function vamHotspotList(sel: VamSelection): AppHotspot[] {
-  if (usesPlanRender(sel.shape)) return vamPlanHotspots(sel.shape);
-  return vamScreen(sel).views.flatMap((v) => [...v.hotspots]);
+  const hotspots = usesPlanRender(sel.shape)
+    ? vamPlanHotspots(sel.shape)
+    : vamScreen(sel).views.flatMap((v) => [...v.hotspots]);
+  return hotspots.filter((hotspot) => hotspot.kind !== 'decor');
 }
 
 function validPick(hotspots: readonly AppHotspot[], key: string, pick: VamPick): boolean {
@@ -162,7 +182,7 @@ function validPick(hotspots: readonly AppHotspot[], key: string, pick: VamPick):
 
 /** Coerce a possibly stale/partial selection into one that exists in the catalogue. */
 export function normalizeVamSelection(raw: Partial<VamSelection> | null | undefined): VamSelection {
-  const shape = findVamShape(raw?.shape) ?? DEFAULT_SHAPE;
+  const shape = VAM_AVAILABLE_SHAPES.find((candidate) => candidate.id === raw?.shape) ?? DEFAULT_SHAPE;
   const glazings = vamShapeGlazings(shape);
   const glazing = glazings.find((g) => g.id === raw?.glazing) ?? glazings[0]!;
   // Validated against the union of the app's real screen hotspots and the plan
@@ -170,6 +190,27 @@ export function normalizeVamSelection(raw: Partial<VamSelection> | null | undefi
   const hotspots = [...(VAM_APP_SCREENS[glazing.screen] ?? []).flatMap((v) => v.hotspots), ...vamPlanHotspots(shape.id)];
   const picks: Record<string, VamPick> = {};
   for (const [key, pick] of Object.entries(raw?.picks ?? {})) {
+    if (key === CABINET_PICK_KEY) {
+      const cabinet = hotspots.find((h) => h.kind === 'cabinet');
+      if (cabinet) {
+        const slot = cabinet.slots[0];
+        if (slot?.options.some((o) => o.id === pick?.o && o.colors.some((c) => c.k === pick.k))) {
+          picks[key] = pick;
+        }
+      }
+      continue;
+    }
+    if (pick && typeof pick.o === 'string' && typeof pick.k === 'number') {
+      const [hotspotId] = key.split('|');
+      const cabinet = hotspots.find((h) => h.kind === 'cabinet' && h.id === hotspotId);
+      if (cabinet) {
+        const cabinetPickIsValid = cabinet.slots.some((slot) =>
+          slot.options.some((option) => option.id === pick.o && option.colors.some((color) => color.k === pick.k)),
+        );
+        if (cabinetPickIsValid) picks[CABINET_PICK_KEY] = pick;
+        continue;
+      }
+    }
     if (pick && typeof pick.o === 'string' && typeof pick.k === 'number' && validPick(hotspots, key, pick)) picks[key] = pick;
   }
   return { shape: shape.id, glazing: glazing.id, picks };
@@ -199,10 +240,17 @@ export function pickedOption(slot: AppSlot, pick: VamPick | undefined): AppOptio
  */
 export function vamViewLayerUrls(screen: VamScreen, viewIndex: 0 | 1, picks: Readonly<Record<string, VamPick>>): string[] {
   const layers: { url: string; z: number }[] = [];
-  for (const view of screen.views) {
+  for (let sourceIndex = 0; sourceIndex < screen.views.length; sourceIndex += 1) {
+    const view = screen.views[sourceIndex]!;
     for (const h of view.hotspots) {
+      if (h.kind === 'decor') continue;
+      // Cabinets belong to the right-hand photo only. The app catalogue contains
+      // a separate cabinet hotspot in each view, but one selection must not be
+      // mirrored into the left view.
+      if (h.kind === 'cabinet' && sourceIndex !== 1) continue;
       for (const s of h.slots) {
-        const pick = picks[pickKey(h.id, s.id)];
+        const sharedCabinetPick = h.kind === 'cabinet' ? picks[CABINET_PICK_KEY] : undefined;
+        const pick = sharedCabinetPick ?? picks[pickKey(h.id, s.id)];
         const option = pickedOption(s, pick);
         // `pick.k` ends up in a URL below — picks can come from an untrusted source
         // (an order's saved `metadata.scene2d`, read back by the admin preview), so
@@ -355,6 +403,15 @@ const TEXTURED = new Set(['laminat', 'vagonka', 'parket', 'mdf', 'plitka']);
 const WALL_TILE: Readonly<Record<string, number>> = { laminat: 640, vagonka: 560, parket: 720, mdf: 700, plitka: 600 };
 const FLOOR_TILE: Readonly<Record<string, number>> = { laminat: 760, vagonka: 640, parket: 760, mdf: 700, plitka: 560 };
 
+/** Structural surfaces every real balcony already has a finish on — unlike furniture
+ * (cabinet/dryer/flowers) or the light, which the app deliberately leaves unset until
+ * the customer adds them (docs/FINAL_REPORT.md §7). A wall/floor/ceiling/sill/plinth/
+ * frame nobody has tapped yet still falls back to the catalogue's own first material
+ * and colour, so the plan renderer's shapes (Лодочка, Сапожок) read as a finished
+ * room from the start, the way the app's own pre-rendered photos always do, instead
+ * of bare placeholder paint until every surface is clicked through by hand. */
+const DEFAULT_FINISH_KINDS: ReadonlySet<HotspotKind> = new Set(['wall', 'floor', 'ceiling', 'sill', 'plintus', 'frame']);
+
 /** What the room renderer paints: a texture or colour per finished surface, the frame colour and the lamp. */
 export function vamRenderPaint(sel: VamSelection): RenderPaint {
   const surfaces: Record<string, SurfacePaint> = {};
@@ -364,17 +421,26 @@ export function vamRenderPaint(sel: VamSelection): RenderPaint {
   for (const h of vamPlanHotspots(sel.shape)) {
     for (const s of h.slots) {
       const pick = sel.picks[pickKey(h.id, s.id)];
-      const option = pickedOption(s, pick);
-      if (!pick || !option) continue;
+      let option = pickedOption(s, pick);
+      let resolved = pick;
+      if (!resolved && DEFAULT_FINISH_KINDS.has(h.kind)) {
+        const fallback = s.options[0];
+        const color = fallback?.colors[0];
+        if (fallback && color) {
+          option = fallback;
+          resolved = { o: fallback.id, k: color.k };
+        }
+      }
+      if (!resolved || !option) continue;
       if (h.id === 'P:cabinet' || h.id === 'P:dryer' || h.id === 'P:flowers') {
-        furniture[h.id === 'P:cabinet' ? 'cabinet' : h.id === 'P:dryer' ? 'dryer' : 'flowers'] = pick.k;
+        furniture[h.id === 'P:cabinet' ? 'cabinet' : h.id === 'P:dryer' ? 'dryer' : 'flowers'] = resolved.k;
         continue;
       }
       if (h.kind === 'light') {
-        lamp = pick.k;
+        lamp = resolved.k;
         continue;
       }
-      const hex = option.colors.find((c) => c.k === pick.k)?.hex;
+      const hex = option.colors.find((c) => c.k === resolved!.k)?.hex;
       if (!hex) continue;
       if (h.kind === 'frame') {
         frame = hex;
@@ -382,7 +448,7 @@ export function vamRenderPaint(sel: VamSelection): RenderPaint {
       }
       if (TEXTURED.has(option.id)) {
         const tile = (h.kind === 'floor' ? FLOOR_TILE : WALL_TILE)[option.id] ?? 700;
-        surfaces[h.id] = { color: hex, tex: `/vam/tex/${option.id}/${pick.k}.webp`, tile };
+        surfaces[h.id] = { color: hex, tex: `/vam/tex/${option.id}/${resolved.k}.webp`, tile };
       } else {
         surfaces[h.id] = { color: hex };
       }

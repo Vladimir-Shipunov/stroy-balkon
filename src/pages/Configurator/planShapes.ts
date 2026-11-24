@@ -8,9 +8,17 @@
  * pixel angles can't be used; every outline is a least-squares fit of the
  * drawing's numbers that keeps its topology (which edges exist, which are
  * parallel, perpendicular or in line). The fits agree with the real П-44Т
- * passports: Лодочка comes out at 2.68 m² (passport: 2.7 m²); Утюжок keeps its
- * 3000×2000 box and 1750 front (4.75 m², passport 4.2–4.8 m²) with the 1850
- * glazing and the 700 concrete end in one straight line, scaled together to fit.
+ * passports: Лодочка's schematic fit came out at 2.68 m² (passport: 2.7 m²);
+ * Утюжок keeps its 3000×2000 box and 1750 front (4.75 m², passport 4.2–4.8 m²)
+ * with the 1850 glazing and the 700 concrete end in one straight line, scaled
+ * together to fit. Лодочка's own wall 3 (the step's ledge, between walls 2 and 4)
+ * was hand-corrected 400 → 900 mm on 2026-10-14 (after two earlier same-day passes
+ * at wall 5) and put back to the schematic's 400 on 2026-10-15 at the owner's word
+ * — "side 3 must be smaller", "as it was before my edits" — so the outline is the
+ * original schematic fit again (walls 5 and 6: 1950 / 1850 nominal, 2.68 m²).
+ * Numbers are mirrored on the right-handed drawing (see `mirrorPlan`): wall 3
+ * there is the long slanted glazing (this outline's wall 6), so when a wall is
+ * named by number, check which hand's drawing is being looked at.
  *
  * Сапожок's outline is instead built directly from a real measured П-44Т
  * Сапожок развёртка (narodnyeokna.ru/razmery-P-44T-Sapozhok.html: facade
@@ -249,12 +257,19 @@ export function mirrorPlan(g: PlanGeom): PlanGeom {
     const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
     thin[(n - i) % n] = [len - t1, len - t0];
   }
+  // Openings are measured along edge 0 (the house wall, `poly[0]` -> `poly[1]`) on its own
+  // 0..houseLen span, not the polygon's overall bounding box — the two only coincided by
+  // chance while the house wall happened to reach the plan's rightmost point (true for every
+  // shape until the Лодочка's own step grew past it on 2026-10-14, see planShapes.ts's file
+  // header): mirroring openings against `w` instead put the Лодочка's door/window outside the
+  // house wall entirely on its right-handed variant.
+  const houseLen = g.poly[1]![0] - g.poly[0]![0];
   return {
     ...g,
     poly: g.poly.map((_, j) => m(g.poly[(1 - j + n) % n]!)),
     kinds: g.kinds.map((_, j) => g.kinds[src(j)]!),
     thin,
-    openings: g.openings.map((o) => ({ ...o, from: w - o.to, to: w - o.from })),
+    openings: g.openings.map((o) => ({ ...o, from: houseLen - o.to, to: houseLen - o.from })),
     ...(g.blocks ? { blocks: g.blocks.map((b) => b.map(m)) } : {}),
     dims: g.dims.map((d) => ({ ...d, a: m(d.b), b: m(d.a), at: d.axis === 'y' ? w - d.at : d.at })),
   };

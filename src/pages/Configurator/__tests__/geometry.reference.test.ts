@@ -39,6 +39,8 @@ const REFERENCE: Readonly<
   // the schematic-fit shapes below because this is independent real-instance variance,
   // not label-vs-geometry schematic slop.
   sapozhok: { areaM2: 4.18, areaToleranceM2: 0.02, vertexCount: 6, openingCount: 2, ceilingH: 2640, parapetH: 1070 },
+  // The schematic fit again (walls 3 / 5 / 6: 400 / 1950 / 1850): wall 3 was hand-edited to 900 on
+  // 2026-10-14 and put back at the owner's word on 2026-10-15 — see planShapes.ts's file header.
   lodochka: { areaM2: 2.68, areaToleranceM2: 0.01, vertexCount: 7, openingCount: 2, ceilingH: 2660, parapetH: 1100 },
   utyuzhok: { areaM2: 4.75, areaToleranceM2: 0.01, vertexCount: 5, openingCount: 2, ceilingH: 2640, parapetH: 1050 },
   loggia: { areaM2: 3.6, areaToleranceM2: 0.001, vertexCount: 4, openingCount: 2, ceilingH: 2640, parapetH: 1050 },

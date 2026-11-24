@@ -81,7 +81,7 @@ export function Contacts(): JSX.Element {
             Свяжитесь с&nbsp;<em>нами</em>
           </>
         }
-        subtitle="Позвоните, напишите в мессенджер или оставьте заявку — ответим и подберём удобное время для бесплатного замера."
+        subtitle="Позвоните, напишите в мессенджер или оставьте заявку — ответим и подберём удобное время для замера."
       />
 
       <section className={`container container--wide ${styles.main}`}>
@@ -242,7 +242,7 @@ export function Contacts(): JSX.Element {
           <iframe
             className={styles.map}
             src={MAP_SRC}
-            title="Карта зоны работ БАЛКОН-МСК"
+            title="Карта зоны работ STROY-BALKON"
             loading="lazy"
             allowFullScreen
           />

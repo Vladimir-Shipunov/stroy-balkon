@@ -7,7 +7,7 @@
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { VamScene } from '../Configurator/VamScene';
-import { findVamShape, vamScreen, vamViewLayerUrls } from '../Configurator/vamCatalog';
+import { VAM_AVAILABLE_SHAPES, vamScreen, vamViewLayerUrls } from '../Configurator/vamCatalog';
 import type { VamPick, VamSelection } from '../Configurator/vamCatalog';
 import styles from './SavedConfigPreview.module.css';
 
@@ -37,7 +37,7 @@ function PhotoPreview({ selection }: { readonly selection: VamSelection }): JSX.
     <div className={styles.views}>
       {screen.views.map((_view, i) => (
         <div key={i} className={styles.viewCard}>
-          <VamScene layers={layerUrls[i]!} mirror={screen.mirror} viewLabel={`кадр ${i + 1}`} />
+          <VamScene layers={layerUrls[i]!} mirror={screen.mirror} viewIndex={i as 0 | 1} viewLabel={`кадр ${i + 1}`} />
         </div>
       ))}
     </div>
@@ -51,6 +51,6 @@ function PhotoPreview({ selection }: { readonly selection: VamSelection }): JSX.
  * captured screenshot or the text summary in that case.
  */
 export function SavedConfigPreview({ scene2d, fallback = null }: { readonly scene2d: unknown; readonly fallback?: ReactNode }): JSX.Element | null {
-  if (!isVamSelection(scene2d) || !findVamShape(scene2d.shape)) return <>{fallback}</>;
+  if (!isVamSelection(scene2d) || !VAM_AVAILABLE_SHAPES.some((shape) => shape.id === scene2d.shape)) return <>{fallback}</>;
   return <PhotoPreview selection={scene2d} />;
 }

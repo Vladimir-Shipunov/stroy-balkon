@@ -86,7 +86,7 @@ function buildDocDefinition(selection: VamSelection, extras: Extras): unknown {
       { text: 'Дополнительные услуги', style: 'section' },
       extrasTable,
       {
-        text: 'Стоимость уточняется специалистом при замере — цены на сайте не рассчитываются.',
+        text: 'Состав работ и материалов согласуется со специалистом после замера.',
         style: 'disclaimer',
       },
     ],

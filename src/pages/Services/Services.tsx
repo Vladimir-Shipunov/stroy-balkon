@@ -1,5 +1,5 @@
 /**
- * @file Services — full list of offerings with prices and a closing CTA.
+ * @file Services — full list of offerings and a closing CTA.
  */
 import { Link } from 'react-router-dom';
 import { useCallModal } from '../../components/CallModal/CallModalProvider';
@@ -12,7 +12,7 @@ import { usePageTitle } from '../../lib/usePageTitle';
 import styles from './Services.module.css';
 
 const INCLUDED: readonly string[] = [
-  'Выезд замерщика и расчёт сметы',
+  'Выезд замерщика и обсуждение задач',
   'Доставка и подъём материалов',
   'Демонтаж старых конструкций',
   'Монтаж, отделка и уборка после работ',
@@ -24,19 +24,19 @@ const INCLUDED: readonly string[] = [
  * @returns The page element.
  */
 export function Services(): JSX.Element {
-  usePageTitle('Услуги и цены');
+  usePageTitle('Услуги');
   const { open } = useCallModal();
 
   return (
     <>
       <PageHero
-        eyebrow="Услуги и цены"
+        eyebrow="Услуги"
         title={
           <>
             Что мы делаем с&nbsp;<em>балконами</em>
           </>
         }
-        subtitle="От холодного остекления до объединения с комнатой. Точную стоимость считаем по итогам бесплатного замера — цена в договоре фиксируется и не меняется."
+        subtitle="От холодного остекления до объединения с комнатой. Подберём подходящее решение после замера."
       />
 
       <section className={`container container--wide ${styles.grid}`}>
@@ -50,14 +50,14 @@ export function Services(): JSX.Element {
       <section className={styles.includedBand}>
         <div className={`container container--wide ${styles.includedInner}`}>
           <Reveal className={styles.includedCopy}>
-            <span className="eyebrow">Без скрытых доплат</span>
-            <h2 className={styles.includedTitle}>Что входит в стоимость</h2>
+            <span className="eyebrow">Полный цикл работ</span>
+            <h2 className={styles.includedTitle}>Что входит в работу</h2>
             <p className={styles.includedText}>
-              Мы не дробим смету на десятки мелких позиций. В цену уже включён полный цикл — вы
-              платите за результат, а не за каждый шуруп.
+              Одна команда выполняет весь комплекс работ — от замера и доставки материалов до
+              монтажа, отделки и уборки.
             </p>
             <Link to="/configurator" className="btn btn--primary btn--lg">
-              Рассчитать в конфигураторе <ArrowRight size={20} />
+              Подобрать решение <ArrowRight size={20} />
             </Link>
           </Reveal>
           <Reveal className={styles.includedList} delay={120}>
@@ -76,7 +76,7 @@ export function Services(): JSX.Element {
         <Reveal className={styles.cta}>
           <h2 className={styles.ctaTitle}>Не знаете, с чего начать?</h2>
           <p className={styles.ctaText}>
-            Оставьте заявку — подскажем оптимальное решение под ваш балкон и бюджет.
+            Оставьте заявку — подскажем решение с учётом особенностей вашего балкона.
           </p>
           <button className="btn btn--primary btn--lg" onClick={() => open()} type="button">
             Получить консультацию

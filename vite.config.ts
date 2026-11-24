@@ -9,10 +9,11 @@ const IMAGE_TYPES: Record<string, string> = {
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
   '.webp': 'image/webp',
+  '.avif': 'image/avif',
 };
 
 /**
- * Dev-only static server for the configurator's 2D scene images under `public/vam/`.
+ * Dev-only static server for images under `public/vam/` and `public/assets/images/`.
  *
  * The SPA build disables Vite's `publicDir` (outDir lives under `public/`), so
  * the dev server would otherwise answer these requests with the SPA's
@@ -20,7 +21,7 @@ const IMAGE_TYPES: Record<string, string> = {
  * serves all of `public/`); this fills the gap for `dev:app`.
  */
 function servePublicImages(): Plugin {
-  const prefixes = ['/vam/'];
+  const prefixes = ['/vam/', '/assets/images/'];
   return {
     name: 'serve-public-images-dev',
     apply: 'serve',
@@ -82,6 +83,6 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: resolve(__dirname, 'public/app'),
     emptyOutDir: true,
-    sourcemap: true,
+    sourcemap: false,
   },
 }));

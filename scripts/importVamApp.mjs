@@ -14,6 +14,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
+import { fitLampsP44t } from './fitVamLampsP44t.mjs';
 
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
@@ -426,6 +427,21 @@ for (const [sid, views] of Object.entries(spec)) {
   }
   screens[sid] = outViews;
 }
+
+// The П-44Т (Утюжок) screens borrow the long loggia's lights, whose far fixtures would float outside
+// the short Утюжок ceiling: they get their own fitted layers instead (fitVamLampsP44t.mjs).
+for (const sid of ['10', '11']) {
+  for (const view of screens[sid] ?? []) {
+    for (const h of view.hotspots) {
+      for (const s of h.slots) {
+        for (const o of s.options) {
+          for (const l of o.layers) l.p = l.p.replace(/^lamp(1|11)_$/, 'lampp$1_');
+        }
+      }
+    }
+  }
+}
+if (!dry) console.log(`${await fitLampsP44t(OUT)} fitted П-44Т lamp layers`);
 
 // Picker photos of the app's first screen.
 const UI = ['start', 'P_obraz', 'lodjia', 'lodjia_6', 'P44t', 'bardur', 'panorama', 'P44tL', 'P44tR'];

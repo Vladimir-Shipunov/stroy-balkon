@@ -7,11 +7,36 @@
  */
 import { forwardRef, useId } from 'react';
 import { PLAN_SHAPES, edgeOf, planFor } from './planShapes';
-import type { EdgeKind, PlanDim, PlanGeom, Pt } from './planShapes';
+import type { PlanGeom } from './planShapes';
 import type { VamShapeDef } from './vamShapes';
 import { glazingUnitCuts } from './wallGeometry';
 import { PHOTO_FOV } from './photoPlanLink';
 import type { PlanCamera } from './photoPlanLink';
+import {
+  DIM_LINE_EM,
+  EXT_LINE_EM,
+  HALO_EM,
+  STROKE_EM,
+  THICK,
+  VIEW_PAD_EM,
+  add,
+  arrowHead,
+  bandParts,
+  bandQuad,
+  extensionLines,
+  inside,
+  len,
+  mul,
+  outward,
+  planView,
+  segDist,
+  signedArea,
+  solidPolygons,
+  sub,
+  unit,
+  wallBands,
+} from './planDrawing';
+import type { DimPlacement, V } from './planDrawing';
 
 interface ShapePlanProps {
   readonly shape: VamShapeDef;
@@ -26,125 +51,57 @@ interface ShapePlanProps {
   readonly highlight?: readonly number[] | undefined;
 }
 
-/** Thickness drawn outside the room for every edge kind, mm. */
-const THICK: Readonly<Record<EdgeKind, number>> = { house: 210, wall: 170, concrete: 170, panel: 70, glazing: 80 };
 const INK = '#6f6b64';
 const HATCH = '#8d887f';
 const GLASS = '#e4ad3b';
 const GLASS_FILL = '#fbf0d4';
 const ROOM = '#f7f3ec';
+/** The ground under the hatching of the solid mass: the outline of the mass is painted under it, so only its outer edge shows. */
+const PAPER = '#ffffff';
 
-type V = readonly [number, number];
-const add = (a: V, b: V): V => [a[0] + b[0], a[1] + b[1]];
-const sub = (a: V, b: V): V => [a[0] - b[0], a[1] - b[1]];
-const mul = (a: V, k: number): V => [a[0] * k, a[1] * k];
-const len = (a: V): number => Math.hypot(a[0], a[1]);
-const unit = (a: V): V => mul(a, 1 / (len(a) || 1));
-const cross = (a: V, b: V): number => a[0] * b[1] - a[1] * b[0];
-/** Outward normal of a counter-clockwise outline's edge a->b (the room is on the left). */
-const outward = (a: V, b: V): V => {
-  const d = unit(sub(b, a));
-  return [d[1], -d[0]];
-};
+/** A plan point as SVG coordinates (the plan's y points up, the SVG's down). */
+const pt = (p: V): string => `${p[0].toFixed(1)},${(-p[1]).toFixed(1)}`;
+const pts = (list: readonly V[]): string => list.map(pt).join(' ');
 
-function inside(poly: readonly Pt[], p: V): boolean {
-  let hit = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i, i += 1) {
-    const a = poly[i]!;
-    const b = poly[j]!;
-    if (a[1] > p[1] !== b[1] > p[1] && p[0] < ((b[0] - a[0]) * (p[1] - a[1])) / (b[1] - a[1]) + a[0]) hit = !hit;
-  }
-  return hit;
-}
-
-/** Distance from p to the segment a-b. */
-function segDist(p: V, a: V, b: V): number {
-  const d = sub(b, a);
-  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * d[0] + (p[1] - a[1]) * d[1]) / (d[0] * d[0] + d[1] * d[1] || 1)));
-  return len(sub(p, add(a, mul(d, t))));
-}
-
-/** Where the outer faces of the two edges meeting at vertex i cross (a mitred corner). */
-function outerCorner(g: PlanGeom, i: number, side: 'start' | 'end', edge: number): V {
-  const n = g.poly.length;
-  const prev = (i - 1 + n) % n;
-  const [p0, p1] = edgeOf(g, prev);
-  const [q0, q1] = edgeOf(g, i);
-  const v = g.poly[i]!;
-  const d1 = unit(sub(p1, p0));
-  const d2 = unit(sub(q1, q0));
-  // In line (the Утюжок's concrete + glazing) or nearly so: square end at the edge's own thickness.
-  if (Math.abs(cross(d1, d2)) < 0.05) return add(v, mul(side === 'start' ? outward(q0, q1) : outward(p0, p1), THICK[g.kinds[edge]!]));
-  const a1 = add(v, mul(outward(p0, p1), THICK[g.kinds[prev]!]));
-  const a2 = add(v, mul(outward(q0, q1), THICK[g.kinds[i]!]));
-  const s = cross(sub(a2, a1), d2) / cross(d1, d2);
-  return add(a1, mul(d1, s));
-}
-
-const pts = (list: readonly V[]): string => list.map((p) => `${p[0].toFixed(1)},${(-p[1]).toFixed(1)}`).join(' ');
-
-interface DimLine {
-  readonly dim: PlanDim;
-  readonly p: V;
-  readonly q: V;
-}
-
-/** The dimension line's ends: on y = at / x = at, or `at` mm outside the room along a->b. */
-function dimLine(dim: PlanDim, g: PlanGeom): DimLine {
-  const { a, b } = dim;
-  if (dim.axis === 'x') return { dim, p: [a[0], dim.at], q: [b[0], dim.at] };
-  if (dim.axis === 'y') return { dim, p: [dim.at, a[1]], q: [dim.at, b[1]] };
-  let nrm: V = outward(a, b);
-  const mid = mul(add(a, b), 0.5);
-  if (inside(g.poly, add(mid, mul(nrm, 20)))) nrm = mul(nrm, -1);
-  return { dim, p: add(a, mul(nrm, dim.at)), q: add(b, mul(nrm, dim.at)) };
-}
-
-/** Text placement of a dimension: centre, rotation (deg) reading left-to-right or bottom-to-top. */
-function dimText(l: DimLine, font: number): { at: V; angle: number } {
-  const dir = unit(sub(l.q, l.p));
-  let angle = (Math.atan2(-dir[1], dir[0]) * 180) / Math.PI;
-  if (angle > 90) angle -= 180;
-  if (angle <= -90) angle += 180;
-  const up: V = [Math.sin((angle * Math.PI) / 180), Math.cos((angle * Math.PI) / 180)];
-  return { at: add(mul(add(l.p, l.q), 0.5), mul(up, font * 0.35)), angle };
+/**
+ * The solid pieces as ONE path, every ring wound the same way: the renderer then fills (and strokes) the union in a
+ * single pass, so a seam where two pieces only abut is painted once — painted as separate shapes, each side covers the
+ * seam pixels only partly and the ink under them shows through as a hairline.
+ */
+function massPath(polys: readonly (readonly V[])[]): string {
+  return polys
+    .map((poly) => {
+      const ring = signedArea(poly) < 0 ? [...poly].reverse() : poly;
+      return `M${ring.map(pt).join('L')}Z`;
+    })
+    .join('');
 }
 
 /** A CAD dimension: extension lines, an arrowed dimension line and the value. */
-function Dimension({ line, font }: { readonly line: DimLine; readonly font: number }): JSX.Element {
-  const { dim, p, q } = line;
-  const ext = (from: V, to: V): string => {
-    const d = sub(to, from);
-    const l = len(d);
-    if (l < 1) return '';
-    const u = mul(d, 1 / l);
-    const s0 = add(from, mul(u, Math.min(font * 0.4, l * 0.2)));
-    const s1 = add(to, mul(u, font * 0.45));
-    return `M${s0[0].toFixed(1)},${(-s0[1]).toFixed(1)}L${s1[0].toFixed(1)},${(-s1[1]).toFixed(1)}`;
-  };
-  const arrow = font * 0.62;
-  const head = (tip: V, back: V): string => {
-    const u = unit(sub(back, tip));
-    const w: V = [-u[1] * arrow * 0.28, u[0] * arrow * 0.28];
-    return pts([tip, add(add(tip, mul(u, arrow)), w), add(add(tip, mul(u, arrow)), mul(w, -1))]);
-  };
-  const t = dimText(line, font);
+function Dimension({ placement, font }: { readonly placement: DimPlacement; readonly font: number }): JSX.Element {
+  const { dim, line, label } = placement;
+  const { p, q } = line;
+  const ext = extensionLines(line, font)
+    .map(([from, to]) => `M${pt(from)}L${pt(to)}`)
+    .join('');
   return (
     <g>
-      <path d={`${ext(dim.a, p)}${ext(dim.b, q)}`} stroke={INK} strokeWidth={font * 0.05} fill="none" />
-      <line x1={p[0]} y1={-p[1]} x2={q[0]} y2={-q[1]} stroke={INK} strokeWidth={font * 0.06} />
-      <polygon points={head(p, q)} fill={INK} />
-      <polygon points={head(q, p)} fill={INK} />
+      <path d={ext} stroke={INK} strokeWidth={font * EXT_LINE_EM} fill="none" />
+      <line x1={p[0]} y1={-p[1]} x2={q[0]} y2={-q[1]} stroke={INK} strokeWidth={font * DIM_LINE_EM} />
+      <polygon points={pts(arrowHead(p, q, font))} fill={INK} />
+      <polygon points={pts(arrowHead(q, p, font))} fill={INK} />
+      {/* Anchored by its baseline: `label.box` is where the glyphs are. The halo is round-joined so a sharp digit (4, 7) cannot spike it. */}
       <text
-        x={t.at[0]}
-        y={-t.at[1]}
+        x={label.at[0]}
+        y={-label.at[1]}
         fontSize={font}
         textAnchor="middle"
         fill="#4a4741"
         fontFamily="Manrope, Arial, sans-serif"
-        transform={`rotate(${t.angle.toFixed(2)} ${t.at[0].toFixed(1)} ${(-t.at[1]).toFixed(1)})`}
+        transform={`rotate(${label.angle.toFixed(2)} ${label.at[0].toFixed(1)} ${(-label.at[1]).toFixed(1)})`}
         stroke="#fff"
-        strokeWidth={font * 0.18}
+        strokeWidth={font * HALO_EM * 2}
+        strokeLinejoin="round"
         paintOrder="stroke"
       >
         {dim.text}
@@ -200,50 +157,14 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
   const clipId = `room-${uid}`;
   const g = (glazing ? planFor(shape.id, glazing) : undefined) ?? PLAN_SHAPES[shape.id];
   if (!g) return null;
-  const n = g.poly.length;
-  const xs = g.poly.map((p) => p[0]);
-  const ys = g.poly.map((p) => p[1]);
-  const size = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys));
-
-  // The view box holds the walls and, in the detailed card, the dimensions; the text
-  // size is then a fixed share of the box so every shape's labels look the same size.
-  const bounds = (font: number): [number, number, number, number] => {
-    let x0 = Math.min(...xs) - 260;
-    let x1 = Math.max(...xs) + 260;
-    let y0 = Math.min(...ys) - 260;
-    let y1 = Math.max(...ys) + 260;
-    const grow = (v: V, m: number): void => {
-      x0 = Math.min(x0, v[0] - m);
-      x1 = Math.max(x1, v[0] + m);
-      y0 = Math.min(y0, v[1] - m);
-      y1 = Math.max(y1, v[1] + m);
-    };
-    if (detailed) {
-      for (const d of g.dims) {
-        const l = dimLine(d, g);
-        grow(l.p, font * 0.6);
-        grow(l.q, font * 0.6);
-        const t = dimText(l, font);
-        grow(t.at, font * Math.max(1, d.text.length * 0.35));
-      }
-    }
-    return [x0, y0, x1, y1];
-  };
-  let font = size * 0.05;
-  for (let pass = 0; pass < 3; pass += 1) {
-    const [x0, y0, x1, y1] = bounds(font);
-    // The card is 100% wide (~300 px) and at most 0.86 of that tall: ~13 px text.
-    font = Math.max(x1 - x0, (y1 - y0) / 0.86) * 0.043;
-  }
-  const [minX, minY, maxX, maxY] = bounds(font);
-  const pad = font * 0.4;
+  const { font, size, minX, minY, maxX, maxY, dims, note } = planView(g, detailed);
+  const pad = font * VIEW_PAD_EM;
   // The setup badges are tiny (78x50 px): heavier lines keep the outline readable.
-  const stroke = font * (detailed ? 0.07 : 0.16);
+  const stroke = font * (detailed ? STROKE_EM : 0.16);
 
-  const bands = g.kinds.map((kind, i) => {
-    const [a, b] = edgeOf(g, i);
-    return { kind, i, a, b, a2: outerCorner(g, i, 'start', i), b2: outerCorner(g, (i + 1) % n, 'end', i) };
-  });
+  const bands = wallBands(g);
+  const solids = solidPolygons(g, bands);
+  const mass = massPath(solids);
 
   // The balcony door block: a white gap across the house wall with the frame line in it.
   const [h0, h1] = edgeOf(g, 0);
@@ -289,8 +210,19 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
             );
           })
         : null}
-      {bands.map(({ kind, i, a, b, a2, b2 }) => {
-        const quad = pts([a, b, b2, a2]);
+      {/*
+        The solid wall mass — the hatched bands and the support blocks — is painted as ONE shape: its outline is
+        stroked twice as wide as the drawing's line, then the whole mass is covered with paper, then hatched. What is
+        left of the outline is the outer edge of the union only, so the mitres between the bands and the places where
+        a block overlaps them leave no stray lines — a step is a clean notch, not a square stuck on. The corners are
+        round-joined: a mitre join would spike out of the sharp (25-40 degree) ends of the mitred bands.
+      */}
+      <path d={mass} fill="none" stroke={INK} strokeWidth={stroke * 2} strokeLinejoin="round" />
+      <path d={mass} fill={PAPER} stroke="none" />
+      <path d={mass} fill={`url(#${hatchId})`} stroke="none" />
+      {bands.map((band) => {
+        const { kind, i, a, b, a2, b2 } = band;
+        const quad = pts(bandQuad(band));
         if (kind === 'glazing') {
           // Mullion ticks at the same cut points as the interior render's window units
           // (render/scene.ts's glazingFaces), so the drawing shows the same sash count
@@ -316,41 +248,17 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
           );
         }
         if (kind === 'panel') {
-          return <polygon key={i} points={quad} fill="#fff" stroke={INK} strokeWidth={stroke} />;
+          return <polygon key={i} points={quad} fill="#fff" stroke={INK} strokeWidth={stroke} strokeLinejoin="round" />;
         }
-        // Concrete: hatched; part of it may be a light (thin) wall.
-        const thin = g.thin?.[i];
-        const edgeLen = len(sub(b, a));
-        const at = (t: number, outer: boolean): V => {
-          const k = t / edgeLen;
-          return outer ? add(a2, mul(sub(b2, a2), k)) : add(a, mul(sub(b, a), k));
-        };
-        if (thin) {
-          const [t0, t1] = thin;
-          const thinW = THICK.panel / THICK[kind];
-          const inner0 = at(t0, false);
-          const inner1 = at(t1, false);
-          const outer0 = add(inner0, mul(sub(at(t0, true), inner0), thinW));
-          const outer1 = add(inner1, mul(sub(at(t1, true), inner1), thinW));
-          return (
-            <g key={i}>
-              {t0 > 0 ? <polygon points={pts([a, inner0, at(t0, true), a2])} fill={`url(#${hatchId})`} stroke={INK} strokeWidth={stroke} /> : null}
-              <polygon points={pts([inner0, inner1, outer1, outer0])} fill="#fff" stroke={INK} strokeWidth={stroke} />
-              {t1 < edgeLen - 1 ? <polygon points={pts([inner1, b, b2, at(t1, true)])} fill={`url(#${hatchId})`} stroke={INK} strokeWidth={stroke} /> : null}
-            </g>
-          );
-        }
-        return <polygon key={i} points={quad} fill={`url(#${hatchId})`} stroke={INK} strokeWidth={stroke} />;
+        // Concrete: the hatched pieces are in the mass above; the thin (light) part of the wall is laid over it.
+        const light = bandParts(g, band).light;
+        return light ? <polygon key={i} points={pts(light)} fill="#fff" stroke={INK} strokeWidth={stroke} strokeLinejoin="round" /> : null;
       })}
-      {/* Support blocks go over the wall bands so their mitred corners don't show through. */}
-      {(g.blocks ?? []).map((b, k) => (
-        <polygon key={`b${k}`} points={pts(b)} fill={`url(#${hatchId})`} stroke={INK} strokeWidth={stroke * 0.6} />
-      ))}
       {g.openings.map((o, k) => {
         const t = THICK.house;
         return (
           <g key={`o${k}`}>
-            <polygon points={pts([along(o.from, 0), along(o.to, 0), along(o.to, t), along(o.from, t)])} fill="#fff" stroke={INK} strokeWidth={stroke * 0.8} />
+            <polygon points={pts([along(o.from, 0), along(o.to, 0), along(o.to, t), along(o.from, t)])} fill="#fff" stroke={INK} strokeWidth={stroke * 0.8} strokeLinejoin="round" />
             <polyline points={pts([along(o.from, t * 0.5), along(o.to, t * 0.5)])} stroke={INK} strokeWidth={stroke * 0.9} fill="none" />
           </g>
         );
@@ -375,13 +283,15 @@ export const ShapePlan = forwardRef<SVGSVGElement, ShapePlanProps>(function Shap
             );
           })
         : null}
-      {detailed ? g.dims.map((d, k) => <Dimension key={`d${k}`} line={dimLine(d, g)} font={font} />) : null}
-      {detailed ? (
+      {dims.map((placement, k) => (
+        <Dimension key={`d${k}`} placement={placement} font={font} />
+      ))}
+      {note ? (
         // The dimension texts are the owner's drawing values; the outline itself is a
         // least-squares fit reconciling them (see planShapes.ts's file comment — some
         // non-scale source drawings state sub-dimensions that can't all hold exactly).
         // This note keeps that honest instead of implying the outline is drawn to the labels.
-        <text x={minX - pad + font * 0.3} y={-minY + pad - font * 0.3} fontSize={font * 0.55} fill="#a39d90" fontFamily="Manrope, Arial, sans-serif">
+        <text x={note.x} y={-note.baseline} fontSize={note.size} fill="#a39d90" fontFamily="Manrope, Arial, sans-serif">
           схема, не в масштабе
         </text>
       ) : null}

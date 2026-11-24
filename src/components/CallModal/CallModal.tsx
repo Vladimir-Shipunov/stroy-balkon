@@ -150,7 +150,7 @@ export function CallModal({ isOpen, options, onClose }: CallModalProps): JSX.Ele
               Заявка принята
             </h2>
             <p className={styles.subtitle}>
-              Спасибо! Менеджер БАЛКОН-МСК перезвонит вам в ближайшее время.
+              Спасибо! Менеджер STROY-BALKON перезвонит вам в ближайшее время.
             </p>
             <button className="btn btn--primary" onClick={onClose} type="button">
               Хорошо
@@ -159,7 +159,7 @@ export function CallModal({ isOpen, options, onClose }: CallModalProps): JSX.Ele
         ) : (
           <>
             <span className={styles.badge}>
-              <PhoneIcon size={15} /> Бесплатный замер
+              <PhoneIcon size={15} /> Заказать замер
             </span>
             <h2 className={styles.title} id={titleId}>
               {title}

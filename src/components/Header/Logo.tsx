@@ -26,7 +26,7 @@ export function Logo({ onDark = false, compact = false }: LogoProps): JSX.Elemen
       </span>
       {!compact && (
         <span className={styles.word}>
-          БАЛКОН<span className={styles.msk}>-МСК</span>
+          STROY<span className={styles.msk}>-BALKON</span>
         </span>
       )}
     </span>

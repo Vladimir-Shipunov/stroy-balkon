@@ -41,11 +41,6 @@ export function ServiceCard({ service, detailed = false }: ServiceCardProps): JS
             {TONE_GLYPH[service.tone]}
           </svg>
         </span>
-        <div className={styles.price}>
-          <span className={styles.priceFrom}>от</span>
-          <span className={styles.priceValue}>{service.priceFrom}</span>
-          <span className={styles.priceUnit}>{service.unit}</span>
-        </div>
       </div>
 
       <h3 className={styles.title}>{service.title}</h3>

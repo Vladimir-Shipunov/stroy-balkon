@@ -10,8 +10,8 @@ import styles from './About.module.css';
 
 const PRINCIPLES: readonly { title: string; body: string }[] = [
   {
-    title: 'Честность в смете',
-    body: 'Называем итоговую цену на замере и фиксируем её в договоре. Без «вылезших» доплат в процессе работ.',
+    title: 'Понятный план работ',
+    body: 'Заранее согласуем все этапы и материалы. Без неожиданных изменений в процессе работ.',
   },
   {
     title: 'Качество материалов',
@@ -44,7 +44,7 @@ export function About(): JSX.Element {
             Делаем балконы в&nbsp;Москве с&nbsp;<em>2013&nbsp;года</em>
           </>
         }
-        subtitle="БАЛКОН-МСК — команда замерщиков, монтажников и отделочников, которая превращает балконы и лоджии в тёплые, удобные и красивые комнаты."
+        subtitle="STROY-BALKON — команда замерщиков, монтажников и отделочников, которая превращает балконы и лоджии в тёплые, удобные и красивые комнаты."
       />
 
       <section className={`container container--wide ${styles.story}`}>
@@ -59,16 +59,16 @@ export function About(): JSX.Element {
           <p>
             Сегодня мы собрали более 2 400 балконов и лоджий. У нас свои бригады без посредников,
             собственный конфигуратор, в котором клиент видит будущий балкон ещё до начала работ, и
-            фиксированные сметы, которым можно доверять.
+            понятный план работ, которому можно доверять.
           </p>
         </Reveal>
         <Reveal className={styles.storyArt} delay={120}>
           <div className={styles.artFrame}>
             <img
-              src="/vam/showcase/story.webp"
-              width={800}
+              src="/assets/images/projects/graphite-finish.webp"
+              width={1000}
               height={800}
-              alt="Балкон со стеновым паркетом и барным стулом"
+              alt="Лоджия с серо-голубой отделкой, встроенным шкафом и светлым полом"
               loading="lazy"
               decoding="async"
             />
@@ -124,7 +124,7 @@ export function About(): JSX.Element {
         <Reveal className={styles.cta}>
           <h2 className={styles.ctaTitle}>Давайте обсудим ваш балкон</h2>
           <p className={styles.ctaText}>
-            Расскажите о задаче — предложим решение и приедем на бесплатный замер.
+            Расскажите о задаче — предложим решение и согласуем время замера.
           </p>
           <button className="btn btn--primary btn--lg" onClick={() => open()} type="button">
             Связаться с нами

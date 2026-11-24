@@ -1,8 +1,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  padding-block: clamp(56px, 8vw, 96px);
+  gap: 20px;
+  padding-block: clamp(32px, 4.2vw, 56px);
 }
 
 .includedBand {
@@ -13,9 +13,9 @@
 .includedInner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(36px, 6vw, 72px);
+  gap: clamp(28px, 4vw, 48px);
   align-items: center;
-  padding-block: clamp(56px, 8vw, 96px);
+  padding-block: clamp(32px, 4.2vw, 56px);
 }
 
 .includedTitle {
@@ -27,7 +27,7 @@
   font-size: var(--fs-lead);
   line-height: 1.6;
   color: var(--text-muted);
-  margin-bottom: 30px;
+  margin-bottom: 22px;
   max-width: 46ch;
 }
 
@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 22px;
+  padding: 14px 18px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -56,7 +56,7 @@
 }
 
 .ctaWrap {
-  padding-block: clamp(56px, 8vw, 96px);
+  padding-block: clamp(32px, 4.2vw, 56px);
 }
 
 .cta {

@@ -83,16 +83,19 @@ export interface VamShapeDef {
   readonly hint: string;
   /** The app balcony type (`VAM_TYPES`) that stands in for this shape. */
   readonly type: string;
+  readonly available?: boolean;
 }
 
 export const VAM_SHAPES: readonly VamShapeDef[] = [
-  { id: 'sapozhok', label: 'Сапожок', hint: 'ступенчатый выступ', type: 'p' },
-  { id: 'lodochka', label: 'Лодочка', hint: 'скос и уступ у стены', type: 'u' },
+  { id: 'sapozhok', label: 'Сапожок', hint: 'ступенчатый выступ', type: 'p', available: false },
+  { id: 'lodochka', label: 'Лодочка', hint: 'скос и уступ у стены', type: 'u', available: false },
   { id: 'utyuzhok', label: 'Утюжок', hint: 'скошенный угол', type: 'u' },
   { id: 'loggia', label: 'Обычная лоджия', hint: 'прямоугольная', type: 'l5' },
   { id: 'long-loggia', label: 'Удлинённая лоджия', hint: 'длина до 6 м', type: 'l8' },
   { id: 'khrushchevka', label: 'Хрущёвка', hint: 'узкий, окна с трёх сторон', type: 'p' },
 ];
+
+export const VAM_AVAILABLE_SHAPES: readonly VamShapeDef[] = VAM_SHAPES.filter((shape) => shape.available !== false);
 
 export function findVamShape(id: string | undefined): VamShapeDef | undefined {
   return VAM_SHAPES.find((s) => s.id === id);

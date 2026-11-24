@@ -1044,42 +1044,14 @@ body {
    §5  SCROLLBARS (Phase C.1 — replaces theme.css kill rules)
    ============================================================ */
 
-/* Page-level: thin, unobtrusive */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: var(--clr-neutral-300, #cbd5e1) transparent;
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
-body::-webkit-scrollbar { width: 8px; }
-body::-webkit-scrollbar-track { background: transparent; }
-body::-webkit-scrollbar-thumb {
-  background: var(--clr-neutral-300, #cbd5e1);
-  border-radius: var(--radius-full, 9999px);
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-body::-webkit-scrollbar-thumb:hover {
-  background: var(--clr-neutral-400, #94a3b8);
-  background-clip: content-box;
-}
-
-/* Panel scrollbars — thin gold tint */
-.left-panel::-webkit-scrollbar,
-.right-panel::-webkit-scrollbar { width: 4px; }
-.left-panel::-webkit-scrollbar-track,
-.right-panel::-webkit-scrollbar-track { background: transparent; }
-.left-panel::-webkit-scrollbar-thumb,
-.right-panel::-webkit-scrollbar-thumb {
-  background: var(--clr-primary-300, rgba(212,162,44,.4));
-  border-radius: var(--radius-full, 9999px);
-}
-.left-panel::-webkit-scrollbar-thumb:hover,
-.right-panel::-webkit-scrollbar-thumb:hover {
-  background: var(--clr-primary-400, rgba(212,162,44,.65));
-}
-
-[data-theme="dark"] body::-webkit-scrollbar-thumb {
-  background: var(--clr-neutral-600, #475569);
-  background-clip: content-box;
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* ============================================================

@@ -1,5 +1,5 @@
 /**
- * @file Single source of truth for БАЛКОН-МСК marketing content.
+ * @file Single source of truth for STROY-BALKON marketing content.
  *
  * Real Russian copy for a Moscow balcony-renovation company — no placeholders.
  * Pages import from here so content stays consistent and easy to edit.
@@ -14,8 +14,6 @@ export interface Service {
   readonly id: string;
   readonly title: string;
   readonly tagline: string;
-  readonly priceFrom: string;
-  readonly unit: string;
   readonly features: readonly string[];
   /** Accent tint used by the card artwork. */
   readonly tone: 'gold' | 'slate' | 'wood' | 'sky';
@@ -36,10 +34,13 @@ export interface Review {
 export interface ProjectItem {
   readonly id: string;
   readonly title: string;
-  readonly category: 'Лоджия' | 'Балкон' | 'Под ключ' | 'Объединение';
-  readonly area: string;
-  readonly term: string;
-  readonly tone: 'gold' | 'slate' | 'wood' | 'sky' | 'stone';
+  readonly category:
+    | 'Панорамное остекление'
+    | 'Отделка под дерево'
+    | 'Светлая отделка'
+    | 'Каменная отделка';
+  readonly image: string;
+  readonly imageAlt: string;
   readonly summary: string;
 }
 
@@ -55,8 +56,8 @@ export interface Stat {
 }
 
 export const COMPANY = {
-  name: 'БАЛКОН-МСК',
-  legalNote: '«БАЛКОН-МСК», 2025. Все права защищены',
+  name: 'STROY-BALKON',
+  legalNote: '«STROY-BALKON», 2025. Все права защищены',
   tagline: 'Отделка и остекление балконов под ключ',
   city: 'Москва и область',
   phonePrimary: { display: '+7 (908) 836-06-06', href: 'tel:+79088360606' },
@@ -95,8 +96,6 @@ export const SERVICES: readonly Service[] = [
     id: 'glazing',
     title: 'Остекление балконов',
     tagline: 'Тёплое и холодное остекление профилями Rehau, KBE, Provedal',
-    priceFrom: '18 000',
-    unit: '₽ / пог. м',
     tone: 'sky',
     features: [
       'Тёплый профиль с двухкамерным стеклопакетом',
@@ -109,8 +108,6 @@ export const SERVICES: readonly Service[] = [
     id: 'insulation',
     title: 'Утепление под ключ',
     tagline: 'Превращаем балкон в тёплую комнату на весь год',
-    priceFrom: '12 000',
-    unit: '₽ / м²',
     tone: 'gold',
     features: [
       'Пеноплэкс + пенофол, контур без мостиков холода',
@@ -123,8 +120,6 @@ export const SERVICES: readonly Service[] = [
     id: 'finishing',
     title: 'Отделка балкона',
     tagline: 'Стены, потолок и пол — от черновой до чистовой',
-    priceFrom: '35 000',
-    unit: '₽ под ключ',
     tone: 'wood',
     features: [
       'МДФ-панели, ПВХ, вагонка, декоративный камень',
@@ -137,8 +132,6 @@ export const SERVICES: readonly Service[] = [
     id: 'roof',
     title: 'Крыша на балкон',
     tagline: 'Для верхних этажей — независимая или зависимая крыша',
-    priceFrom: '25 000',
-    unit: '₽ от',
     tone: 'slate',
     features: [
       'Металлокаркас с антикоррозийной обработкой',
@@ -151,9 +144,7 @@ export const SERVICES: readonly Service[] = [
     id: 'merge',
     title: 'Объединение с комнатой',
     tagline: 'Расширяем пространство квартиры за счёт балкона',
-    priceFrom: '55 000',
-    unit: '₽ от',
-    tone: 'gold',
+    tone: 'sky',
     features: [
       'Демонтаж порога и подоконного блока',
       'Тёплый контур и тёплый пол',
@@ -165,8 +156,6 @@ export const SERVICES: readonly Service[] = [
     id: 'furniture',
     title: 'Мебель и хранение',
     tagline: 'Встроенные шкафы, полки и зона отдыха по размеру',
-    priceFrom: '9 000',
-    unit: '₽ от',
     tone: 'wood',
     features: [
       'Встроенные шкафы и тумбы',
@@ -183,8 +172,8 @@ export const REASONS: readonly Reason[] = [
     body: 'Замерщики, монтажники и отделочники — штатные сотрудники. Никаких субподрядов и накруток.',
   },
   {
-    title: 'Фиксированная смета',
-    body: 'Стоимость в договоре не меняется. Все материалы и работы прописаны до начала монтажа.',
+    title: 'Понятный план работ',
+    body: 'Все материалы и этапы согласуем до начала монтажа.',
   },
   {
     title: 'Гарантия 5 лет',
@@ -199,8 +188,8 @@ export const REASONS: readonly Reason[] = [
     body: 'Защищаем квартиру плёнкой, выносим мусор. После бригады остаётся только убрать пыль.',
   },
   {
-    title: 'Рассрочка 0%',
-    body: 'Оплата по этапам или рассрочка без переплат от банков-партнёров. Приём карт и наличных.',
+    title: 'Подбор решения',
+    body: 'Помогаем выбрать материалы и оформление с учётом особенностей помещения.',
   },
 ];
 
@@ -208,12 +197,12 @@ export const STEPS: readonly Step[] = [
   {
     n: '01',
     title: 'Заявка и замер',
-    body: 'Оставляете заявку — приезжаем на бесплатный замер в удобное время, обсуждаем задачи и бюджет.',
+    body: 'Оставляете заявку — приезжаем на замер в удобное время и обсуждаем ваши задачи.',
   },
   {
     n: '02',
-    title: 'Проект и смета',
-    body: 'Собираете балкон в конфигураторе или с дизайнером. Готовим фиксированную смету и договор.',
+    title: 'Проект и план работ',
+    body: 'Собираете балкон в конфигураторе или с дизайнером. Согласуем состав работ и договор.',
   },
   {
     n: '03',
@@ -244,7 +233,7 @@ export const REVIEWS: readonly Review[] = [
     author: 'Дмитрий К.',
     meta: 'Объединение с кухней, Москва',
     rating: 5,
-    text: 'Делали объединение балкона с кухней. Всё по смете, без сюрпризов по цене. Французское остекление выглядит дорого. Рекомендую.',
+    text: 'Делали объединение балкона с кухней. Всё подробно согласовали до начала работ, без неожиданностей. Французское остекление выглядит отлично. Рекомендую.',
   },
   {
     author: 'Наталья В.',
@@ -257,56 +246,98 @@ export const REVIEWS: readonly Review[] = [
 export const PROJECTS: readonly ProjectItem[] = [
   {
     id: 'p1',
-    title: 'Тёплая лоджия с кабинетом',
-    category: 'Лоджия',
-    area: '3,2 м',
-    term: '11 дней',
-    tone: 'wood',
-    summary: 'Тёплое остекление Rehau, утепление пеноплэксом, МДФ-панели и тёплый пол.',
+    title: 'Лоджия с фактурной каменной отделкой',
+    category: 'Каменная отделка',
+    image: '/assets/images/projects/portfolio-01.webp',
+    imageAlt: 'Фактурная светлая отделка стен лоджии и тёмный пол',
+    summary: 'Светлая фактурная отделка стен сочетается с контрастным напольным покрытием.',
   },
   {
     id: 'p2',
-    title: 'Панорамный балкон с видом',
-    category: 'Балкон',
-    area: '4,0 м',
-    term: '8 дней',
-    tone: 'sky',
-    summary: 'Панорамное остекление в пол, минимум профиля, кварцвинил на полу.',
+    title: 'Лоджия с каменной отделкой и шкафом',
+    category: 'Каменная отделка',
+    image: '/assets/images/projects/portfolio-02.webp',
+    imageAlt: 'Каменная отделка под окном и встроенный шкаф на лоджии',
+    summary: 'Фактурная стена сочетается с окном и встроенным местом для хранения.',
   },
   {
     id: 'p3',
-    title: 'Балкон «хрущёвка» под ключ',
-    category: 'Под ключ',
-    area: '2,8 м',
-    term: '7 дней',
-    tone: 'gold',
-    summary: 'Вынос по подоконнику, ПВХ-панели, точечный свет и откидной столик.',
+    title: 'Компактная лоджия с видом на город',
+    category: 'Панорамное остекление',
+    image: '/assets/images/projects/portfolio-03.webp',
+    imageAlt: 'Остеклённая лоджия с видом на жилые дома',
+    summary: 'Компактное пространство с большими окнами и видом на город.',
   },
   {
     id: 'p4',
-    title: 'Объединение с гостиной',
-    category: 'Объединение',
-    area: '5,1 м',
-    term: '16 дней',
-    tone: 'slate',
-    summary: 'Демонтаж блока, французское остекление, тёплый контур и подсветка ленты.',
+    title: 'Деревянные рейки и кирпичная стена',
+    category: 'Отделка под дерево',
+    image: '/assets/images/projects/portfolio-04.webp',
+    imageAlt: 'Деревянные рейки, кирпичная стена и остекление лоджии',
+    summary: 'Разные фактуры дерева и кирпича создают выразительный акцент.',
   },
   {
     id: 'p5',
-    title: 'Скандинавская лоджия',
-    category: 'Лоджия',
-    area: '3,5 м',
-    term: '12 дней',
-    tone: 'stone',
-    summary: 'Декоративный камень и евровагонка, реечный потолок, зона отдыха с диваном.',
+    title: 'Лоджия с зелёной акцентной стеной',
+    category: 'Отделка под дерево',
+    image: '/assets/images/projects/portfolio-05.webp',
+    imageAlt: 'Зелёная стена, деревянная отделка и окна в лоджии',
+    summary: 'Насыщенный зелёный оттенок выделяется на фоне тёплой деревянной отделки.',
   },
   {
     id: 'p6',
-    title: 'Балкон-гардеробная',
-    category: 'Под ключ',
-    area: '3,0 м',
-    term: '10 дней',
-    tone: 'wood',
-    summary: 'Встроенные шкафы во всю стену, ламинат, тёплое остекление и LED-подсветка.',
+    title: 'Светлая лоджия с деревянной отделкой',
+    category: 'Отделка под дерево',
+    image: '/assets/images/projects/portfolio-06.webp',
+    imageAlt: 'Светлая деревянная обшивка стен и потолка лоджии',
+    summary: 'Светлая обшивка стен и потолка объединяет интерьер.',
+  },
+  {
+    id: 'p7',
+    title: 'Лоджия с отделкой под серое дерево',
+    category: 'Отделка под дерево',
+    image: '/assets/images/projects/portfolio-07.webp',
+    imageAlt: 'Серо-бежевая отделка стен и встроенное место для хранения',
+    summary: 'Сдержанный оттенок и встроенное хранение помогают сохранить порядок.',
+  },
+  {
+    id: 'p8',
+    title: 'Отделка под дерево со встроенным шкафом',
+    category: 'Отделка под дерево',
+    image: '/assets/images/projects/portfolio-08.webp',
+    imageAlt: 'Деревянная отделка и встроенный шкаф на узкой лоджии',
+    summary: 'Вертикальные панели и встроенный шкаф используют пространство по максимуму.',
+  },
+  {
+    id: 'p9',
+    title: 'Тёплая отделка с длинной встроенной полкой',
+    category: 'Отделка под дерево',
+    image: '/assets/images/projects/portfolio-09.webp',
+    imageAlt: 'Деревянная отделка и широкая встроенная полка у окон',
+    summary: 'Тёплые древесные оттенки и длинная полка вдоль окна.',
+  },
+  {
+    id: 'p10',
+    title: 'Голубая отделка с белыми панелями',
+    category: 'Светлая отделка',
+    image: '/assets/images/projects/portfolio-10.webp',
+    imageAlt: 'Голубые стеновые панели и белые оконные рамы на лоджии',
+    summary: 'Сочетание голубых стен и белых рам создаёт лёгкий, чистый интерьер.',
+  },
+  {
+    id: 'p11',
+    title: 'Лоджия с белой отделкой',
+    category: 'Светлая отделка',
+    image: '/assets/images/projects/portfolio-11.webp',
+    imageAlt: 'Светлая лоджия с белыми панелями, окном и светлым полом',
+    summary: 'Нейтральные светлые поверхности сохраняют ощущение простора.',
+  },
+  {
+    id: 'p12',
+    title: 'Светлая лоджия с панорамным остеклением',
+    category: 'Панорамное остекление',
+    image: '/assets/images/projects/portfolio-12.webp',
+    imageAlt: 'Светлая лоджия с остеклением и видом на жилые дома',
+    summary: 'Панорамное остекление и светлая отделка делают пространство воздушным.',
   },
 ];

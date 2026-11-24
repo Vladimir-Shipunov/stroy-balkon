@@ -109,7 +109,7 @@ export function Configurator(): JSX.Element {
 
     open({
       title: 'Заказать замер',
-      subtitle: 'Оставьте контакты — приедем, уточним размеры и рассчитаем смету по вашей конфигурации.',
+      subtitle: 'Оставьте контакты — приедем, уточним размеры и обсудим план работ по вашей конфигурации.',
       source: 'configurator',
       endpoint: '/api/orders',
       payload: {

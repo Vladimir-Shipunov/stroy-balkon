@@ -107,6 +107,40 @@ export function sampleUnit(img: UnitImage, m: UnitMap, u: number, v: number, foo
   unitPixel[1] = f[p00 * 3 + 1]! * w00 + f[p10 * 3 + 1]! * w10 + f[p01 * 3 + 1]! * w01 + f[p11 * 3 + 1]! * w11;
   unitPixel[2] = f[p00 * 3 + 2]! * w00 + f[p10 * 3 + 2]! * w10 + f[p01 * 3 + 2]! * w01 + f[p11 * 3 + 2]! * w11;
   unitPixel[3] = T.a[p00]! * w00 + T.a[p10]! * w10 + T.a[p01]! * w01 + T.a[p11]! * w11;
+  applyBevel(u, v, m, b);
+}
+
+/**
+ * A PVC frame is a chamfered profile, catching the light along its outer edge (nearest the
+ * wall) and falling into shadow where it meets the glass — but the extracted photo the ring
+ * is cut from is only ~150x350 px to begin with (see docs/apk-inventory.md), so that real
+ * shading is faint or missing over much of the ring and every unit reads flat/painted rather
+ * than three-dimensional (reported directly against the app's own real photos, which always
+ * show this bevel). This adds that depth cue procedurally, from the same (u, v, b) the 9-slice
+ * already uses, so it holds up at any window size instead of depending on sparse baked detail.
+ */
+function applyBevel(u: number, v: number, m: UnitMap, b: number): void {
+  const du = Math.min(u - m.u0, m.u1 - u);
+  const dv = Math.min(v - m.v0, m.v1 - v);
+  let depth: number | null = null;
+  if (du < b) depth = du / b;
+  if (dv < b) depth = depth === null ? dv / b : Math.min(depth, dv / b);
+  if (depth === null) return;
+  // A real casement is two rings, not one flat bar: the outer frame catches a bright
+  // highlight near the wall (depth 0), dips into a shadowed seam where it meets the
+  // inner sash (depth ~0.45 — the groove a real profile always shows there), then the
+  // sash itself lifts a little again right next to the glass. A single linear ramp read
+  // as a flat gradient rather than a moulded profile, so this shapes two lobes instead.
+  const seam = Math.exp(-((depth - 0.45) ** 2) * 18);
+  const bevel = 1.22 - 0.1 * depth - 0.38 * seam;
+  // The extracted photo's own shading is faint (a ~150x350 px source stretched over the
+  // ring, see docs/apk-inventory.md) — pull what little contrast it has further from its
+  // own mid-tone before layering the procedural bevel on top, so real detail (a sash
+  // corner, a handle's cast shadow) still reads through rather than being swamped by it.
+  const stretch = (c: number): number => Math.max(0, 0.86 + (c - 0.86) * 1.6);
+  unitPixel[0] = stretch(unitPixel[0]!) * bevel;
+  unitPixel[1] = stretch(unitPixel[1]!) * bevel;
+  unitPixel[2] = stretch(unitPixel[2]!) * bevel;
 }
 
 /**

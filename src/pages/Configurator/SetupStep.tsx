@@ -7,7 +7,7 @@ import { ArrowRight, Check } from '../../components/icons';
 import { ShapePlan } from './ShapePlan';
 import type { Extras } from './useConfigurator';
 import type { Action, ConfigState } from './useConfigurator';
-import { VAM_SHAPES, findVamShape, vamShapeGlazings, vamShapeType, vamUiUrl } from './vamCatalog';
+import { VAM_AVAILABLE_SHAPES, vamShapeGlazings, vamShapeType, vamUiUrl } from './vamCatalog';
 import styles from './Wizard.module.css';
 
 interface SetupStepProps {
@@ -27,7 +27,7 @@ const EXTRAS: readonly { key: keyof Extras; label: string; hint: string }[] = [
  * @returns The screen element.
  */
 export function SetupStep({ state, dispatch, onNext }: SetupStepProps): JSX.Element {
-  const shape = findVamShape(state.vam.shape) ?? VAM_SHAPES[0]!;
+  const shape = VAM_AVAILABLE_SHAPES.find((candidate) => candidate.id === state.vam.shape) ?? VAM_AVAILABLE_SHAPES[0]!;
   const type = vamShapeType(shape);
   const glazings = vamShapeGlazings(shape);
   const isHanded = type.id === 'u';
@@ -43,7 +43,7 @@ export function SetupStep({ state, dispatch, onNext }: SetupStepProps): JSX.Elem
 
       <h2 className={styles.title}>Выберите тип балкона</h2>
       <div className={styles.typeRow} role="radiogroup" aria-label="Тип балкона">
-        {VAM_SHAPES.map((s) => {
+        {VAM_AVAILABLE_SHAPES.map((s) => {
           const on = s.id === shape.id;
           return (
             <button

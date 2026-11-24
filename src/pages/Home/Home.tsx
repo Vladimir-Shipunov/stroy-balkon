@@ -39,7 +39,7 @@ export function Home(): JSX.Element {
                 Собрать свой балкон <ArrowRight size={20} />
               </Link>
               <button className="btn btn--ghost btn--lg" onClick={() => open()} type="button">
-                Бесплатный замер
+                Заказать замер
               </button>
             </div>
             <div className={styles.heroTrust}>
@@ -63,25 +63,14 @@ export function Home(): JSX.Element {
             <div className={styles.heroArtFrame}>
               <img
                 className={styles.heroArt}
-                src="/vam/showcase/hero.webp"
+                src="/assets/images/projects/graphite-finish.webp"
                 width={800}
-                height={800}
-                alt="Угловой балкон, отделанный вагонкой, с подвесными светильниками"
+                height={640}
+                alt="Лоджия с графитовой отделкой и панорамным остеклением"
                 // @ts-expect-error fetchpriority is valid HTML but missing from the installed @types/react@18.3.31 JSX typings
                 fetchpriority="high"
                 decoding="async"
               />
-            </div>
-            <div className={`${styles.chip} ${styles.chipTop}`}>
-              <span className={styles.chipLabel}>Срок монтажа</span>
-              <span className={styles.chipValue}>7–14 дней</span>
-            </div>
-            <div className={`${styles.chip} ${styles.chipBottom}`}>
-              <span className={styles.chipDot} aria-hidden="true" />
-              <span>
-                <span className={styles.chipLabel}>Уже собрано</span>
-                <span className={styles.chipValue}>2 400+ балконов</span>
-              </span>
             </div>
           </div>
         </div>
@@ -107,7 +96,7 @@ export function Home(): JSX.Element {
             <h2 className={styles.sectionTitle}>Полный цикл работ с&nbsp;балконом</h2>
           </div>
           <Link to="/services" className={styles.sectionLink}>
-            Все услуги и цены <ArrowUpRight size={18} />
+            Все услуги <ArrowUpRight size={18} />
           </Link>
         </Reveal>
         <div className={styles.servicesGrid}>
@@ -125,10 +114,10 @@ export function Home(): JSX.Element {
           <div className={`${styles.promoArt} grain`}>
             <img
               className={styles.promoArtImg}
-              src="/vam/showcase/promo.webp"
-              width={800}
+              src="/assets/images/projects/portfolio-04.webp"
+              width={1000}
               height={800}
-              alt="Длинная лоджия с голубой вагонкой и светильником"
+              alt="Лоджия с отделкой деревянными рейками, кирпичной стеной и панорамными окнами"
               loading="lazy"
               decoding="async"
             />
@@ -166,7 +155,7 @@ export function Home(): JSX.Element {
         <Reveal className={styles.sectionHeadCenter}>
           <span className="eyebrow eyebrow--center">Почему мы</span>
           <h2 className={styles.sectionTitle}>
-            6&nbsp;причин выбрать <em>БАЛКОН-МСК</em>
+            6&nbsp;причин выбрать <em>STROY-BALKON</em>
           </h2>
         </Reveal>
         <div className={styles.reasonsGrid}>
@@ -235,12 +224,12 @@ export function Home(): JSX.Element {
             <h2 className={styles.ctaTitle}>Готовы преобразить свой балкон?</h2>
             <p className={styles.ctaText}>
               Замер — бесплатно и ни к чему не обязывает. Приедем в удобное время, всё измерим и
-              рассчитаем точную смету.
+              обсудим подходящее решение и план работ.
             </p>
           </div>
           <div className={styles.ctaActions}>
             <button className="btn btn--primary btn--lg" onClick={() => open()} type="button">
-              Заказать бесплатный замер
+              Заказать замер
             </button>
             <Link to="/configurator" className={styles.ctaLink}>
               или соберите балкон сами <ArrowRight size={18} />

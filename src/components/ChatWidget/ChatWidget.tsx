@@ -37,7 +37,7 @@ const STORAGE_KEY = 'balkon-chat-v1';
 const GREETING: ChatMessage = {
   role: 'assistant',
   content:
-    'Здравствуйте! Я консультант БАЛКОН-МСК. Помогу подобрать остекление и отделку и могу менять ваш балкон в конфигураторе. Чем помочь?',
+    'Здравствуйте! Я консультант STROY-BALKON. Помогу подобрать остекление и отделку и могу менять ваш балкон в конфигураторе. Чем помочь?',
 };
 
 /** Baseboard colour / lamp model ↔ the assistant's names (numbers are the app's picker order). */

@@ -1,6 +1,6 @@
 /* ===== Shared section rhythm ===== */
 .section {
-  padding-block: clamp(64px, 9vw, 120px);
+  padding-block: clamp(40px, 5vw, 64px);
 }
 
 .sectionHead {
@@ -8,13 +8,13 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .sectionHeadCenter {
   text-align: center;
   max-width: 720px;
-  margin: 0 auto 56px;
+  margin: 0 auto 36px;
 }
 
 .sectionTitle {
@@ -58,13 +58,13 @@
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   align-items: center;
-  gap: clamp(40px, 6vw, 88px);
-  padding-block: clamp(48px, 8vw, 96px);
+  gap: clamp(28px, 4vw, 56px);
+  padding-block: clamp(36px, 4.5vw, 58px);
 }
 
 .heroTitle {
   font-size: var(--fs-h1);
-  margin: 22px 0 24px;
+  margin: 16px 0 18px;
   letter-spacing: -0.025em;
 }
 
@@ -73,14 +73,14 @@
   line-height: 1.6;
   color: var(--text-muted);
   max-width: 33ch;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-bottom: 38px;
+  margin-bottom: 26px;
 }
 
 .heroTrust {
@@ -130,18 +130,12 @@
 
 .heroArtFrame {
   position: relative;
-  aspect-ratio: 5 / 4.4;
+  aspect-ratio: 5 / 4;
   border-radius: var(--radius-xl);
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-xl);
   background: var(--surface);
-  rotate: 1.2deg;
-  transition: rotate var(--dur-slow) var(--ease-out);
-}
-
-.heroArtWrap:hover .heroArtFrame {
-  rotate: 0deg;
 }
 
 .heroArt {
@@ -149,71 +143,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.chip {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  animation: floaty 6s ease-in-out infinite;
-}
-
-.chipTop {
-  top: 22px;
-  left: -22px;
-}
-
-.chipBottom {
-  bottom: 26px;
-  right: -18px;
-  animation-delay: -3s;
-}
-
-.chipLabel {
-  display: block;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-faint);
-}
-
-.chipValue {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.chipDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #3da35a;
-  box-shadow: 0 0 0 4px rgba(61, 163, 90, 0.18);
-}
-
-@keyframes floaty {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-9px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .chip {
-    animation: none;
-  }
+  object-position: center 48%;
 }
 
 /* ===== Stats band ===== */
@@ -274,8 +204,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: clamp(40px, 6vw, 80px);
-  padding-block: clamp(64px, 9vw, 120px);
+  gap: clamp(28px, 4vw, 56px);
+  padding-block: clamp(40px, 5vw, 64px);
 }
 
 .promoArt {
@@ -292,6 +222,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 48%;
 }
 
 .promoTitle {
@@ -337,7 +268,7 @@
 
 .reason {
   position: relative;
-  padding: 32px 28px;
+  padding: 24px 22px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -381,7 +312,7 @@
 
 .step {
   position: relative;
-  padding: 28px 24px;
+  padding: 18px 16px;
 }
 
 .step::before {
@@ -435,7 +366,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 30px 30px 26px;
+  padding: 24px 24px 22px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -496,8 +427,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  margin-bottom: clamp(64px, 9vw, 120px);
-  padding: clamp(40px, 6vw, 64px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+  padding: clamp(28px, 4vw, 48px);
   border-radius: var(--radius-xl);
   background:
     radial-gradient(70% 140% at 90% 10%, rgba(196, 154, 40, 0.22) 0%, transparent 55%),
@@ -557,7 +488,7 @@
     grid-template-columns: 1fr;
   }
   .heroArtWrap {
-    order: -1;
+    order: 1;
     max-width: 520px;
   }
   .promoInner {

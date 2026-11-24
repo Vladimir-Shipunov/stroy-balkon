@@ -66,6 +66,29 @@
   cursor: default;
 }
 
+.fitClip,
+.fitMove,
+.fitPiece {
+  position: absolute;
+  inset: 0;
+}
+
+/* The warped far wall with its ledge (vamWarp.ts), drawn onto a canvas the size of the picture in place of it. */
+.warpCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Shading laid over the wall of one piece (a face of the corner protrusion); never takes a tap. */
+.fitShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 .layers {
   position: absolute;
   inset: 0;

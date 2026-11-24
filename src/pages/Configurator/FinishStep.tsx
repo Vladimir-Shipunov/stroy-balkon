@@ -8,9 +8,9 @@
  * (`photoPlanLink.ts`): it marks where each frame is shot from, the wall numbers on the
  * photos are the drawing's own, and the wall being finished lights up on the plan.
  */
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Dispatch, RefObject } from 'react';
-import { Check, DownloadIcon } from '../../components/icons';
+import { Check } from '../../components/icons';
 import { ShapePlan } from './ShapePlan';
 import { VamScene } from './VamScene';
 import type { VamSceneHandle } from './VamScene';
@@ -19,13 +19,16 @@ import { usePlanViews } from './usePlanViews';
 import { downloadSpecPdf, SpecPdfError } from './exportPdf';
 import { SaveProjectButton } from './SaveProjectButton';
 import type { Action, ConfigState } from './useConfigurator';
-import { findVamShape, hotspotTitle, pickKey, pickedOption, usesPlanRender, vamPlanHotspots, vamRenderPaint, vamScreen, vamViewLayerUrls } from './vamCatalog';
+import { findVamShape, hotspotTitle, pickKey, pickedOption, surfacePickKey, usesPlanRender, vamPlanHotspots, vamRenderPaint, vamScreen, vamViewLayerUrls } from './vamCatalog';
 import { PLAN_SHAPES, planFor } from './planShapes';
 import { planCameras, wallNumbersText, wallTitle, wallsAtPhotoX } from './photoPlanLink';
-import { downloadSvgElement, svgFilename } from './exportSvg';
+import { fitFor, fitPoint, fitShows, fitTapPoint } from './vamFit';
 import type { AppHotspot, AppSlot, HotspotKind } from './vamCatalog';
 import styles from './Wizard.module.css';
 import panel from './Configurator.module.css';
+
+/** Half the round tap target's width (46 px, `.hotspot` in Wizard.module.css). */
+const HOTSPOT_RADIUS_PX = 23;
 
 interface FinishStepProps {
   readonly state: ConfigState;
@@ -99,7 +102,7 @@ function SurfacePanel({
   const [slotId, setSlotId] = useState<string>(hotspot.slots[0]?.id ?? 'main');
   const slot: AppSlot | undefined = hotspot.slots.find((s) => s.id === slotId) ?? hotspot.slots[0];
   if (!slot) return <p className={panel.hint}>Для этой поверхности нет вариантов.</p>;
-  const key = pickKey(hotspot.id, slot.id);
+  const key = surfacePickKey(hotspot, slot.id);
   const pick = state.vam.picks[key];
   const option = pickedOption(slot, pick) ?? slot.options[0];
 
@@ -194,7 +197,6 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
   const [active, setActive] = useState<ActiveSpot | null>(null);
   const [pdfBusy, setPdfBusy] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
-  const planSvgRef = useRef<SVGSVGElement>(null);
   const shape = findVamShape(state.vam.shape);
   // Perf audit (docs/PERF_AUDIT_15-20.md #5): avoid rebuilding both views' layer-URL
   // arrays on every render of this component (e.g. toggling an unrelated `extras`
@@ -203,10 +205,27 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
     () => screen.views.map((_view, i) => vamViewLayerUrls(screen, i as 0 | 1, state.vam.picks)),
     [screen, state.vam.picks],
   );
-  // Shapes the app has no photos for (Лодочка) are drawn from their exact plan by the room renderer.
+  // The crop and turn each frame wears for this shape (vamFit.ts) — none for the shapes the photo fits as it is.
+  const sceneFits = useMemo(
+    () => ([0, 1] as const).map((i) => fitFor(state.vam.shape, i, screen.mirror)),
+    [state.vam.shape, screen.mirror],
+  );
+  // Always the app's real photos now (usesPlanRender is permanently false, see vamCatalog.ts)
+  // — the "Чертёж, мм" card below still draws the exact geometry regardless.
   const planMode = usesPlanRender(state.vam.shape);
-  const planHotspots = useMemo(() => (planMode ? vamPlanHotspots(state.vam.shape) : []), [planMode, state.vam.shape]);
-  const activeHotspot = planMode ? planHotspots.find((h) => h.id === active?.id) : active ? screen.views[active.view]?.hotspots.find((h) => h.id === active.id) : undefined;
+  const planHotspots = useMemo(
+    () => (planMode ? vamPlanHotspots(state.vam.shape).filter((h) => h.kind !== 'decor') : []),
+    [planMode, state.vam.shape],
+  );
+  const activeHotspot = planMode
+    ? planHotspots.find((h) => h.id === active?.id)
+    : active
+      ? screen.views[active.view]?.hotspots.find((h) =>
+          h.id === active.id &&
+          h.kind !== 'decor' &&
+          !(h.kind === 'cabinet' && active.view === 0),
+        )
+      : undefined;
 
   // Photo <-> plan: the plan this selection draws, and which of its walls each wall tap
   // target on the photos sits on (the number is the one printed on the drawing).
@@ -279,18 +298,25 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
             ))
           : screen.views.map((view, i) => (
           <div key={i} className={styles.viewCard}>
-            <VamScene ref={sceneRefs[i]!} layers={screenLayerUrls[i]!} mirror={screen.mirror} viewLabel={`кадр ${i + 1}`}>
-              {view.hotspots.map((h) => {
-                const chosen = h.slots.some((s) => state.vam.picks[pickKey(h.id, s.id)]);
+            <VamScene ref={sceneRefs[i]!} layers={screenLayerUrls[i]!} mirror={screen.mirror} fit={sceneFits[i]} viewIndex={i as 0 | 1} viewLabel={`кадр ${i + 1}`}>
+              {view.hotspots.filter((h) => h.kind !== 'decor').map((h) => {
+                if (h.kind === 'cabinet' && i === 0) return null;
+                const chosen = h.slots.some((s) => state.vam.picks[surfacePickKey(h, s.id)]);
                 const isActive = active?.view === i && active.id === h.id;
                 const edges = h.kind === 'wall' ? wallEdges.get(`${i}:${h.id}`) : undefined;
                 const wallNo = edges ? wallNumbersText(edges) : h.kind === 'wall' ? h.id.match(/^\d+/)?.[0] : undefined;
+                // The tap target rides the photo's fit (it must stay on its actual surface) and goes away with a surface the crop cuts off.
+                // A zoom that pushes a point past the frame's edge keeps the ring inside the frame without moving it to an unrelated surface.
+                const [fx, fy] = fitPoint(sceneFits[i], screen.mirror ? 100 - h.x : h.x, h.y);
+                if (!fitShows(sceneFits[i], fx, fy)) return null;
+                const [hx, hy] = fitTapPoint(sceneFits[i], h.id, [fx, fy]);
+                const place = (v: number): string => (sceneFits[i] ? `clamp(${HOTSPOT_RADIUS_PX}px, ${v}%, calc(100% - ${HOTSPOT_RADIUS_PX}px))` : `${v}%`);
                 return (
                   <button
                     key={h.id}
                     type="button"
                     className={`${styles.hotspot} ${chosen ? styles.hotspotDone : ''} ${isActive ? styles.hotspotActive : ''}`}
-                    style={{ left: `${screen.mirror ? 100 - h.x : h.x}%`, top: `${h.y}%` }}
+                    style={{ left: place(hx), top: place(hy) }}
                     onClick={() => setActive({ view: i, id: h.id })}
                     aria-label={edges ? wallTitle(edges) : hotspotTitle(h)}
                     title={edges ? wallTitle(edges) : hotspotTitle(h)}
@@ -320,18 +346,8 @@ export function FinishStep({ state, dispatch, sceneRefs }: FinishStepProps): JSX
           {shape ? (
             <div className={styles.planCard}>
               <span className={styles.planCardTitle}>Чертёж, мм</span>
-              <ShapePlan ref={planSvgRef} shape={shape} glazing={state.vam.glazing} className={styles.planCardSvg} detailed cameras={cameras} highlight={highlight} />
+              <ShapePlan shape={shape} glazing={state.vam.glazing} className={styles.planCardSvg} detailed cameras={cameras} highlight={highlight} />
               <p className={styles.planCardNote}>Оранжевые точки 1 и 2 — откуда сняты кадры. Стена, которую вы выбираете на фото, подсвечивается на чертеже.</p>
-              <button
-                type="button"
-                className={panel.downloadBtn}
-                onClick={() => {
-                  const svgEl = planSvgRef.current;
-                  if (svgEl) downloadSvgElement(svgEl, svgFilename(shape.label));
-                }}
-              >
-                <DownloadIcon size={16} /> Скачать чертёж (SVG)
-              </button>
             </div>
           ) : null}
           <div className={styles.planCard}>

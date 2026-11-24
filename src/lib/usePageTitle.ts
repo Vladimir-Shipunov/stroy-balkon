@@ -4,10 +4,10 @@
  */
 import { useEffect } from 'react';
 
-const SUFFIX = 'БАЛКОН-МСК';
+const SUFFIX = 'STROY-BALKON';
 
 /**
- * Set the document title to `"<title> — БАЛКОН-МСК"` while mounted.
+ * Set the document title to `"<title> — STROY-BALKON"` while mounted.
  * @param title Page-specific title. Pass an empty string to use the brand alone.
  */
 export function usePageTitle(title: string): void {
