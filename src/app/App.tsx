@@ -17,7 +17,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CallModalProvider } from '../components/CallModal/CallModalProvider';
-import { ChatWidget } from '../components/ChatWidget/ChatWidget';
 import { ManagerChatWidget } from '../components/ManagerChatWidget/ManagerChatWidget';
 import { Layout } from '../components/Layout/Layout';
 import { PageLoader } from '../components/PageLoader';
@@ -102,7 +101,6 @@ export function App(): JSX.Element {
           <Route path="admin/chats" element={<Suspense fallback={<PageLoader />}><AdminChats /></Suspense>} />
           <Route path="admin/chats/:id" element={<Suspense fallback={<PageLoader />}><AdminChats /></Suspense>} />
           </Routes>
-          <ChatWidget />
           <ManagerChatWidget />
         </CallModalProvider>
       </ConfiguratorProvider>

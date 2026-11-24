@@ -1,7 +1,7 @@
 .root {
   position: fixed;
   right: clamp(16px, 3vw, 28px);
-  bottom: clamp(88px, 8vw, 100px);
+  bottom: clamp(16px, 3vw, 28px);
   z-index: 149;
   display: flex;
   flex-direction: column;
@@ -10,14 +10,14 @@
 }
 
 .fab {
-  width: 52px;
-  height: 52px;
-  border: 1px solid var(--border);
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(196, 154, 40, 0.42);
   border-radius: 50%;
-  background: var(--surface);
-  color: var(--text);
+  background: linear-gradient(150deg, #f0c46a 0%, #dca94a 100%);
+  color: #fff;
   box-shadow: var(--shadow-md);
-  font-size: 22px;
+  font-size: 24px;
   display: grid;
   place-items: center;
 }
