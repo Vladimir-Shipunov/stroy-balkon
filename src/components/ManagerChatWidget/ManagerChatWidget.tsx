@@ -30,6 +30,16 @@ export function ManagerChatWidget(): JSX.Element | null {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  function scrollToBottom(): void {
+    window.requestAnimationFrame(() => {
+      const element = listRef.current;
+      if (element) element.scrollTo({ top: element.scrollHeight, behavior: 'auto' });
+      window.requestAnimationFrame(() => {
+        if (element) element.scrollTo({ top: element.scrollHeight, behavior: 'auto' });
+      });
+    });
+  }
+
   function addFiles(files: readonly File[]): void {
     setSelectedFiles((current) => {
       const accepted = [...current];
@@ -88,7 +98,7 @@ export function ManagerChatWidget(): JSX.Element | null {
   }, [open, sessionId]);
 
   useEffect(() => {
-    if (open) listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
+    if (open) scrollToBottom();
   }, [open, messages]);
 
   async function send(event: FormEvent): Promise<void> {
@@ -168,8 +178,13 @@ export function ManagerChatWidget(): JSX.Element | null {
                       key={attachment.url}
                       className={styles.attachmentImage}
                       src={attachment.url}
-                      alt={attachment.name}
+                      alt=""
                       loading="lazy"
+                      onLoad={scrollToBottom}
+                      onError={(event) => {
+                        event.currentTarget.style.display = 'none';
+                        scrollToBottom();
+                      }}
                     />
                   ) : (
                     <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noreferrer">
