@@ -192,10 +192,24 @@ export function ManagerChatWidget(): JSX.Element | null {
                       }}
                     />
                   ) : (
-                    <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noopener noreferrer">
-                      <span>📎</span>
-                      <span className={styles.fileName}>{attachment.name}</span>
-                    </a>
+                      attachment.mimeType === 'application/pdf' ? (
+                        <div className={styles.documentPreview} key={attachment.url}>
+                          <iframe
+                            className={styles.pdfPreview}
+                            src={`${attachment.url}#toolbar=1&navpanes=0&view=FitH`}
+                            title={attachment.name}
+                          />
+                          <a className={styles.fileLink} href={attachment.url} target="_blank" rel="noopener noreferrer">
+                            <span>📎</span>
+                            <span className={styles.fileName}>Открыть PDF полностью</span>
+                          </a>
+                        </div>
+                      ) : (
+                        <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noopener noreferrer">
+                          <span>📎</span>
+                          <span className={styles.fileName}>{attachment.name}</span>
+                        </a>
+                      )
                   )
                 ))}
               </div>

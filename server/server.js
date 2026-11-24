@@ -39,6 +39,7 @@ function sanitizeUploadFilename(originalName = 'upload') {
         .normalize('NFKD')
         .replace(/[^\w.-]+/g, '-')
         .replace(/-+/g, '-')
+        .replace(/\.+$/g, '')
         .replace(/^-|-$/g, '')
         .slice(0, 80) || 'upload';
 
@@ -67,6 +68,7 @@ function sanitizeChatFilename(originalName = 'file', mimeType = '') {
         .normalize('NFKD')
         .replace(/[^\w.-]+/g, '-')
         .replace(/-+/g, '-')
+        .replace(/\.+$/g, '')
         .replace(/^-|-$/g, '')
         .slice(0, 100) || 'file';
     return `${base}${safeExtension || '.bin'}`;

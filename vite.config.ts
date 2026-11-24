@@ -12,6 +12,28 @@ const IMAGE_TYPES: Record<string, string> = {
   '.avif': 'image/avif',
 };
 
+const CHAT_FILE_TYPES: Record<string, string> = {
+  '.pdf': 'application/pdf',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.tif': 'image/tiff',
+  '.tiff': 'image/tiff',
+  '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+  '.xml': 'application/xml',
+  '.txt': 'text/plain; charset=utf-8',
+  '.csv': 'text/csv; charset=utf-8',
+  '.rtf': 'application/rtf',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.odt': 'application/vnd.oasis.opendocument.text',
+  '.epub': 'application/epub+zip',
+  '.mobi': 'application/x-mobipocket-ebook',
+  '.djvu': 'image/vnd.djvu',
+  '.fb2': 'application/xml',
+};
+
 /**
  * Dev-only static server for images under `public/vam/` and `public/assets/images/`.
  *
@@ -48,6 +70,32 @@ function servePublicImages(): Plugin {
   };
 }
 
+function serveChatFiles(): Plugin {
+  return {
+    name: 'serve-chat-files-dev',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const url = req.url ?? '';
+        if (!url.startsWith('/uploads/chat/')) return next();
+        const rel = decodeURIComponent(url.split('?')[0] ?? '');
+        const root = resolve(__dirname, 'public/uploads/chat');
+        const filePath = resolve(__dirname, `public${rel}`);
+        const type = CHAT_FILE_TYPES[extname(filePath).toLowerCase()];
+        if (!type || !filePath.startsWith(root) || !existsSync(filePath) || !statSync(filePath).isFile()) {
+          return next();
+        }
+        res.setHeader('Content-Type', type);
+        res.setHeader('Content-Disposition', 'inline');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        createReadStream(filePath).pipe(res);
+        return undefined;
+      });
+    },
+  };
+}
+
 /**
  * Vite config for the React configurator SPA.
  *
@@ -66,7 +114,7 @@ export default defineConfig(({ command }) => ({
   // The SPA imports its own assets; do not copy the legacy `public/` tree into
   // the build output (outDir lives under public/, so publicDir must be off).
   publicDir: false,
-  plugins: [react(), servePublicImages()],
+  plugins: [react(), servePublicImages(), serveChatFiles()],
   server: {
     // Bind on all interfaces so both IPv4 (127.0.0.1) and IPv6 loopback resolve
     // (Windows localhost defaults to IPv6, which some clients can't reach).
