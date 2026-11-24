@@ -18,6 +18,8 @@ interface ChatAttachment {
 }
 
 const SESSION_KEY = 'stroy-balkon-manager-chat';
+const CHAT_FILE_ACCEPT = '.xml,.pdf,.docx,.xlsx,.txt,.rtf,.odt,.jpg,.jpeg,.png,.tiff,.tif,.svg,.webp,.csv,.fb2,.epub,.mobi,.djvu';
+const CHAT_EXTENSIONS = new Set(CHAT_FILE_ACCEPT.split(',').map((extension) => extension.trim()));
 
 export function ManagerChatWidget(): JSX.Element | null {
   const location = useLocation();
@@ -46,6 +48,9 @@ export function ManagerChatWidget(): JSX.Element | null {
       for (const file of files) {
         if (accepted.length >= 5) break;
         if (file.size > 10 * 1024 * 1024) continue;
+        const dot = file.name.lastIndexOf('.');
+        const extension = dot >= 0 ? file.name.slice(dot).toLowerCase() : '';
+        if (!CHAT_EXTENSIONS.has(extension)) continue;
         const duplicate = accepted.some((item) =>
           item.name === file.name && item.size === file.size && item.lastModified === file.lastModified
         );
@@ -211,7 +216,7 @@ export function ManagerChatWidget(): JSX.Element | null {
                 ref={fileInputRef}
                 className={styles.fileInput}
                 type="file"
-                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+                accept={CHAT_FILE_ACCEPT}
                 multiple
                 onChange={(event) => {
                   addFiles(Array.from(event.target.files ?? []));

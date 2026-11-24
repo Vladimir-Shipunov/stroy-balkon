@@ -9,6 +9,8 @@ import styles from './AdminPanel.module.css';
 interface ChatAttachment { name:string; url:string; size:number; mimeType:string }
 interface ChatMessage { id:string; role:'user'|'manager'; content:string; attachments?:ChatAttachment[]; createdAt:string }
 interface ChatSession { id:string; visitorName:string|null; visitorPhone:string|null; page:string; status:'new'|'processing'|'answered'|'closed'; updatedAt:string; messages:ChatMessage[] }
+const CHAT_FILE_ACCEPT='.xml,.pdf,.docx,.xlsx,.txt,.rtf,.odt,.jpg,.jpeg,.png,.tiff,.tif,.svg,.webp,.csv,.fb2,.epub,.mobi,.djvu';
+const CHAT_EXTENSIONS=new Set(CHAT_FILE_ACCEPT.split(','));
 
 export function AdminChats(): JSX.Element {
   const auth=useAdminAuth();
@@ -64,7 +66,9 @@ function ChatDetail({id,token,onLogout,sessions}:{id:string;token:string;onLogou
         <img key={a.url} className={styles.adminAttachmentImage} src={a.url} alt={a.name} loading="lazy"/>:
         <a key={a.url} href={a.url} target="_blank" rel="noreferrer">📎 {a.name}</a>)}
     </div>)}</div><div className={styles.reply}>
-      <input ref={fileInputRef} className={styles.fileInput} type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar" multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>f.size<=10*1024*1024))}/>
+      <input ref={fileInputRef} className={styles.fileInput} type="file" accept={CHAT_FILE_ACCEPT} multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>{
+        const dot=f.name.lastIndexOf('.');const ext=dot>=0?f.name.slice(dot).toLowerCase():'';return f.size<=10*1024*1024&&CHAT_EXTENSIONS.has(ext);
+      }))}/>
       <button type="button" onClick={()=>fileInputRef.current?.click()} title="Прикрепить файл">📎</button>
       <input value={input} onChange={e=>setInput(e.target.value)} onPaste={e=>{
         const files=Array.from(e.clipboardData.files);

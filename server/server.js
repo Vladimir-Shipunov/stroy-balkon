@@ -51,7 +51,13 @@ function sanitizeChatFilename(originalName = 'file', mimeType = '') {
         'image/png': '.png',
         'image/gif': '.gif',
         'image/webp': '.webp',
-        'application/pdf': '.pdf'
+        'image/svg+xml': '.svg',
+        'image/tiff': '.tiff',
+        'application/pdf': '.pdf',
+        'application/xml': '.xml',
+        'text/xml': '.xml',
+        'text/csv': '.csv',
+        'application/epub+zip': '.epub'
     };
     const ext = path.extname(originalName).toLowerCase();
     const safeExtension = ext && ext.length <= 10
@@ -370,10 +376,14 @@ const chatUpload = multer({
         files: 5
     },
     fileFilter: (req, file, cb) => {
-        const blockedExtensions = new Set(['.exe', '.bat', '.cmd', '.msi', '.com', '.scr', '.js', '.php']);
+        const allowedExtensions = new Set([
+            '.xml', '.pdf', '.docx', '.xlsx', '.txt', '.rtf', '.odt',
+            '.jpg', '.jpeg', '.png', '.tiff', '.tif', '.svg', '.webp',
+            '.csv', '.fb2', '.epub', '.mobi', '.djvu'
+        ]);
         const ext = path.extname(file.originalname).toLowerCase();
-        if (blockedExtensions.has(ext)) {
-            const error = new Error('Этот тип файла запрещён');
+        if (!allowedExtensions.has(ext)) {
+            const error = new Error('Тип файла не поддерживается');
             error.status = 400;
             cb(error);
             return;
