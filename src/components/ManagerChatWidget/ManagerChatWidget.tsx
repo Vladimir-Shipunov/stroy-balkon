@@ -164,10 +164,13 @@ export function ManagerChatWidget(): JSX.Element | null {
                 {message.content ? <p>{message.content}</p> : null}
                 {message.attachments?.map((attachment) => (
                   attachment.mimeType.startsWith('image/') ? (
-                    <a key={attachment.url} href={attachment.url} target="_blank" rel="noreferrer">
-                      <img className={styles.attachmentImage} src={attachment.url} alt={attachment.name} />
-                      <span className={styles.fileName}>{attachment.name}</span>
-                    </a>
+                    <img
+                      key={attachment.url}
+                      className={styles.attachmentImage}
+                      src={attachment.url}
+                      alt={attachment.name}
+                      loading="lazy"
+                    />
                   ) : (
                     <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noreferrer">
                       <span>📎</span>

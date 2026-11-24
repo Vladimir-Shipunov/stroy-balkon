@@ -851,6 +851,18 @@ app.use(express.static(path.join(__dirname, '../public'), {
     etag: true
 }));
 
+app.get('/uploads/chat/:filename', (req, res) => {
+    const filename = path.basename(String(req.params.filename || ''));
+    const filePath = path.resolve(__dirname, '../public/uploads/chat', filename);
+    const chatRoot = path.resolve(__dirname, '../public/uploads/chat');
+    if (!filePath.startsWith(chatRoot + path.sep) || !fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+        return res.status(404).send('Файл не найден');
+    }
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('Cache-Control', NODE_ENV === 'production' ? 'public, max-age=604800' : 'no-cache');
+    return res.sendFile(filePath);
+});
+
 // The React SPA (public/app/, built by `npm run build:app`) owns every
 // top-level page route — '/', '/configurator', '/services', etc. It used to
 // be reachable only under '/app/...' while these legacy static pages sat at

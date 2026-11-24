@@ -61,7 +61,7 @@ function ChatDetail({id,token,onLogout,sessions}:{id:string;token:string;onLogou
     <section className={styles.card}><div className={styles.messages}>{session.messages.map(m=><div key={m.id} className={`${styles.message} ${m.role==='manager'?styles.manager:''}`}>
       {m.content?<p>{m.content}</p>:null}
       {m.attachments?.map(a=>a.mimeType.startsWith('image/')?
-        <a key={a.url} href={a.url} target="_blank" rel="noreferrer"><img className={styles.adminAttachmentImage} src={a.url} alt={a.name}/><span>{a.name}</span></a>:
+        <img key={a.url} className={styles.adminAttachmentImage} src={a.url} alt={a.name} loading="lazy"/>:
         <a key={a.url} href={a.url} target="_blank" rel="noreferrer">📎 {a.name}</a>)}
     </div>)}</div><div className={styles.reply}>
       <input ref={fileInputRef} className={styles.fileInput} type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar" multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>f.size<=10*1024*1024))}/>
