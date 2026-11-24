@@ -12,6 +12,12 @@ interface ChatSession { id:string; visitorName:string|null; visitorPhone:string|
 const CHAT_FILE_ACCEPT='.xml,.pdf,.docx,.xlsx,.txt,.rtf,.odt,.jpg,.jpeg,.png,.tiff,.tif,.svg,.webp,.csv,.fb2,.epub,.mobi,.djvu';
 const CHAT_EXTENSIONS=new Set(CHAT_FILE_ACCEPT.split(','));
 
+function formatFileSize(bytes:number):string{
+  if(bytes<1024)return `${bytes} Б`;
+  if(bytes<1024*1024)return `${Math.round(bytes/1024)} КБ`;
+  return `${(bytes/(1024*1024)).toFixed(1)} МБ`;
+}
+
 export function AdminChats(): JSX.Element {
   const auth=useAdminAuth();
   if(!auth.token)return <AdminTokenGate title="Чаты" onAuthed={auth.login}/>;
@@ -64,9 +70,9 @@ function ChatDetail({id,token,onLogout,sessions}:{id:string;token:string;onLogou
       {m.content?<p>{m.content}</p>:null}
       {m.attachments?.map(a=>a.mimeType.startsWith('image/')?
         <img key={a.url} className={styles.adminAttachmentImage} src={a.url} alt={a.name} loading="lazy"/>:
-        a.mimeType==='application/pdf'?
-          <div key={a.url}><iframe className={styles.adminPdfPreview} src={`${a.url}#toolbar=1&navpanes=0&view=FitH`} title={a.name}/><a href={a.url} target="_blank" rel="noopener noreferrer">Открыть PDF полностью</a></div>:
-          <a key={a.url} href={a.url} target="_blank" rel="noopener noreferrer">📎 {a.name}</a>)}
+        <a key={a.url} className={styles.adminFileCard} href={a.url} target="_blank" rel="noopener noreferrer" title={`Открыть ${a.name}`}>
+          <span>📄</span><span><strong>{a.name}</strong><small>{formatFileSize(a.size)}</small></span>
+        </a>)}
     </div>)}</div><div className={styles.reply}>
       <input ref={fileInputRef} className={styles.fileInput} type="file" accept={CHAT_FILE_ACCEPT} multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>{
         const dot=f.name.lastIndexOf('.');const ext=dot>=0?f.name.slice(dot).toLowerCase():'';return f.size<=10*1024*1024&&CHAT_EXTENSIONS.has(ext);

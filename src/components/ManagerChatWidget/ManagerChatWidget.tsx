@@ -21,6 +21,12 @@ const SESSION_KEY = 'stroy-balkon-manager-chat';
 const CHAT_FILE_ACCEPT = '.xml,.pdf,.docx,.xlsx,.txt,.rtf,.odt,.jpg,.jpeg,.png,.tiff,.tif,.svg,.webp,.csv,.fb2,.epub,.mobi,.djvu';
 const CHAT_EXTENSIONS = new Set(CHAT_FILE_ACCEPT.split(',').map((extension) => extension.trim()));
 
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} Б`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} КБ`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+}
+
 export function ManagerChatWidget(): JSX.Element | null {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -192,24 +198,28 @@ export function ManagerChatWidget(): JSX.Element | null {
                       }}
                     />
                   ) : (
-                      attachment.mimeType === 'application/pdf' ? (
-                        <div className={styles.documentPreview} key={attachment.url}>
-                          <iframe
-                            className={styles.pdfPreview}
-                            src={`${attachment.url}#toolbar=1&navpanes=0&view=FitH`}
-                            title={attachment.name}
-                          />
-                          <a className={styles.fileLink} href={attachment.url} target="_blank" rel="noopener noreferrer">
-                            <span>📎</span>
-                            <span className={styles.fileName}>Открыть PDF полностью</span>
-                          </a>
-                        </div>
-                      ) : (
-                        <a className={styles.fileLink} key={attachment.url} href={attachment.url} target="_blank" rel="noopener noreferrer">
-                          <span>📎</span>
+                      <a
+                        className={styles.fileCard}
+                        key={attachment.url}
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download={false}
+                        title={`Открыть ${attachment.name}`}
+                      >
+                        <span className={styles.fileIcon} aria-hidden="true">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <path d="M14 2v6h6M8 13h8M8 17h5" />
+                          </svg>
+                        </span>
+                        <span className={styles.fileInfo}>
                           <span className={styles.fileName}>{attachment.name}</span>
-                        </a>
-                      )
+                          <span className={styles.fileMeta}>
+                            {formatFileSize(attachment.size)}
+                          </span>
+                        </span>
+                      </a>
                   )
                 ))}
               </div>
