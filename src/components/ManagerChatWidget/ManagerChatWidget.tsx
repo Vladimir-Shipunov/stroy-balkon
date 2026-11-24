@@ -30,6 +30,21 @@ export function ManagerChatWidget(): JSX.Element | null {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  function addFiles(files: readonly File[]): void {
+    setSelectedFiles((current) => {
+      const accepted = [...current];
+      for (const file of files) {
+        if (accepted.length >= 5) break;
+        if (file.size > 10 * 1024 * 1024) continue;
+        const duplicate = accepted.some((item) =>
+          item.name === file.name && item.size === file.size && item.lastModified === file.lastModified
+        );
+        if (!duplicate) accepted.push(file);
+      }
+      return accepted;
+    });
+  }
+
   useEffect(() => {
     let cancelled = false;
     fetch('/api/chat/session')
@@ -181,8 +196,7 @@ export function ManagerChatWidget(): JSX.Element | null {
                 accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
                 multiple
                 onChange={(event) => {
-                  const files = Array.from(event.target.files ?? []).slice(0, 5);
-                  setSelectedFiles(files.filter((file) => file.size <= 10 * 1024 * 1024));
+                  addFiles(Array.from(event.target.files ?? []));
                 }}
               />
               <button
@@ -198,6 +212,20 @@ export function ManagerChatWidget(): JSX.Element | null {
               <input
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
+                onPaste={(event) => {
+                  const pastedFiles = Array.from(event.clipboardData.files);
+                  if (pastedFiles.length > 0) {
+                    event.preventDefault();
+                    addFiles(pastedFiles.map((file, index) =>
+                      file.name && file.name !== 'image.png'
+                        ? file
+                        : new File([file], `изображение-${Date.now()}-${index + 1}.png`, {
+                            type: file.type || 'image/png',
+                            lastModified: Date.now(),
+                          })
+                    ));
+                  }
+                }}
                 placeholder="Сообщение менеджеру…"
                 aria-label="Сообщение менеджеру"
                 maxLength={2000}

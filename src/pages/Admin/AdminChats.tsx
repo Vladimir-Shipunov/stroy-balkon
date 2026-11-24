@@ -66,7 +66,18 @@ function ChatDetail({id,token,onLogout,sessions}:{id:string;token:string;onLogou
     </div>)}</div><div className={styles.reply}>
       <input ref={fileInputRef} className={styles.fileInput} type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar" multiple onChange={e=>setSelectedFiles(Array.from(e.target.files??[]).slice(0,5).filter(f=>f.size<=10*1024*1024))}/>
       <button type="button" onClick={()=>fileInputRef.current?.click()} title="Прикрепить файл">📎</button>
-      <input value={input} onChange={e=>setInput(e.target.value)} placeholder={selectedFiles.length?'Файлы выбраны':'Ответ посетителю…'} />
+      <input value={input} onChange={e=>setInput(e.target.value)} onPaste={e=>{
+        const files=Array.from(e.clipboardData.files);
+        if(files.length){e.preventDefault();setSelectedFiles(current=>{
+          const next=[...current];
+          for(const [index,file] of files.entries()){
+            if(next.length>=5||file.size>10*1024*1024)continue;
+            const named=file.name&&file.name!==''?file:new File([file],`изображение-${Date.now()}-${index+1}.png`,{type:file.type||'image/png',lastModified:Date.now()});
+            next.push(named);
+          }
+          return next;
+        })}
+      }} placeholder={selectedFiles.length?'Файлы выбраны':'Ответ посетителю…'} />
       <button type="button" onClick={send}>Ответить</button>
     </div></section>
   </div>:<div className={styles.empty}>Чат не найден.</div>}</main></div>;

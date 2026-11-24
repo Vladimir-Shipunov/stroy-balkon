@@ -45,6 +45,27 @@ function sanitizeUploadFilename(originalName = 'upload') {
     return `${base}${UPLOAD_EXTENSIONS.has(ext) ? ext : '.bin'}`;
 }
 
+function sanitizeChatFilename(originalName = 'file', mimeType = '') {
+    const mimeToExtension = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'application/pdf': '.pdf'
+    };
+    const ext = path.extname(originalName).toLowerCase();
+    const safeExtension = ext && ext.length <= 10
+        ? ext
+        : (mimeToExtension[String(mimeType).toLowerCase()] || '');
+    const base = path.basename(originalName, ext)
+        .normalize('NFKD')
+        .replace(/[^\w.-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 100) || 'file';
+    return `${base}${safeExtension || '.bin'}`;
+}
+
 const apiLimiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
@@ -338,7 +359,7 @@ const chatStorage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, chatUploadDirectory),
     filename: (req, file, cb) => {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        cb(null, `${uniqueSuffix}-${sanitizeUploadFilename(file.originalname)}`);
+        cb(null, `${uniqueSuffix}-${sanitizeChatFilename(file.originalname, file.mimetype)}`);
     }
 });
 
@@ -539,7 +560,11 @@ app.post('/api/chat/sessions/:id/messages', aiChatLimiter, chatUpload.array('fil
                 name: file.originalname,
                 url: `/uploads/chat/${encodeURIComponent(file.filename)}`,
                 size: file.size,
-                mimeType: file.mimetype
+                mimeType: file.mimetype || (path.extname(file.filename).toLowerCase() === '.png'
+                    ? 'image/png'
+                    : path.extname(file.filename).toLowerCase() === '.jpg'
+                        ? 'image/jpeg'
+                        : 'application/octet-stream')
             })),
             createdAt: new Date().toISOString()
         };
@@ -607,7 +632,11 @@ app.post('/api/admin/chat-sessions/:id/messages', adminGuard, chatUpload.array('
             name: file.originalname,
             url: `/uploads/chat/${encodeURIComponent(file.filename)}`,
             size: file.size,
-            mimeType: file.mimetype
+            mimeType: file.mimetype || (path.extname(file.filename).toLowerCase() === '.png'
+                ? 'image/png'
+                : path.extname(file.filename).toLowerCase() === '.jpg'
+                    ? 'image/jpeg'
+                    : 'application/octet-stream')
         })),
         createdAt: new Date().toISOString()
     };
