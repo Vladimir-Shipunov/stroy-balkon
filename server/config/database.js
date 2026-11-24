@@ -108,6 +108,7 @@ class BalconyDatabase {
         this.db.exec(`
             CREATE TABLE IF NOT EXISTS chat_sessions (
                 id TEXT PRIMARY KEY,
+                visitorId TEXT,
                 visitorName TEXT,
                 visitorPhone TEXT,
                 page TEXT,
@@ -127,6 +128,13 @@ class BalconyDatabase {
             CREATE INDEX IF NOT EXISTS idx_chat_sessions_updated ON chat_sessions(updatedAt);
             CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(sessionId);
         `);
+        const hasChatVisitorId = this.db
+            .prepare("SELECT 1 FROM pragma_table_info('chat_sessions') WHERE name = 'visitorId'")
+            .get();
+        if (!hasChatVisitorId) {
+            this.db.exec('ALTER TABLE chat_sessions ADD COLUMN visitorId TEXT');
+        }
+        this.db.exec('CREATE INDEX IF NOT EXISTS idx_chat_sessions_visitor ON chat_sessions(visitorId)');
 
         // Admin-editable price list (so prices can change without a code deploy).
         // scope: 'material' | 'profile' | 'base' | 'option'; ref_key identifies the
@@ -856,12 +864,27 @@ class BalconyDatabase {
     createChatSession(session) {
         try {
             this.db.prepare(`
-                INSERT INTO chat_sessions (id, visitorName, visitorPhone, page, status, createdAt, updatedAt)
-                VALUES (?, ?, ?, ?, 'new', ?, ?)
-            `).run(session.id, session.visitorName, session.visitorPhone, session.page, session.createdAt, session.updatedAt);
+                INSERT INTO chat_sessions (id, visitorId, visitorName, visitorPhone, page, status, createdAt, updatedAt)
+                VALUES (?, ?, ?, ?, ?, 'new', ?, ?)
+            `).run(session.id, session.visitorId, session.visitorName, session.visitorPhone, session.page, session.createdAt, session.updatedAt);
             return session;
         } catch (error) {
             logger.error('Create chat session error', error);
+            return null;
+        }
+    }
+
+    getChatSessionByVisitor(visitorId) {
+        try {
+            const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+            return this.db.prepare(`
+                SELECT * FROM chat_sessions
+                WHERE visitorId = ? AND status != 'closed' AND updatedAt >= ?
+                ORDER BY updatedAt DESC
+                LIMIT 1
+            `).get(visitorId, cutoff) || null;
+        } catch (error) {
+            logger.error('Get chat session by visitor error', error);
             return null;
         }
     }

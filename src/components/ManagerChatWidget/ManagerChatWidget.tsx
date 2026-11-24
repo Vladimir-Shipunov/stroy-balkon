@@ -14,11 +14,33 @@ const SESSION_KEY = 'stroy-balkon-manager-chat';
 export function ManagerChatWidget(): JSX.Element | null {
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(() => sessionStorage.getItem(SESSION_KEY));
+  const [sessionId, setSessionId] = useState<string | null>(() => localStorage.getItem(SESSION_KEY));
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/chat/session')
+      .then((res) => res.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data.success && data.sessionId) {
+          localStorage.setItem(SESSION_KEY, data.sessionId);
+          setSessionId(data.sessionId);
+          setMessages(data.messages ?? []);
+        } else {
+          localStorage.removeItem(SESSION_KEY);
+          setSessionId(null);
+          setMessages([]);
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!open || !sessionId) return;
@@ -61,7 +83,7 @@ export function ManagerChatWidget(): JSX.Element | null {
         if (!created.ok || !data.sessionId) throw new Error('chat');
         activeSession = data.sessionId;
         if (!activeSession) throw new Error('chat');
-        sessionStorage.setItem(SESSION_KEY, activeSession);
+        localStorage.setItem(SESSION_KEY, activeSession);
         setSessionId(activeSession);
       }
       const res = await fetch(`/api/chat/sessions/${activeSession}/messages`, {

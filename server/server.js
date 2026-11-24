@@ -399,13 +399,49 @@ app.post('/api/request-call', callRequestLimiter, async (req, res) => {
     }
 });
 
+const CHAT_VISITOR_COOKIE = 'stroy_chat_visitor';
+const CHAT_COOKIE_MAX_AGE = 48 * 60 * 60;
+
+function readChatVisitorId(req) {
+    const cookieHeader = req.headers.cookie || '';
+    const match = cookieHeader
+        .split(';')
+        .map((item) => item.trim())
+        .find((item) => item.startsWith(`${CHAT_VISITOR_COOKIE}=`));
+    const value = match ? match.slice(CHAT_VISITOR_COOKIE.length + 1) : '';
+    return /^[a-zA-Z0-9_-]{16,80}$/.test(value) ? value : null;
+}
+
+function setChatVisitorCookie(res, visitorId) {
+    const expires = new Date(Date.now() + CHAT_COOKIE_MAX_AGE * 1000).toUTCString();
+    res.setHeader('Set-Cookie',
+        `${CHAT_VISITOR_COOKIE}=${visitorId}; Expires=${expires}; Max-Age=${CHAT_COOKIE_MAX_AGE}; Path=/; HttpOnly; SameSite=Lax${NODE_ENV === 'production' ? '; Secure' : ''}`
+    );
+}
+
 // Live manager chat (separate from the AI consultant).
 app.post('/api/chat/sessions', aiChatLimiter, async (req, res) => {
     try {
         const crypto = require('crypto');
         const now = new Date().toISOString();
+        let visitorId = readChatVisitorId(req);
+        if (!visitorId) {
+            visitorId = `v_${crypto.randomBytes(24).toString('hex')}`;
+        }
+        setChatVisitorCookie(res, visitorId);
+        const existing = db.getChatSessionByVisitor(visitorId);
+        if (existing) {
+            db.touchChatSession(existing.id);
+            return res.status(200).json({
+                success: true,
+                sessionId: existing.id,
+                expiresInSeconds: CHAT_COOKIE_MAX_AGE,
+                messages: db.getChatMessages(existing.id)
+            });
+        }
         const session = {
             id: `chat_${crypto.randomBytes(12).toString('hex')}`,
+            visitorId,
             visitorName: cleanString(req.body?.name, { max: 120 }) || null,
             visitorPhone: cleanPhone(req.body?.phone),
             page: cleanString(req.body?.page, { max: 80 }) || 'Главная',
@@ -418,11 +454,34 @@ app.post('/api/chat/sessions', aiChatLimiter, async (req, res) => {
         await telegramBot.sendMessage(
             `<b>Новый чат на сайте</b>\n\nСтраница: ${session.page}\nИмя: ${session.visitorName || 'не указано'}\nТелефон: ${session.visitorPhone || 'не указан'}\nСсылка: ${siteUrl}/admin/chats/${session.id}`
         );
-        return res.status(201).json({ success: true, sessionId: session.id });
+        return res.status(201).json({
+            success: true,
+            sessionId: session.id,
+            expiresInSeconds: CHAT_COOKIE_MAX_AGE,
+            messages: []
+        });
     } catch (error) {
         logger.error('Create chat session error', error);
         return res.status(500).json({ success: false, error: 'Не удалось создать чат' });
     }
+});
+
+app.get('/api/chat/session', (req, res) => {
+    const visitorId = readChatVisitorId(req);
+    if (!visitorId) {
+        return res.json({ success: true, sessionId: null, messages: [] });
+    }
+    setChatVisitorCookie(res, visitorId);
+    const session = db.getChatSessionByVisitor(visitorId);
+    if (!session) {
+        return res.json({ success: true, sessionId: null, messages: [] });
+    }
+    return res.json({
+        success: true,
+        sessionId: session.id,
+        expiresInSeconds: CHAT_COOKIE_MAX_AGE,
+        messages: db.getChatMessages(session.id)
+    });
 });
 
 app.post('/api/chat/sessions/:id/messages', aiChatLimiter, async (req, res) => {
@@ -433,7 +492,9 @@ app.post('/api/chat/sessions/:id/messages', aiChatLimiter, async (req, res) => {
         if (!sessionId || !content) {
             return res.status(400).json({ success: false, error: 'Укажите сообщение' });
         }
-        if (!db.getChatSession(sessionId)) {
+        const session = db.getChatSession(sessionId);
+        const visitorId = readChatVisitorId(req);
+        if (!session || (session.visitorId && session.visitorId !== visitorId)) {
             return res.status(404).json({ success: false, error: 'Чат не найден' });
         }
         const message = {
@@ -458,7 +519,9 @@ app.post('/api/chat/sessions/:id/messages', aiChatLimiter, async (req, res) => {
 
 app.get('/api/chat/sessions/:id/messages', (req, res) => {
     const sessionId = cleanString(req.params.id, { max: 80 });
-    if (!db.getChatSession(sessionId)) {
+    const session = db.getChatSession(sessionId);
+    const visitorId = readChatVisitorId(req);
+    if (!session || (session.visitorId && session.visitorId !== visitorId)) {
         return res.status(404).json({ success: false, error: 'Чат не найден' });
     }
     return res.json({ success: true, messages: db.getChatMessages(sessionId) });
